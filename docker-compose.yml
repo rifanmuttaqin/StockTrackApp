@@ -1,0 +1,144 @@
+version: '3.8'
+
+# Docker Compose untuk StockTrackApp
+# Sistem monitoring stock keluar dengan arsitektur Repository Pattern dan Service Layer
+# Teknologi: Laravel + Inertia.js + React + PostgreSQL
+# Pendekatan: Mobile-first design
+
+services:
+  # Service untuk aplikasi Laravel (PHP-FPM)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stocktrack_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      # Mount source code untuk development
+      - ./:/var/www/html
+      # Mount untuk cache Composer
+      - composer-cache:/root/.composer/cache
+    networks:
+      - stocktrack-network
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    extra_hosts:
+      # Untuk mempercepat koneksi ke host machine (untuk development)
+      - "host.docker.internal:host-gateway"
+
+  # Service untuk Node.js (build frontend React)
+  node:
+    image: node:18-alpine
+    container_name: stocktrack_node
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      # Mount source code untuk development
+      - ./:/var/www/html
+      # Mount untuk cache npm
+      - node-cache:/root/.npm
+    networks:
+      - stocktrack-network
+    # Command untuk development dengan hot-reload
+    command: sh -c "npm install && npm run dev"
+    env_file:
+      - .env
+
+  # Service untuk web server (Nginx)
+  nginx:
+    image: nginx:alpine
+    container_name: stocktrack_nginx
+    restart: unless-stopped
+    ports:
+      - "8002:80"
+    volumes:
+      # Mount source code
+      - ./:/var/www/html
+      # Mount konfigurasi Nginx custom
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/sites/:/etc/nginx/sites-available/
+      # Mount log Nginx
+      - nginx-logs:/var/log/nginx
+    networks:
+      - stocktrack-network
+    depends_on:
+      - app
+      - node
+
+  # Service untuk PostgreSQL (jika diperlukan untuk development lokal)
+  # Note: Sesuai PRD, database menggunakan image global yang sudah siap
+  # Service ini dapat di-comment jika menggunakan database eksternal
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: stocktrack_postgres
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     - POSTGRES_DB=stocktrack_db
+  #     - POSTGRES_USER=stocktrack_user
+  #     - POSTGRES_PASSWORD=stocktrack_password
+  #     - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+  #   volumes:
+  #     # Mount data PostgreSQL untuk persistensi
+  #     - postgres-data:/var/lib/postgresql/data
+  #     # Mount untuk init scripts
+  #     - ./docker/postgres/init:/docker-entrypoint-initdb.d
+  #   networks:
+  #     - stocktrack-network
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U stocktrack_user -d stocktrack_db"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # Service untuk Redis (opsional, untuk cache dan queue)
+  redis:
+    image: redis:7-alpine
+    container_name: stocktrack_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      # Mount data Redis untuk persistensi
+      - redis-data:/data
+    networks:
+      - stocktrack-network
+    command: redis-server --appendonly yes
+
+  # Service untuk MailHog (email testing untuk development)
+  # mailhog:
+  #   image: mailhog/mailhog:latest
+  #   container_name: stocktrack_mailhog
+  #   restart: unless-stopped
+  #   ports:
+  #     - "1025:1025"  # SMTP port
+  #     - "8025:8025"  # Web interface
+  #   networks:
+  #     - stocktrack-network
+
+# Volume untuk persistensi data
+volumes:
+  # Volume untuk data PostgreSQL
+  # postgres-data:
+  #   driver: local
+  # Volume untuk data Redis
+  redis-data:
+    driver: local
+  # Volume untuk cache Composer
+  composer-cache:
+    driver: local
+  # Volume untuk cache npm
+  node-cache:
+    driver: local
+  # Volume untuk log Nginx
+  nginx-logs:
+    driver: local
+
+# Network untuk komunikasi antar container
+networks:
+  stocktrack-network:
+    driver: bridge
