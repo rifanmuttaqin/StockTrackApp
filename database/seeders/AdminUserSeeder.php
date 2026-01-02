@@ -32,7 +32,7 @@ class AdminUserSeeder extends Seeder
                 'is_active' => true,
             ]);
 
-            // Assign management role to admin using the pivot table directly
+            // Assign management role to admin using the pivot table directly // Assign perlu dibenerin pakai stadart
             DB::table('model_has_roles')->insert([
                 'model_id' => $adminUser->id,
                 'model_type' => User::class,
