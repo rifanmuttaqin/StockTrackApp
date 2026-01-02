@@ -1,9 +1,23 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
+import { useMobileDetection } from '../Hooks/useMobileDetection';
+import MobileLayout from '../Components/Layouts/MobileLayout';
 import Navbar from '../Components/Navbar';
 import Sidebar from '../Components/Sidebar';
 
-export default function AppLayout({ title, children }) {
+export default function AppLayout({ title, children, header }) {
+    const { isMobile } = useMobileDetection();
+
+    // If mobile, use MobileLayout
+    if (isMobile) {
+        return (
+            <MobileLayout title={title} header={header}>
+                {children}
+            </MobileLayout>
+        );
+    }
+
+    // Desktop layout
     return (
         <div className="min-h-screen bg-gray-50">
             <Head title={title} />

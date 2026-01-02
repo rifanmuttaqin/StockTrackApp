@@ -2,11 +2,14 @@ import React from 'react';
 import { Head } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 import UserForm from '../../Components/Forms/UserForm';
+import { MobileUserForm } from '../../Components/Users';
 import Alert from '../../Components/Alert';
 import { usePermission } from '../../Hooks/usePermission';
+import { useMobileDetection } from '../../Hooks/useMobileDetection';
 
 const Create = ({ roles, errors }) => {
   const { can } = usePermission();
+  const { isMobile } = useMobileDetection();
 
   return (
     <AppLayout title="Create User">
@@ -29,28 +32,37 @@ const Create = ({ roles, errors }) => {
           <Alert type="error" message={props.flash.error} className="mb-4" />
         )}
 
-        <div className="bg-white shadow sm:rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="mb-4">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
-                User Information
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Fill in the user information below. All fields marked with * are required.
-              </p>
+        {isMobile ? (
+          <MobileUserForm
+            roles={roles}
+            userRoles={[]}
+            isEditing={false}
+            errors={errors}
+          />
+        ) : (
+          <div className="bg-white shadow sm:rounded-lg">
+            <div className="px-4 py-5 sm:p-6">
+              <div className="mb-4">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                  User Information
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Fill in the user information below. All fields marked with * are required.
+                </p>
+              </div>
+
+              <UserForm
+                roles={roles}
+                userRoles={[]}
+                isEditing={false}
+                errors={errors}
+              />
             </div>
-
-            <UserForm
-              roles={roles}
-              userRoles={[]}
-              isEditing={false}
-              errors={errors}
-            />
           </div>
-        </div>
+        )}
 
-        {/* Help Section */}
-        <div className="mt-6 bg-blue-50 border-l-4 border-blue-400 p-4">
+        {/* Help Section - Responsive */}
+        <div className={`mt-6 bg-blue-50 border-l-4 border-blue-400 p-4 ${isMobile ? 'rounded-lg' : ''}`}>
           <div className="flex">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">

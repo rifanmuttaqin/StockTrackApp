@@ -19,6 +19,7 @@ export { default as ResetPasswordForm } from './Forms/ResetPasswordForm';
 
 // Auth Components
 export { default as EmailVerification } from './Auth/EmailVerification';
+export { default as MobileLogin } from './Auth/MobileLogin';
 
 // Table Components
 export { default as UserTable } from './Tables/UserTable';

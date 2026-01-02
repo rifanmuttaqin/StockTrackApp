@@ -36,8 +36,7 @@ Output akhir harus mengikuti format **PRD_Template.md**.
 
 # Topik Fitur yang akan di kerjakan
 
-Baca dan pahami /home/rifanmuttaqin/project/StockTrackApp/PRD/MASTER_PRD.md
-Dari PRD tersebut, buatkan PRD lengkap master USER dan pondasi dasar dari aplikasi yang akan dibangun.
-
-Aplikasi menerapkan pattern arsitektur Repository dan Service Layer.
-Hasilkan PRD lengkap dengan semua bagian sesuai PRD_Template.md.
+Project masih tahap awal dan baru saja dimulai, perlu design mobile layout untuk arsitektur UI dari aplikasi yang dibangun.
+gunakan shadcn ui untuk komponennya
+fokus pada module yang sudah ada dahulu, dashboard - login dan - user untuk membentuk fondasi awal.
+design akses perangkat mobile dan modern, design UX stadarisasi SAAS modern

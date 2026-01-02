@@ -6,10 +6,14 @@ import Modal from '../../Components/Modal';
 import LoadingSpinner from '../../Components/LoadingSpinner';
 import Pagination from '../../Components/Pagination';
 import RoleAssignmentModal from '../../Components/Modals/RoleAssignmentModal';
+import MobileCard from '../../Components/UI/MobileCard';
+import MobileButton from '../../Components/UI/MobileButton';
 import { usePermission } from '../../Hooks/usePermission';
+import { useMobileDetection } from '../../Hooks/useMobileDetection';
 
 const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
   const { can } = usePermission();
+  const { isMobile } = useMobileDetection();
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(false);
@@ -123,18 +127,18 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
           </div>
         )}
 
-        {/* Header */}
+        {/* Header - Responsive */}
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
             <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
               User Details
             </h2>
           </div>
-          <div className="mt-4 flex md:mt-0 md:ml-4 space-x-3">
+          <div className={`mt-4 ${isMobile ? 'flex flex-col gap-2' : 'md:mt-0 md:ml-4 space-x-3'}`}>
             {can('users.assign-role') && (
               <button
                 onClick={() => setShowRoleModal(true)}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${isMobile ? 'w-full justify-center' : ''}`}
               >
                 <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -145,7 +149,7 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
             {can('users.edit') && (
               <Link
                 href={route('users.edit', user.id)}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className={`inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${isMobile ? 'w-full justify-center' : ''}`}
               >
                 <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -164,7 +168,7 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
           <Alert type="error" message={props.flash.error} className="mb-4" />
         )}
 
-        {/* User Info Card */}
+        {/* User Info Card - Responsive */}
         <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
           <div className="px-4 py-5 sm:px-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
@@ -175,78 +179,141 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
             </p>
           </div>
           <div className="border-t border-gray-200">
-            <dl>
-              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Full name</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{user.name}</dd>
-              </div>
-              <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Email address</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{user.email}</dd>
-              </div>
-              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Status</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {getStatusBadge(user.status)}
-                </dd>
-              </div>
-              <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Roles</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  <div className="flex flex-wrap gap-2">
-                    {userRoles?.map((role) => (
-                      <span
-                        key={role.id}
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
-                      >
-                        {role.name}
+            {isMobile ? (
+              <dl className="divide-y divide-gray-100">
+                <div className="px-4 py-3 flex justify-between">
+                  <dt className="text-sm font-medium text-gray-500">Full name</dt>
+                  <dd className="text-sm text-gray-900">{user.name}</dd>
+                </div>
+                <div className="px-4 py-3 flex justify-between">
+                  <dt className="text-sm font-medium text-gray-500">Email address</dt>
+                  <dd className="text-sm text-gray-900">{user.email}</dd>
+                </div>
+                <div className="px-4 py-3 flex justify-between">
+                  <dt className="text-sm font-medium text-gray-500">Status</dt>
+                  <dd className="text-sm text-gray-900">
+                    {getStatusBadge(user.status)}
+                  </dd>
+                </div>
+                <div className="px-4 py-3">
+                  <dt className="text-sm font-medium text-gray-500 mb-2">Roles</dt>
+                  <dd className="text-sm text-gray-900">
+                    <div className="flex flex-wrap gap-2">
+                      {userRoles?.map((role) => (
+                        <span
+                          key={role.id}
+                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
+                        >
+                          {role.name}
+                        </span>
+                      ))}
+                      {(!userRoles || userRoles.length === 0) && (
+                        <span className="text-sm text-gray-500">No roles assigned</span>
+                      )}
+                    </div>
+                  </dd>
+                </div>
+                <div className="px-4 py-3 flex justify-between">
+                  <dt className="text-sm font-medium text-gray-500">Email Verified</dt>
+                  <dd className="text-sm text-gray-900">
+                    {user.email_verified_at ? (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Verified
                       </span>
-                    ))}
-                    {(!userRoles || userRoles.length === 0) && (
-                      <span className="text-sm text-gray-500">No roles assigned</span>
+                    ) : (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        Not Verified
+                      </span>
                     )}
-                  </div>
-                </dd>
-              </div>
-              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Email Verified</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {user.email_verified_at ? (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                      Verified
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                      Not Verified
-                    </span>
-                  )}
-                </dd>
-              </div>
-              <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Created At</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {formatDate(user.created_at)}
-                </dd>
-              </div>
-              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Last Login</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {formatDate(user.last_login_at)}
-                </dd>
-              </div>
-            </dl>
+                  </dd>
+                </div>
+                <div className="px-4 py-3 flex justify-between">
+                  <dt className="text-sm font-medium text-gray-500">Created At</dt>
+                  <dd className="text-sm text-gray-900">
+                    {formatDate(user.created_at)}
+                  </dd>
+                </div>
+                <div className="px-4 py-3 flex justify-between">
+                  <dt className="text-sm font-medium text-gray-500">Last Login</dt>
+                  <dd className="text-sm text-gray-900">
+                    {formatDate(user.last_login_at)}
+                  </dd>
+                </div>
+              </dl>
+            ) : (
+              <dl>
+                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-gray-500">Full name</dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{user.name}</dd>
+                </div>
+                <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-gray-500">Email address</dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{user.email}</dd>
+                </div>
+                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-gray-500">Status</dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {getStatusBadge(user.status)}
+                  </dd>
+                </div>
+                <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-gray-500">Roles</dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    <div className="flex flex-wrap gap-2">
+                      {userRoles?.map((role) => (
+                        <span
+                          key={role.id}
+                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
+                        >
+                          {role.name}
+                        </span>
+                      ))}
+                      {(!userRoles || userRoles.length === 0) && (
+                        <span className="text-sm text-gray-500">No roles assigned</span>
+                      )}
+                    </div>
+                  </dd>
+                </div>
+                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-gray-500">Email Verified</dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {user.email_verified_at ? (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Verified
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        Not Verified
+                      </span>
+                    )}
+                  </dd>
+                </div>
+                <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-gray-500">Created At</dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {formatDate(user.created_at)}
+                  </dd>
+                </div>
+                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-gray-500">Last Login</dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {formatDate(user.last_login_at)}
+                  </dd>
+                </div>
+              </dl>
+            )}
           </div>
         </div>
 
-        {/* Tabs */}
+        {/* Tabs - Responsive */}
         <div className="bg-white shadow sm:rounded-lg">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8 px-4" aria-label="Tabs">
+            <nav className={`${isMobile ? 'flex overflow-x-auto' : '-mb-px flex space-x-8'} px-4`} aria-label="Tabs">
               <button
                 onClick={() => setActiveTab('overview')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`${isMobile ? 'py-3 px-4 whitespace-nowrap' : 'py-4 px-1 border-b-2'} font-medium text-sm ${
                   activeTab === 'overview'
-                    ? 'border-indigo-500 text-indigo-600'
+                    ? isMobile ? 'text-blue-600 border-b-2 border-blue-600' : 'border-indigo-500 text-indigo-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -254,9 +321,9 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
               </button>
               <button
                 onClick={() => setActiveTab('activity')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`${isMobile ? 'py-3 px-4 whitespace-nowrap' : 'py-4 px-1 border-b-2'} font-medium text-sm ${
                   activeTab === 'activity'
-                    ? 'border-indigo-500 text-indigo-600'
+                    ? isMobile ? 'text-blue-600 border-b-2 border-blue-600' : 'border-indigo-500 text-indigo-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -264,9 +331,9 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
               </button>
               <button
                 onClick={() => setActiveTab('sessions')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`${isMobile ? 'py-3 px-4 whitespace-nowrap' : 'py-4 px-1 border-b-2'} font-medium text-sm ${
                   activeTab === 'sessions'
-                    ? 'border-indigo-500 text-indigo-600'
+                    ? isMobile ? 'text-blue-600 border-b-2 border-blue-600' : 'border-indigo-500 text-indigo-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -275,13 +342,13 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
             </nav>
           </div>
 
-          <div className="p-4">
+          <div className={`${isMobile ? 'p-3' : 'p-4'}`}>
             {activeTab === 'overview' && (
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Account Overview</h3>
-                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                    <div className="bg-white overflow-hidden shadow rounded-lg">
+                  <div className={`${isMobile ? 'space-y-3' : 'grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3'}`}>
+                    <MobileCard className={`${isMobile ? '' : 'bg-white overflow-hidden shadow rounded-lg'}`}>
                       <div className="p-5">
                         <div className="flex items-center">
                           <div className="flex-shrink-0">
@@ -301,9 +368,9 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </MobileCard>
 
-                    <div className="bg-white overflow-hidden shadow rounded-lg">
+                    <MobileCard className={`${isMobile ? '' : 'bg-white overflow-hidden shadow rounded-lg'}`}>
                       <div className="p-5">
                         <div className="flex items-center">
                           <div className="flex-shrink-0">
@@ -321,9 +388,9 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </MobileCard>
 
-                    <div className="bg-white overflow-hidden shadow rounded-lg">
+                    <MobileCard className={`${isMobile ? '' : 'bg-white overflow-hidden shadow rounded-lg'}`}>
                       <div className="p-5">
                         <div className="flex items-center">
                           <div className="flex-shrink-0">
@@ -343,40 +410,42 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </MobileCard>
                   </div>
                 </div>
 
                 {can('users.edit') && (
                   <div>
                     <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Quick Actions</h3>
-                    <div className="flex flex-wrap gap-3">
+                    <div className={`${isMobile ? 'flex flex-col gap-3' : 'flex flex-wrap gap-3'}`}>
                       {user.status === 'active' ? (
-                        <button
+                        <MobileButton
+                          variant="outline"
                           onClick={() => handleToggleStatus('inactive')}
-                          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          className={`${isMobile ? 'w-full' : ''}`}
                         >
                           <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                           </svg>
                           Deactivate User
-                        </button>
+                        </MobileButton>
                       ) : (
-                        <button
+                        <MobileButton
+                          variant="primary"
                           onClick={() => handleToggleStatus('active')}
-                          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                          className={`${isMobile ? 'w-full' : ''}`}
                         >
                           <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                           Activate User
-                        </button>
+                        </MobileButton>
                       )}
 
                       <Link
                         href={route('password.email')}
-                        className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${isMobile ? 'w-full justify-center' : ''}`}
                       >
                         <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
@@ -393,44 +462,59 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
               <div>
                 <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Activity Log</h3>
                 {activityLogs && activityLogs.length > 0 ? (
-                  <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                    <table className="min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Action
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Description
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            IP Address
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Date
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {activityLogs.map((log) => (
-                          <tr key={log.id}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                              {log.action}
-                            </td>
-                            <td className="px-6 py-4 text-sm text-gray-500">
-                              {log.description}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {formatIpAddress(log.ip_address)}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {formatDate(log.created_at)}
-                            </td>
+                  isMobile ? (
+                    <div className="space-y-3">
+                      {activityLogs.map((log) => (
+                        <MobileCard key={log.id} className="p-3">
+                          <div className="flex justify-between items-start mb-2">
+                            <h4 className="text-sm font-medium text-gray-900">{log.action}</h4>
+                            <span className="text-xs text-gray-500">{formatDate(log.created_at)}</span>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2">{log.description}</p>
+                          <p className="text-xs text-gray-500">IP: {formatIpAddress(log.ip_address)}</p>
+                        </MobileCard>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                      <table className="min-w-full divide-y divide-gray-300">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Action
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Description
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              IP Address
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Date
+                            </th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {activityLogs.map((log) => (
+                            <tr key={log.id}>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {log.action}
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-500">
+                                {log.description}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {formatIpAddress(log.ip_address)}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {formatDate(log.created_at)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )
                 ) : (
                   <div className="text-center py-4">
                     <p className="text-sm text-gray-500">No activity logs found</p>
@@ -443,51 +527,75 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
               <div>
                 <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Active Sessions</h3>
                 {sessions && sessions.length > 0 ? (
-                  <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                    <table className="min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Device
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            IP Address
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Last Activity
-                          </th>
-                          <th scope="col" className="relative px-6 py-3">
-                            <span className="sr-only">Actions</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {sessions.map((session) => (
-                          <tr key={session.id}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {getUserAgent(session.user_agent)}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {formatIpAddress(session.ip_address)}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {formatDate(session.last_activity)}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                              {can('users.manage-sessions') && (
-                                <button
-                                  onClick={() => handleRevokeSession(session.id)}
-                                  className="text-red-600 hover:text-red-900"
-                                >
-                                  Revoke
-                                </button>
-                              )}
-                            </td>
+                  isMobile ? (
+                    <div className="space-y-3">
+                      {sessions.map((session) => (
+                        <MobileCard key={session.id} className="p-3">
+                          <div className="flex justify-between items-start mb-2">
+                            <h4 className="text-sm font-medium text-gray-900">{getUserAgent(session.user_agent)}</h4>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2">IP: {formatIpAddress(session.ip_address)}</p>
+                          <p className="text-xs text-gray-500 mb-2">Last Activity: {formatDate(session.last_activity)}</p>
+                          {can('users.manage-sessions') && (
+                            <MobileButton
+                              variant="danger"
+                              size="sm"
+                              onClick={() => handleRevokeSession(session.id)}
+                              className="w-full"
+                            >
+                              Revoke Session
+                            </MobileButton>
+                          )}
+                        </MobileCard>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                      <table className="min-w-full divide-y divide-gray-300">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Device
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              IP Address
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Last Activity
+                            </th>
+                            <th scope="col" className="relative px-6 py-3">
+                              <span className="sr-only">Actions</span>
+                            </th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {sessions.map((session) => (
+                            <tr key={session.id}>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {getUserAgent(session.user_agent)}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {formatIpAddress(session.ip_address)}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {formatDate(session.last_activity)}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                {can('users.manage-sessions') && (
+                                  <button
+                                    onClick={() => handleRevokeSession(session.id)}
+                                    className="text-red-600 hover:text-red-900"
+                                  >
+                                    Revoke
+                                  </button>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )
                 ) : (
                   <div className="text-center py-4">
                     <p className="text-sm text-gray-500">No active sessions</p>

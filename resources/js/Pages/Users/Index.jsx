@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link, router } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 import UserTable from '../../Components/Tables/UserTable';
+import { MobileUserTable } from '../../Components/Users';
 import Pagination from '../../Components/Pagination';
 import Alert from '../../Components/Alert';
 import LoadingSpinner from '../../Components/LoadingSpinner';
 import { usePermission } from '../../Hooks/usePermission';
+import { useMobileDetection } from '../../Hooks/useMobileDetection';
 
 const Index = ({ users, roles, filters, meta }) => {
   const { can } = usePermission();
+  const { isMobile } = useMobileDetection();
   const [loading, setLoading] = useState(false);
   const [localFilters, setLocalFilters] = useState({
     search: filters?.search || '',
@@ -160,36 +163,76 @@ const Index = ({ users, roles, filters, meta }) => {
           </div>
         )}
 
-        {/* User Table */}
-        <UserTable
-          users={users}
-          roles={roles}
-          filters={localFilters}
-          meta={meta}
-          onFilterChange={handleFilterChange}
-          onSortChange={handleSortChange}
-          onDelete={(user) => {
-            if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
-              router.delete(route('users.destroy', user.id));
-            }
-          }}
-          onToggleStatus={handleToggleStatus}
-          onAssignRole={handleAssignRole}
-        />
+        {/* User Table - Conditional Rendering */}
+        {isMobile ? (
+          <MobileUserTable
+            users={users}
+            roles={roles}
+            filters={localFilters}
+            meta={meta}
+            onFilterChange={handleFilterChange}
+            onSortChange={handleSortChange}
+            onDelete={(user) => {
+              if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+                router.delete(route('users.destroy', user.id));
+              }
+            }}
+            onToggleStatus={handleToggleStatus}
+            onAssignRole={handleAssignRole}
+          />
+        ) : (
+          <UserTable
+            users={users}
+            roles={roles}
+            filters={localFilters}
+            meta={meta}
+            onFilterChange={handleFilterChange}
+            onSortChange={handleSortChange}
+            onDelete={(user) => {
+              if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+                router.delete(route('users.destroy', user.id));
+              }
+            }}
+            onToggleStatus={handleToggleStatus}
+            onAssignRole={handleAssignRole}
+          />
+        )}
 
-        {/* Pagination */}
+        {/* Pagination - Mobile Friendly */}
         {meta && (
           <div className="mt-6">
-            <Pagination
-              currentPage={meta.current_page}
-              totalPages={meta.last_page}
-              onPageChange={handlePageChange}
-            />
+            {isMobile ? (
+              <div className="flex justify-between items-center bg-white px-4 py-3 rounded-lg shadow">
+                <button
+                  onClick={() => handlePageChange(Math.max(1, meta.current_page - 1))}
+                  disabled={meta.current_page <= 1}
+                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                >
+                  Previous
+                </button>
+                <span className="text-sm text-gray-700">
+                  Page {meta.current_page} of {meta.last_page}
+                </span>
+                <button
+                  onClick={() => handlePageChange(Math.min(meta.last_page, meta.current_page + 1))}
+                  disabled={meta.current_page >= meta.last_page}
+                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+            ) : (
+              <Pagination
+                currentPage={meta.current_page}
+                totalPages={meta.last_page}
+                onPageChange={handlePageChange}
+              />
+            )}
           </div>
         )}
 
-        {/* Summary Stats */}
-        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Summary Stats - Responsive Grid */}
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="p-5">
               <div className="flex items-center">

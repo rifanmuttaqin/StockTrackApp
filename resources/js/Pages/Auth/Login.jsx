@@ -5,8 +5,13 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { useMobileDetection } from '@/Hooks/useMobileDetection';
+import MobileLogin from '@/Components/Auth/MobileLogin';
 
 export default function Login({ status, canResetPassword }) {
+    const { isMobile } = useMobileDetection();
+
+    // Desktop login component (original code)
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -16,14 +21,15 @@ export default function Login({ status, canResetPassword }) {
     const submit = (e) => {
         e.preventDefault();
 
-        console.log('Form submitted with data:', data);
-        console.log('Form element:', e.target);
-        console.log('Form element type:', e.target.type);
-
         post(route('login'), {
             onFinish: () => reset('password'),
         });
     };
+
+    // Use mobile login component for mobile devices
+    if (isMobile) {
+        return <MobileLogin status={status} canResetPassword={canResetPassword} />;
+    }
 
     return (
         <GuestLayout>
