@@ -41,11 +41,23 @@ if (typeof window !== 'undefined') {
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) =>
-        resolvePageComponent(
-            `./Pages/${name}.jsx`,
-            import.meta.glob('./Pages/**/*.jsx'),
-        ),
+    resolve: (name) => {
+        console.log('Resolving page:', name);
+        console.log('Looking for:', `./Pages/${name}.jsx`);
+
+        try {
+            const component = resolvePageComponent(
+                `./Pages/${name}.jsx`,
+                import.meta.glob('./Pages/**/*.jsx'),
+            );
+            console.log('Successfully resolved:', name);
+            return component;
+        } catch (error) {
+            console.error('Error resolving page:', name);
+            console.error('Error details:', error);
+            throw error;
+        }
+    },
     setup({ el, App, props }) {
         const root = createRoot(el);
 
