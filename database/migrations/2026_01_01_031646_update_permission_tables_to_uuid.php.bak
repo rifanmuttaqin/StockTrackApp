@@ -1,0 +1,89 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        $tableNames = config('permission.table_names');
+
+        // Update roles table
+        Schema::table($tableNames['roles'], function (Blueprint $table) {
+            $table->uuid('uuid')->nullable()->after('id');
+            $table->string('display_name')->nullable()->after('name');
+            $table->text('description')->nullable()->after('display_name');
+            $table->boolean('is_active')->default(true)->after('guard_name');
+
+            // Add indexes
+            $table->index('name');
+            $table->index('is_active');
+        });
+
+        // Update permissions table
+        Schema::table($tableNames['permissions'], function (Blueprint $table) {
+            $table->uuid('uuid')->nullable()->after('id');
+            $table->string('display_name')->nullable()->after('name');
+            $table->text('description')->nullable()->after('display_name');
+
+            // Add indexes
+            $table->index('name');
+        });
+
+        // Update model_has_roles table to use UUID for model_id
+        Schema::table($tableNames['model_has_roles'], function (Blueprint $table) {
+            // Change model_id to string to support UUID
+            $table->string('model_uuid')->nullable()->after('model_id');
+
+            // Add index for the new column
+            $table->index('model_uuid');
+        });
+
+        // Update model_has_permissions table to use UUID for model_id
+        Schema::table($tableNames['model_has_permissions'], function (Blueprint $table) {
+            // Change model_id to string to support UUID
+            $table->string('model_uuid')->nullable()->after('model_id');
+
+            // Add index for the new column
+            $table->index('model_uuid');
+        });
+
+        // Update role_has_permissions table to use UUID
+        Schema::table($tableNames['role_has_permissions'], function (Blueprint $table) {
+            $table->uuid('permission_uuid')->nullable()->after('permission_id');
+            $table->uuid('role_uuid')->nullable()->after('role_id');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        $tableNames = config('permission.table_names');
+
+        Schema::table($tableNames['roles'], function (Blueprint $table) {
+            $table->dropColumn(['uuid', 'display_name', 'description', 'is_active']);
+            $table->dropIndex(['name', 'is_active']);
+        });
+
+        Schema::table($tableNames['permissions'], function (Blueprint $table) {
+            $table->dropColumn(['uuid', 'display_name', 'description']);
+            $table->dropIndex(['name']);
+        });
+
+        Schema::table($tableNames['model_has_roles'], function (Blueprint $table) {
+            $table->dropColumn('model_uuid');
+            $table->dropIndex('model_uuid');
+        });
+
+        Schema::table($tableNames['model_has_permissions'], function (Blueprint $table) {
+            $table->dropColumn(['permission_uuid', 'role_uuid']);
+        });
+    }
+}
