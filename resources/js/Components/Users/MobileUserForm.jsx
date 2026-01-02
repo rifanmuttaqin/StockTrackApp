@@ -22,35 +22,79 @@ const MobileUserForm = ({
     email: user?.email || '',
     password: '',
     password_confirmation: '',
-    roles: userRoles?.map(role => role.id) || [],
+    role_id: userRoles?.length > 0 ? userRoles[0].id : '', // Change from roles array to single role_id
     status: user?.status || 'active',
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState({ score: 0, text: '', color: '' });
+
+  // Calculate password strength
+  useEffect(() => {
+    if (!data.password) {
+      setPasswordStrength({ score: 0, text: '', color: '' });
+      return;
+    }
+
+    let score = 0;
+    const checks = {
+      length: data.password.length >= 8,
+      lowercase: /[a-z]/.test(data.password),
+      uppercase: /[A-Z]/.test(data.password),
+      numbers: /\d/.test(data.password),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(data.password)
+    };
+
+    Object.values(checks).forEach(passed => {
+      if (passed) score++;
+    });
+
+    const strengthLevels = [
+      { score: 0, text: '', color: '' },
+      { score: 1, text: 'Very Weak', color: 'bg-red-500' },
+      { score: 2, text: 'Weak', color: 'bg-orange-500' },
+      { score: 3, text: 'Fair', color: 'bg-yellow-500' },
+      { score: 4, text: 'Good', color: 'bg-blue-500' },
+      { score: 5, text: 'Strong', color: 'bg-green-500' }
+    ];
+
+    const strength = strengthLevels[score];
+    setPasswordStrength(strength);
+  }, [data.password]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setShowConfirmDialog(true);
+  };
+
+  const confirmSubmit = () => {
+    setShowConfirmDialog(false);
 
     if (isEditing) {
       put(route('users.update', user.id), {
-        onSuccess: () => reset(),
+        onSuccess: () => {
+          reset();
+          // Redirect to users list after successful update
+          router.visit(route('users.index'));
+        },
         onError: (errors) => setError(errors),
       });
     } else {
       post(route('users.store'), {
-        onSuccess: () => reset(),
+        onSuccess: () => {
+          reset();
+          // Redirect to users list after successful creation
+          router.visit(route('users.index'));
+        },
         onError: (errors) => setError(errors),
       });
     }
   };
 
   const handleRoleChange = (roleId) => {
-    setData('roles',
-      data.roles.includes(roleId)
-        ? data.roles.filter(id => id !== roleId)
-        : [...data.roles, roleId]
-    );
+    setData('role_id', roleId); // Change to single role selection
   };
 
   return (
@@ -136,6 +180,27 @@ const MobileUserForm = ({
                   {errors.password && (
                     <p className="mt-1 text-sm text-red-600">{errors.password}</p>
                   )}
+
+                  {/* Password Strength Indicator */}
+                  {data.password && (
+                    <div className="mt-2">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs text-gray-500">Password Strength</span>
+                        <span className={`text-xs ${passwordStrength.color.replace('bg-', 'text-')}`}>
+                          {passwordStrength.text}
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.color}`}
+                          style={{ width: `${(passwordStrength.score / 5) * 100}%` }}
+                        ></div>
+                      </div>
+                      <div className="mt-1 text-xs text-gray-500">
+                        Use 8+ characters with mix of upper/lowercase, numbers, and symbols
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -177,7 +242,7 @@ const MobileUserForm = ({
               </>
             )}
 
-            {isEditing && (
+            {isEditing && can('users.toggle-status') && (
               <div>
                 <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
                   Status
@@ -210,27 +275,46 @@ const MobileUserForm = ({
           </h3>
 
           <div className="space-y-2">
-            {roles.map((role) => (
-              <div key={role.id} className="flex items-center p-3 border rounded-lg">
-                <input
-                  type="checkbox"
-                  id={`role-${role.id}`}
-                  checked={data.roles.includes(role.id)}
-                  onChange={() => handleRoleChange(role.id)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label htmlFor={`role-${role.id}`} className="ml-3 flex-1">
-                  <div className="text-sm font-medium text-gray-900">{role.name}</div>
-                  <div className="text-xs text-gray-500">{role.description}</div>
-                </label>
-              </div>
-            ))}
+            <select
+              id="role_id"
+              name="role_id"
+              value={data.role_id}
+              onChange={(e) => handleRoleChange(e.target.value)}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
+              required
+              disabled={isEditing && !can('users.assign-role')}
+            >
+              <option value="">Select a role</option>
+              {roles.map((role) => (
+                <option key={role.id} value={role.id}>
+                  {role.name} - {role.description}
+                </option>
+              ))}
+            </select>
+            {errors.role_id && (
+              <p className="mt-2 text-sm text-red-600">{errors.role_id}</p>
+            )}
+            <p className="mt-1 text-sm text-gray-500">
+              Select the primary role for this user. Additional roles can be assigned later.
+            </p>
           </div>
-          {errors.roles && (
-            <p className="mt-2 text-sm text-red-600">{errors.roles}</p>
-          )}
         </div>
       </MobileCard>
+
+      {/* Password Change Link */}
+      {isEditing && (
+        <MobileCard>
+          <div className="p-4">
+            <button
+              type="button"
+              onClick={() => router.visit(route('users.password', user.id))}
+              className="w-full text-center text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+            >
+              Ubah Password Pengguna
+            </button>
+          </div>
+        </MobileCard>
+      )}
 
       {/* Help Section */}
       <MobileCard className="bg-blue-50 border-blue-200">
@@ -302,6 +386,74 @@ const MobileUserForm = ({
           )}
         </MobileButton>
       </div>
+
+      {/* Confirmation Dialog for Mobile */}
+      {showConfirmDialog && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <svg className="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  </div>
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                      {isEditing ? 'Confirm User Update' : 'Confirm User Creation'}
+                    </h3>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500">
+                        {isEditing
+                          ? 'Are you sure you want to update this user? Please review the information below:'
+                          : 'Are you sure you want to create this user? Please review the information below:'
+                        }
+                      </p>
+                      <div className="mt-3 bg-gray-50 p-3 rounded-md">
+                        <p className="text-sm"><strong>Name:</strong> {data.name}</p>
+                        <p className="text-sm"><strong>Email:</strong> {data.email}</p>
+                        {data.role_id && (
+                          <p className="text-sm">
+                            <strong>Role:</strong> {roles.find(r => r.id === parseInt(data.role_id))?.name}
+                          </p>
+                        )}
+                        {isEditing && data.status && (
+                          <p className="text-sm">
+                            <strong>Status:</strong> {data.status === 'active' ? 'Aktif' : data.status === 'inactive' ? 'Tidak Aktif' : 'Ditangguhkan'}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button
+                  type="button"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  onClick={confirmSubmit}
+                >
+                  {isEditing ? 'Update User' : 'Create User'}
+                </button>
+                <button
+                  type="button"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm"
+                  onClick={() => setShowConfirmDialog(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -3,6 +3,7 @@
 
 // shadcn/ui Components
 export { Button, buttonVariants } from './button';
+export { default as Badge } from './Badge';
 export {
   Card,
   CardHeader,

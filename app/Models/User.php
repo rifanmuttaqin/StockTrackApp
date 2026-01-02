@@ -9,15 +9,31 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Traits\HasPermissions;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, HasPermissions;
 
     protected $keyType = 'string';
 
     public $incrementing = false;
+
+    /**
+     * Boot function for using with User Events
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = Str::uuid();
+            }
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -30,6 +46,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'current_role_id',
         'is_active',
+        'suspended',
+        'suspension_reason',
+        'suspended_at',
         'last_login_at',
     ];
 
@@ -44,7 +63,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Get attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -56,12 +75,14 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'suspended' => 'boolean',
+            'suspended_at' => 'datetime',
             'last_login_at' => 'datetime',
         ];
     }
 
     /**
-     * Get the current role associated with the user.
+     * Get current role associated with user.
      */
     public function currentRole(): BelongsTo
     {
@@ -69,7 +90,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the roles assigned to the user.
+     * Get roles assigned to user.
      */
     public function roles(): BelongsToMany
     {
@@ -78,7 +99,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the permissions for the user.
+     * Get permissions for user.
      */
     public function permissions(): BelongsToMany
     {
@@ -95,7 +116,55 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the user's full name attribute.
+     * Check if user is suspended
+     */
+    public function isSuspended(): bool
+    {
+        return $this->suspended;
+    }
+
+    /**
+     * Suspend user
+     */
+    public function suspend(string $reason = null): bool
+    {
+        $this->suspended = true;
+        $this->suspension_reason = $reason;
+        $this->suspended_at = now();
+
+        return $this->save();
+    }
+
+    /**
+     * Unsuspend user
+     */
+    public function unsuspend(): bool
+    {
+        $this->suspended = false;
+        $this->suspension_reason = null;
+        $this->suspended_at = null;
+
+        return $this->save();
+    }
+
+    /**
+     * Get user status as string
+     */
+    public function getStatusAttribute(): string
+    {
+        if ($this->suspended) {
+            return 'suspended';
+        }
+
+        if ($this->is_active) {
+            return 'active';
+        }
+
+        return 'inactive';
+    }
+
+    /**
+     * Get user's full name attribute.
      */
     public function getFullNameAttribute(): string
     {

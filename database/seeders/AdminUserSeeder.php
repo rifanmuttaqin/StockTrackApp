@@ -18,6 +18,7 @@ class AdminUserSeeder extends Seeder
     {
         DB::transaction(function () {
             // Get roles
+            $adminRole = Role::where('name', 'admin')->first();
             $inventoryRole = Role::where('name', 'inventory_staff')->first();
             $supervisorRole = Role::where('name', 'warehouse_supervisor')->first();
             $managementRole = Role::where('name', 'management')->first();
@@ -33,16 +34,19 @@ class AdminUserSeeder extends Seeder
                 'is_active' => true,
             ]);
 
-            // Assign management role to admin using DB facade directly
-            DB::table('model_has_roles')->insert([
-                'role_id' => $managementRole->id,
-                'model_type' => User::class,
-                'model_id' => $adminUser->id,
-            ]);
+            // Only assign role if this is a newly created user
+            if ($adminUser->wasRecentlyCreated) {
+                // Assign admin role to admin using DB facade directly
+                DB::table('model_has_roles')->insert([
+                    'role_id' => $adminRole->id,
+                    'model_type' => User::class,
+                    'model_id' => $adminUser->id,
+                ]);
 
-            // Update current_role_id with UUID role ID
-            $adminUser->current_role_id = $managementRole->id;
-            $adminUser->save();
+                // Update current_role_id with UUID role ID
+                $adminUser->current_role_id = $adminRole->id;
+                $adminUser->save();
+            }
 
             // Create sample users with UUID
             $sampleUsers = [

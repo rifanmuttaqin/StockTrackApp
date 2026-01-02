@@ -1,5 +1,5 @@
 import React, { useState, memo, useCallback, useMemo } from 'react';
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm, router } from '@inertiajs/react';
 import MobileCard from '../UI/MobileCard';
 import MobileButton from '../UI/MobileButton';
 import MobileAlert from '../UI/MobileAlert';
@@ -20,6 +20,18 @@ const MobileUserTable = ({
   onToggleStatus,
   onAssignRole
 }) => {
+  // Helper function to get users array from either direct array or pagination object
+  const getUsersArray = () => {
+    if (Array.isArray(users)) {
+      return users;
+    }
+    if (users && users.data && Array.isArray(users.data)) {
+      return users.data;
+    }
+    return [];
+  };
+
+  const usersArray = getUsersArray();
   const { can } = usePermission();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -55,11 +67,11 @@ const MobileUserTable = ({
 
   const confirmStatusToggle = useCallback(() => {
     if (selectedUser) {
-      onToggleStatus(selectedUser.id, newStatus);
+      router.patch(route('users.toggle-status', selectedUser.id), { status: newStatus });
       setShowStatusModal(false);
       setSelectedUser(null);
     }
-  }, [selectedUser, newStatus, onToggleStatus]);
+  }, [selectedUser, newStatus]);
 
   const handleAssignRole = useCallback((user) => {
     setSelectedUser(user);
@@ -110,8 +122,8 @@ const MobileUserTable = ({
 
   // Memoize user count text
   const userCountText = useMemo(() => {
-    return `${users.length} user${users.length !== 1 ? 's' : ''}`;
-  }, [users.length]);
+    return `${usersArray.length} user${usersArray.length !== 1 ? 's' : ''}`;
+  }, [usersArray.length]);
 
   // Memoize filter options
   const roleOptions = useMemo(() => {
@@ -242,7 +254,7 @@ const MobileUserTable = ({
         )}
 
         {/* User Cards */}
-        {users.length === 0 ? (
+        {usersArray.length === 0 ? (
           <MobileCard>
             <div className="p-8 text-center">
               <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -258,7 +270,7 @@ const MobileUserTable = ({
           </MobileCard>
         ) : (
           <div>
-            {users.map((user) => (
+            {usersArray.map((user) => (
               <MobileUserCard
                 key={user.id}
                 user={user}

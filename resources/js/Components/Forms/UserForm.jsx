@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from '@inertiajs/react';
+import { useForm, router } from '@inertiajs/react';
 import Alert from '../Alert';
 import LoadingSpinner from '../LoadingSpinner';
+import Modal from '../Modal';
+import { usePermission } from '../../Hooks/usePermission';
 
 const UserForm = ({
   user = null,
@@ -12,40 +14,85 @@ const UserForm = ({
   errors = {},
   processing = false
 }) => {
+  const { can } = usePermission();
   const { data, setData, post, put, reset, setError } = useForm({
     name: user?.name || '',
     email: user?.email || '',
     password: '',
     password_confirmation: '',
-    roles: userRoles?.map(role => role.id) || [],
+    role_id: userRoles?.length > 0 ? userRoles[0].id : '',
     status: user?.status || 'active',
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState({ score: 0, text: '', color: '' });
+
+  // Calculate password strength
+  useEffect(() => {
+    if (!data.password) {
+      setPasswordStrength({ score: 0, text: '', color: '' });
+      return;
+    }
+
+    let score = 0;
+    const checks = {
+      length: data.password.length >= 8,
+      lowercase: /[a-z]/.test(data.password),
+      uppercase: /[A-Z]/.test(data.password),
+      numbers: /\d/.test(data.password),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(data.password)
+    };
+
+    Object.values(checks).forEach(passed => {
+      if (passed) score++;
+    });
+
+    const strengthLevels = [
+      { score: 0, text: '', color: '' },
+      { score: 1, text: 'Very Weak', color: 'bg-red-500' },
+      { score: 2, text: 'Weak', color: 'bg-orange-500' },
+      { score: 3, text: 'Fair', color: 'bg-yellow-500' },
+      { score: 4, text: 'Good', color: 'bg-blue-500' },
+      { score: 5, text: 'Strong', color: 'bg-green-500' }
+    ];
+
+    const strength = strengthLevels[score];
+    setPasswordStrength(strength);
+  }, [data.password]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setShowConfirmDialog(true);
+  };
+
+  const confirmSubmit = () => {
+    setShowConfirmDialog(false);
 
     if (isEditing) {
       put(route('users.update', user.id), {
-        onSuccess: () => reset(),
+        onSuccess: () => {
+          reset();
+          // Redirect to users list after successful update
+          router.visit(route('users.index'));
+        },
         onError: (errors) => setError(errors),
       });
     } else {
       post(route('users.store'), {
-        onSuccess: () => reset(),
+        onSuccess: () => {
+          reset();
+          // Redirect to users list after successful creation
+          router.visit(route('users.index'));
+        },
         onError: (errors) => setError(errors),
       });
     }
   };
 
   const handleRoleChange = (roleId) => {
-    setData('roles',
-      data.roles.includes(roleId)
-        ? data.roles.filter(id => id !== roleId)
-        : [...data.roles, roleId]
-    );
+    setData('role_id', roleId); // Change to single role selection
   };
 
   return (
@@ -128,6 +175,27 @@ const UserForm = ({
                     {errors.password && (
                       <p className="mt-2 text-sm text-red-600">{errors.password}</p>
                     )}
+
+                    {/* Password Strength Indicator */}
+                    {data.password && (
+                      <div className="mt-2">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs text-gray-500">Password Strength</span>
+                          <span className={`text-xs ${passwordStrength.color.replace('bg-', 'text-')}`}>
+                            {passwordStrength.text}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.color}`}
+                            style={{ width: `${(passwordStrength.score / 5) * 100}%` }}
+                          ></div>
+                        </div>
+                        <div className="mt-1 text-xs text-gray-500">
+                          Use 8+ characters with mix of upper/lowercase, numbers, and symbols
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -169,7 +237,7 @@ const UserForm = ({
               </>
             )}
 
-            {isEditing && (
+            {isEditing && can('users.toggle-status') && (
               <div className="sm:col-span-3">
                 <label htmlFor="status" className="block text-sm font-medium text-gray-700">
                   Status
@@ -194,35 +262,50 @@ const UserForm = ({
             )}
 
             <div className="sm:col-span-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Role Assignment
+              <label htmlFor="role_id" className="block text-sm font-medium text-gray-700 mb-3">
+                Role Assignment *
               </label>
-              <div className="space-y-2">
+              <select
+                id="role_id"
+                name="role_id"
+                value={data.role_id}
+                onChange={(e) => handleRoleChange(e.target.value)}
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                required
+                disabled={isEditing && !can('users.assign-role')}
+              >
+                <option value="">Select a role</option>
                 {roles.map((role) => (
-                  <div key={role.id} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id={`role-${role.id}`}
-                      checked={data.roles.includes(role.id)}
-                      onChange={() => handleRoleChange(role.id)}
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor={`role-${role.id}`} className="ml-2 block text-sm text-gray-900">
-                      {role.name}
-                      <span className="ml-2 text-xs text-gray-500">({role.description})</span>
-                    </label>
-                  </div>
+                  <option key={role.id} value={role.id}>
+                    {role.name} - {role.description}
+                  </option>
                 ))}
-              </div>
-              {errors.roles && (
-                <p className="mt-2 text-sm text-red-600">{errors.roles}</p>
+              </select>
+              {errors.role_id && (
+                <p className="mt-2 text-sm text-red-600">{errors.role_id}</p>
               )}
+              <p className="mt-1 text-sm text-gray-500">
+                Select the primary role for this user. Additional roles can be assigned later.
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex justify-end">
+      {/* Password Change Link */}
+      {isEditing && (
+        <div className="mt-4 text-center">
+          <button
+            type="button"
+            onClick={() => router.visit(route('users.password', user.id))}
+            className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+          >
+            Ubah Password Pengguna
+          </button>
+        </div>
+      )}
+
+      <div className="flex justify-end mt-6">
         <button
           type="button"
           onClick={() => window.history.back()}
@@ -245,6 +328,63 @@ const UserForm = ({
           )}
         </button>
       </div>
+
+      {/* Confirmation Modal */}
+      <Modal show={showConfirmDialog} onClose={() => setShowConfirmDialog(false)}>
+        <div className="p-6">
+          <div className="flex items-center mb-4">
+            <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
+              <svg className="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div className="ml-4">
+              <h3 className="text-lg font-medium text-gray-900">
+                {isEditing ? 'Confirm User Update' : 'Confirm User Creation'}
+              </h3>
+              <div className="mt-2">
+                <p className="text-sm text-gray-500">
+                  {isEditing
+                    ? 'Are you sure you want to update this user? Please review the information below:'
+                    : 'Are you sure you want to create this user? Please review the information below:'
+                  }
+                </p>
+                <div className="mt-3 bg-gray-50 p-3 rounded-md">
+                  <p className="text-sm"><strong>Name:</strong> {data.name}</p>
+                  <p className="text-sm"><strong>Email:</strong> {data.email}</p>
+                  {data.role_id && (
+                    <p className="text-sm">
+                      <strong>Role:</strong> {roles.find(r => r.id === parseInt(data.role_id))?.name}
+                    </p>
+                  )}
+                  {isEditing && data.status && (
+                    <p className="text-sm">
+                      <strong>Status:</strong> {data.status === 'active' ? 'Aktif' : data.status === 'inactive' ? 'Tidak Aktif' : 'Ditangguhkan'}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+            <button
+              type="button"
+              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
+              onClick={confirmSubmit}
+            >
+              {isEditing ? 'Update User' : 'Create User'}
+            </button>
+            <button
+              type="button"
+              className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+              onClick={() => setShowConfirmDialog(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </Modal>
     </form>
   );
 };

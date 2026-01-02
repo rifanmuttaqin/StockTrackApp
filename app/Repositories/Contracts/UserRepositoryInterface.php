@@ -11,7 +11,7 @@ interface UserRepositoryInterface
     /**
      * Get all users with pagination
      */
-    public function getAll(int $perPage = 15): LengthAwarePaginator;
+    public function getAll(int $perPage = 15, array $filters = []): LengthAwarePaginator;
 
     /**
      * Find user by ID
@@ -51,5 +51,25 @@ interface UserRepositoryInterface
     /**
      * Search users
      */
-    public function search(string $query, int $perPage = 15): LengthAwarePaginator;
+    public function search(string $query, int $perPage = 15, array $filters = []): LengthAwarePaginator;
+
+    /**
+     * Assign role to user
+     */
+    public function assignRole(string $userId, string $roleId): bool;
+
+    /**
+     * Remove role from user
+     */
+    public function removeRole(string $userId, string $roleId): bool;
+
+    /**
+     * Get users count by status
+     */
+    public function getCountByStatus(string $status): int;
+
+    /**
+     * Get users for export
+     */
+    public function getForExport(array $filters = []): Collection;
 }

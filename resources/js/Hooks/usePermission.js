@@ -9,5 +9,6 @@ export const usePermission = () => {
         hasAnyPermission,
         hasRole,
         hasAnyRole,
+        can: hasPermission, // Alias for hasPermission to maintain compatibility
     };
 };

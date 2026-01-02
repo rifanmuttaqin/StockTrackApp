@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 import UserForm from '../../Components/Forms/UserForm';
 import { MobileUserForm } from '../../Components/Users';
@@ -8,14 +8,75 @@ import { usePermission } from '../../Hooks/usePermission';
 import { useMobileDetection } from '../../Hooks/useMobileDetection';
 
 const Create = ({ roles, errors }) => {
-  const { can } = usePermission();
+  const { can, hasRole } = usePermission();
   const { isMobile } = useMobileDetection();
+  const { props } = usePage();
+
+  // Permission check - only admin or users with users.create permission can access
+  if (!hasRole('admin') && !can('users.create')) {
+    return (
+      <AppLayout title="Access Denied">
+        <Head title="Access Denied" />
+        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="bg-red-50 border-l-4 border-red-400 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">
+                  Access Denied
+                </h3>
+                <div className="mt-2 text-sm text-red-700">
+                  You don't have permission to create users. Please contact your administrator.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout title="Create User">
       <Head title="Create User" />
 
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        {/* Breadcrumb */}
+        <nav className="flex mb-4" aria-label="Breadcrumb">
+          <ol className="inline-flex items-center space-x-1 md:space-x-3">
+            <li className="inline-flex items-center">
+              <a href={route('dashboard')} className="text-gray-700 hover:text-gray-900 inline-flex items-center">
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                </svg>
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <div className="flex items-center">
+                <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path>
+                </svg>
+                <a href={route('users.index')} className="ml-1 text-gray-700 hover:text-gray-900 md:ml-2">
+                  Users
+                </a>
+              </div>
+            </li>
+            <li aria-current="page">
+              <div className="flex items-center">
+                <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path>
+                </svg>
+                <span className="ml-1 text-gray-500 md:ml-2">Create User</span>
+              </div>
+            </li>
+          </ol>
+        </nav>
+
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
             <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">

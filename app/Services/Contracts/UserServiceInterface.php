@@ -9,13 +9,14 @@ use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Requests\User\UserRegistrationRequest;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 interface UserServiceInterface
 {
     /**
      * Get all users with pagination
      */
-    public function getAllUsers(int $perPage = 15): LengthAwarePaginator;
+    public function getAllUsers(int $perPage = 15, array $filters = []): LengthAwarePaginator;
 
     /**
      * Find user by ID
@@ -65,7 +66,17 @@ interface UserServiceInterface
     /**
      * Toggle user active status
      */
-    public function toggleActiveStatus(string $id): bool;
+    public function toggleActiveStatus(string $id, bool $newStatus = null): bool;
+
+    /**
+     * Suspend user
+     */
+    public function suspendUser(string $id, string $reason = null): bool;
+
+    /**
+     * Unsuspend user
+     */
+    public function unsuspendUser(string $id): bool;
 
     /**
      * Assign role to user
@@ -80,5 +91,15 @@ interface UserServiceInterface
     /**
      * Search users
      */
-    public function searchUsers(string $query, int $perPage = 15): LengthAwarePaginator;
+    public function searchUsers(string $query, int $perPage = 15, array $filters = []): LengthAwarePaginator;
+
+    /**
+     * Get users count by status
+     */
+    public function getUsersCountByStatus(string $status): int;
+
+    /**
+     * Get users for export
+     */
+    public function getUsersForExport(array $filters = []): Collection;
 }

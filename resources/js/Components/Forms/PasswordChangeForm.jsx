@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from '@inertiajs/react';
+import { useForm, router } from '@inertiajs/react';
+import Alert from '../Alert';
+import LoadingSpinner from '../LoadingSpinner';
+import Modal from '../Modal';
 
-export default function PasswordChangeForm({ onSuccess }) {
-    const { data, setData, post, processing, errors, reset, recentlySuccessful } = useForm({
+export default function PasswordChangeForm({ user, errors = {}, isOwnProfile = false, onSuccess }) {
+    const { data, setData, post, processing, reset, recentlySuccessful } = useForm({
         current_password: '',
         password: '',
         password_confirmation: '',
@@ -54,10 +57,22 @@ export default function PasswordChangeForm({ onSuccess }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post('/profile/password', {
+
+        // Use different route based on whether it's own profile or another user
+        const routeName = isOwnProfile ? 'profile.password' : 'users.change-password';
+        const routeParams = isOwnProfile ? {} : { id: user.id };
+
+        post(route(routeName, routeParams), {
             onSuccess: () => {
                 reset();
                 if (onSuccess) onSuccess();
+                // Redirect back if successful
+                if (!isOwnProfile) {
+                    router.visit(route('users.edit', user.id));
+                }
+            },
+            onError: (errors) => {
+                console.error('Password change errors:', errors);
             },
         });
     };
@@ -70,24 +85,29 @@ export default function PasswordChangeForm({ onSuccess }) {
 
     return (
         <form onSubmit={submit} className="space-y-6">
-            <div>
-                <label htmlFor="current_password" className="block text-sm font-medium text-gray-700">
-                    Password Saat Ini
-                </label>
-                <div className="mt-1">
-                    <input
-                        type="password"
-                        id="current_password"
-                        value={data.current_password}
-                        onChange={(e) => setData('current_password', e.target.value)}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                        autoComplete="current-password"
-                    />
-                    {errors.current_password && (
-                        <p className="mt-2 text-sm text-red-600">{errors.current_password}</p>
-                    )}
+            {/* Only show current password field for own profile */}
+            {isOwnProfile && (
+                <div>
+                    <label htmlFor="current_password" className="block text-sm font-medium text-gray-700">
+                        Password Saat Ini
+                    </label>
+                    <div className="mt-1">
+                        <input
+                            type="password"
+                            id="current_password"
+                            name="current_password"
+                            value={data.current_password}
+                            onChange={(e) => setData('current_password', e.target.value)}
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                            autoComplete="current-password"
+                            required
+                        />
+                        {errors.current_password && (
+                            <p className="mt-2 text-sm text-red-600">{errors.current_password}</p>
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
@@ -97,10 +117,12 @@ export default function PasswordChangeForm({ onSuccess }) {
                     <input
                         type="password"
                         id="password"
+                        name="password"
                         value={data.password}
                         onChange={(e) => setData('password', e.target.value)}
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                         autoComplete="new-password"
+                        required
                     />
                     {errors.password && (
                         <p className="mt-2 text-sm text-red-600">{errors.password}</p>
@@ -137,10 +159,12 @@ export default function PasswordChangeForm({ onSuccess }) {
                     <input
                         type="password"
                         id="password_confirmation"
+                        name="password_confirmation"
                         value={data.password_confirmation}
                         onChange={(e) => setData('password_confirmation', e.target.value)}
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                         autoComplete="new-password"
+                        required
                     />
                     {errors.password_confirmation && (
                         <p className="mt-2 text-sm text-red-600">{errors.password_confirmation}</p>
@@ -154,20 +178,19 @@ export default function PasswordChangeForm({ onSuccess }) {
                     disabled={processing}
                     className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
                 >
-                    {processing ? 'Memproses...' : 'Update Password'}
+                    {processing ? (
+                        <>
+                            <LoadingSpinner size="sm" />
+                            <span className="ml-2">Memproses...</span>
+                        </>
+                    ) : (
+                        'Update Password'
+                    )}
                 </button>
             </div>
 
             {recentlySuccessful && (
-                <div className="rounded-md bg-green-50 p-4">
-                    <div className="flex">
-                        <div className="ml-3">
-                            <h3 className="text-sm font-medium text-green-800">
-                                Password berhasil diperbarui.
-                            </h3>
-                        </div>
-                    </div>
-                </div>
+                <Alert type="success" message="Password berhasil diperbarui." className="mt-4" />
             )}
         </form>
     );

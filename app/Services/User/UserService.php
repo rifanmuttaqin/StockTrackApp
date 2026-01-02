@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Services\Contracts\UserServiceInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserService implements UserServiceInterface
@@ -25,9 +27,9 @@ class UserService implements UserServiceInterface
     /**
      * Get all users with pagination
      */
-    public function getAllUsers(int $perPage = 15): LengthAwarePaginator
+    public function getAllUsers(int $perPage = 15, array $filters = []): LengthAwarePaginator
     {
-        return $this->userRepository->getAll($perPage);
+        return $this->userRepository->getAll($perPage, $filters);
     }
 
     /**
@@ -49,9 +51,14 @@ class UserService implements UserServiceInterface
     /**
      * Create new user
      */
-    public function createUser(UserCreateRequest $request): User
+    public function createUser($request): User
     {
-        return $this->userRepository->create($request->validated());
+        if ($request instanceof UserCreateRequest) {
+            return $this->userRepository->create($request->validated());
+        }
+
+        // Handle array input
+        return $this->userRepository->create($request);
     }
 
     /**
@@ -68,9 +75,14 @@ class UserService implements UserServiceInterface
     /**
      * Update user
      */
-    public function updateUser(string $id, UserUpdateRequest $request): bool
+    public function updateUser(string $id, $request): bool
     {
-        return $this->userRepository->update($id, $request->validated());
+        if ($request instanceof UserUpdateRequest) {
+            return $this->userRepository->update($id, $request->validated());
+        }
+
+        // Handle array input
+        return $this->userRepository->update($id, $request);
     }
 
     /**
@@ -84,15 +96,20 @@ class UserService implements UserServiceInterface
     /**
      * Update user profile
      */
-    public function updateProfile(string $id, UserProfileUpdateRequest $request): bool
+    public function updateProfile(string $id, $request): bool
     {
-        return $this->userRepository->update($id, $request->validated());
+        if ($request instanceof UserProfileUpdateRequest) {
+            return $this->userRepository->update($id, $request->validated());
+        }
+
+        // Handle array input
+        return $this->userRepository->update($id, $request);
     }
 
     /**
      * Change user password
      */
-    public function changePassword(string $id, UserChangePasswordRequest $request): bool
+    public function changePassword(string $id, $request): bool
     {
         $user = $this->userRepository->findById($id);
 
@@ -100,13 +117,20 @@ class UserService implements UserServiceInterface
             throw new \Exception('User not found');
         }
 
-        // Validate current password
-        if (!Hash::check($request->validated()['current_password'], $user->password)) {
-            throw new \Exception('Current password is incorrect');
+        if ($request instanceof UserChangePasswordRequest) {
+            $validatedData = $request->validated();
+        } else {
+            $validatedData = $request;
+        }
+
+        // Validate current password (only if user is changing their own password)
+        $currentUser = Auth::user();
+        if ($currentUser && $currentUser->id === $id && isset($validatedData['current_password']) && !Hash::check($validatedData['current_password'], $user->password)) {
+            throw new \Exception('Password saat ini tidak benar');
         }
 
         return $this->userRepository->update($id, [
-            'password' => $request->validated()['new_password'],
+            'password' => $validatedData['password'],
         ]);
     }
 
@@ -121,7 +145,28 @@ class UserService implements UserServiceInterface
     /**
      * Toggle user active status
      */
-    public function toggleActiveStatus(string $id): bool
+    public function toggleActiveStatus(string $id, bool $newStatus = null): bool
+    {
+        $user = $this->userRepository->findById($id);
+
+        if (!$user) {
+            throw new \Exception('User not found');
+        }
+
+        // If no new status is provided, toggle the current status
+        if ($newStatus === null) {
+            $newStatus = !$user->is_active;
+        }
+
+        return $this->userRepository->update($id, [
+            'is_active' => $newStatus,
+        ]);
+    }
+
+    /**
+     * Suspend user
+     */
+    public function suspendUser(string $id, string $reason = null): bool
     {
         $user = $this->userRepository->findById($id);
 
@@ -130,7 +175,27 @@ class UserService implements UserServiceInterface
         }
 
         return $this->userRepository->update($id, [
-            'is_active' => !$user->is_active,
+            'suspended' => true,
+            'suspension_reason' => $reason,
+            'suspended_at' => now(),
+        ]);
+    }
+
+    /**
+     * Unsuspend user
+     */
+    public function unsuspendUser(string $id): bool
+    {
+        $user = $this->userRepository->findById($id);
+
+        if (!$user) {
+            throw new \Exception('User not found');
+        }
+
+        return $this->userRepository->update($id, [
+            'suspended' => false,
+            'suspension_reason' => null,
+            'suspended_at' => null,
         ]);
     }
 
@@ -145,9 +210,7 @@ class UserService implements UserServiceInterface
             throw new \Exception('User not found');
         }
 
-        return $this->userRepository->update($userId, [
-            'role_id' => $roleId,
-        ]);
+        return $this->userRepository->assignRole($userId, $roleId);
     }
 
     /**
@@ -161,16 +224,30 @@ class UserService implements UserServiceInterface
             throw new \Exception('User not found');
         }
 
-        return $this->userRepository->update($userId, [
-            'role_id' => null,
-        ]);
+        return $this->userRepository->removeRole($userId, $roleId);
     }
 
     /**
      * Search users
      */
-    public function searchUsers(string $query, int $perPage = 15): LengthAwarePaginator
+    public function searchUsers(string $query, int $perPage = 15, array $filters = []): LengthAwarePaginator
     {
-        return $this->userRepository->search($query, $perPage);
+        return $this->userRepository->search($query, $perPage, $filters);
+    }
+
+    /**
+     * Get users count by status
+     */
+    public function getUsersCountByStatus(string $status): int
+    {
+        return $this->userRepository->getCountByStatus($status);
+    }
+
+    /**
+     * Get users for export
+     */
+    public function getUsersForExport(array $filters = []): Collection
+    {
+        return $this->userRepository->getForExport($filters);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class PermissionMiddleware
 {
@@ -24,14 +23,8 @@ class PermissionMiddleware
             return redirect()->route('login');
         }
 
-        // Check if user has the required permission
-        $hasPermission = DB::table('model_has_permissions')
-            ->join('permissions', 'model_has_permissions.permission_id', '=', 'permissions.id')
-            ->where('model_has_permissions.model_id', $user->id)
-            ->where('permissions.name', $permission)
-            ->exists();
-
-        if (!$hasPermission) {
+        // Check if user has the required permission using Spatie's built-in method
+        if (!$user->hasPermissionTo($permission)) {
             abort(403, 'Unauthorized action.');
         }
 

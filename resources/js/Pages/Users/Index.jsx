@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 import UserTable from '../../Components/Tables/UserTable';
 import { MobileUserTable } from '../../Components/Users';
@@ -10,6 +10,7 @@ import { usePermission } from '../../Hooks/usePermission';
 import { useMobileDetection } from '../../Hooks/useMobileDetection';
 
 const Index = ({ users, roles, filters, meta }) => {
+  const { props } = usePage();
   const { can } = usePermission();
   const { isMobile } = useMobileDetection();
   const [loading, setLoading] = useState(false);
