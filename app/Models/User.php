@@ -15,6 +15,10 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -48,6 +52,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'id' => 'string',
+            'current_role_id' => 'string',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
@@ -60,7 +65,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function currentRole(): BelongsTo
     {
-        return $this->belongsTo(\Spatie\Permission\Models\Role::class, 'current_role_id');
+        return $this->belongsTo(Role::class, 'current_role_id');
     }
 
     /**
@@ -68,7 +73,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(\Spatie\Permission\Models\Role::class, 'model_has_roles', 'model_id', 'role_id');
+        return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id')
+            ->withPivot('model_type');
     }
 
     /**
@@ -76,7 +82,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function permissions(): BelongsToMany
     {
-        return $this->belongsToMany(\Spatie\Permission\Models\Permission::class, 'model_has_permissions', 'model_id', 'permission_id');
+        return $this->belongsToMany(Permission::class, 'model_has_permissions', 'model_id', 'permission_id')
+            ->withPivot('model_type');
     }
 
     /**

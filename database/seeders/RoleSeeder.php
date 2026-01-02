@@ -5,7 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
+use App\Models\Permission;
 
 class RoleSeeder extends Seeder
 {
@@ -18,6 +19,7 @@ class RoleSeeder extends Seeder
             // Create roles according to PRD
             $roles = [
                 [
+                    'id' => Str::uuid(),
                     'name' => 'inventory_staff',
                     'display_name' => 'Inventory Staff',
                     'description' => 'Staff yang bertanggung jawab atas input data dan laporan dasar',
@@ -25,6 +27,7 @@ class RoleSeeder extends Seeder
                     'is_active' => true,
                 ],
                 [
+                    'id' => Str::uuid(),
                     'name' => 'warehouse_supervisor',
                     'display_name' => 'Warehouse Supervisor',
                     'description' => 'Supervisor yang memiliki akses penuh ke manajemen data dan user',
@@ -32,6 +35,7 @@ class RoleSeeder extends Seeder
                     'is_active' => true,
                 ],
                 [
+                    'id' => Str::uuid(),
                     'name' => 'management',
                     'display_name' => 'Management',
                     'description' => 'Management yang memiliki akses view-only ke laporan dan dashboard',
@@ -60,10 +64,11 @@ class RoleSeeder extends Seeder
         $permissions = $this->getPermissionsForRole($role->name);
 
         foreach ($permissions as $permissionData) {
-            $permission = \Spatie\Permission\Models\Permission::firstOrCreate([
+            $permission = Permission::firstOrCreate([
                 'name' => $permissionData['name'],
                 'guard_name' => 'web',
             ], [
+                'id' => Str::uuid(),
                 'display_name' => $permissionData['display_name'],
                 'description' => $permissionData['description'],
             ]);

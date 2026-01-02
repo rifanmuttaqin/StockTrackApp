@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 
 class AdminUserSeeder extends Seeder
 {
@@ -29,17 +29,18 @@ class AdminUserSeeder extends Seeder
                 'id' => Str::uuid(),
                 'name' => 'Super Admin',
                 'password' => Hash::make('admin123'),
+                'email_verified_at' => now(),
                 'is_active' => true,
             ]);
 
-            // Assign management role to admin using the pivot table directly // Assign perlu dibenerin pakai stadart
+            // Assign management role to admin using DB facade directly
             DB::table('model_has_roles')->insert([
-                'model_id' => $adminUser->id,
-                'model_type' => User::class,
                 'role_id' => $managementRole->id,
+                'model_type' => User::class,
+                'model_id' => $adminUser->id,
             ]);
 
-            // Update current_role_id with integer role ID
+            // Update current_role_id with UUID role ID
             $adminUser->current_role_id = $managementRole->id;
             $adminUser->save();
 
@@ -50,6 +51,7 @@ class AdminUserSeeder extends Seeder
                     'name' => 'John Supervisor',
                     'email' => 'supervisor@stocktrackapp.com',
                     'password' => Hash::make('password123'),
+                    'email_verified_at' => now(),
                     'is_active' => true,
                 ],
                 [
@@ -57,6 +59,7 @@ class AdminUserSeeder extends Seeder
                     'name' => 'Jane Staff',
                     'email' => 'staff@stocktrackapp.com',
                     'password' => Hash::make('password123'),
+                    'email_verified_at' => now(),
                     'is_active' => true,
                 ],
             ];
@@ -68,22 +71,20 @@ class AdminUserSeeder extends Seeder
 
                 // Only assign roles if this is a newly created user
                 if ($user->wasRecentlyCreated) {
-                    // Assign roles using pivot table directly
+                    // Assign roles using DB facade directly
                     if ($index === 0) {
                         DB::table('model_has_roles')->insert([
-                            'model_id' => $user->id,
-                            'model_type' => User::class,
                             'role_id' => $supervisorRole->id,
+                            'model_type' => User::class,
+                            'model_id' => $user->id,
                         ]);
-
                         $user->current_role_id = $supervisorRole->id;
                     } else {
                         DB::table('model_has_roles')->insert([
-                            'model_id' => $user->id,
-                            'model_type' => User::class,
                             'role_id' => $inventoryRole->id,
+                            'model_type' => User::class,
+                            'model_id' => $user->id,
                         ]);
-
                         $user->current_role_id = $inventoryRole->id;
                     }
 
