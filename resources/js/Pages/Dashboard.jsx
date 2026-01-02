@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AppLayout from '@/Layouts/AppLayout';
 import { Head, usePage } from '@inertiajs/react';
 import { useMobileDetection } from '@/Hooks/useMobileDetection';
 import { MobileDashboard } from '@/Components/Dashboard';
@@ -15,18 +15,10 @@ export default function Dashboard() {
 
     // Render desktop dashboard for desktop devices
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-poppins font-semibold leading-tight text-gray-800">
-                    Dashboard
-                </h2>
-            }
-        >
+        <AppLayout title="Dashboard">
             <Head title="Dashboard" />
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="bg-white shadow-sm rounded-lg p-6">
+            <div className="bg-white shadow-sm rounded-lg p-6">
                         <div className="mb-6">
                             <h3 className="text-lg font-poppins font-medium text-gray-900 mb-2">
                                 Selamat datang kembali, {auth.user.name}!
@@ -128,8 +120,6 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </AuthenticatedLayout>
+            </AppLayout>
     );
 }

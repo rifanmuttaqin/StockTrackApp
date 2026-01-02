@@ -15,6 +15,22 @@ use Inertia\Response;
 class ProfileController extends Controller
 {
     /**
+     * Display user's profile.
+     */
+    public function show(Request $request): Response
+    {
+        return Inertia::render('Profile/Show', [
+            'user' => $request->user(),
+            'sessions' => [], // Add sessions data if needed
+            'activities' => [], // Add activities data if needed
+            'flash' => [
+                'success' => session('success') ?: null,
+                'error' => session('error') ?: null
+            ]
+        ]);
+    }
+
+    /**
      * Display user's profile form.
      */
     public function edit(Request $request): Response
