@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\UserRegistrationRequest;
 use App\Services\Contracts\UserServiceInterface;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
@@ -82,19 +83,9 @@ class AuthController extends Controller
     /**
      * Handle registration request
      */
-    public function register(Request $request)
+    public function register(UserRegistrationRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $user = $this->userService->createUser([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password,
-        ]);
+        $user = $this->userService->registerUser($request);
 
         // Send email verification
         if ($user && !$user->hasVerifiedEmail()) {

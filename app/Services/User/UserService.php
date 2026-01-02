@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\User;
 
+use App\Http\Requests\User\UserChangePasswordRequest;
+use App\Http\Requests\User\UserCreateRequest;
+use App\Http\Requests\User\UserProfileUpdateRequest;
+use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Requests\User\UserRegistrationRequest;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Services\Contracts\UserServiceInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 class UserService implements UserServiceInterface
 {
@@ -46,42 +49,28 @@ class UserService implements UserServiceInterface
     /**
      * Create new user
      */
-    public function createUser(array $data): User
+    public function createUser(UserCreateRequest $request): User
     {
-        // Validate data
-        $validator = Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'role_id' => 'required|exists:roles,id',
-        ]);
+        return $this->userRepository->create($request->validated());
+    }
 
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
-        }
+    /**
+     * Register new user
+     */
+    public function registerUser(UserRegistrationRequest $request): User
+    {
+        $userData = $request->validated();
+        $userData['role_id'] = 2; // Default role ID for regular users
 
-        return $this->userRepository->create($data);
+        return $this->userRepository->create($userData);
     }
 
     /**
      * Update user
      */
-    public function updateUser(string $id, array $data): bool
+    public function updateUser(string $id, UserUpdateRequest $request): bool
     {
-        // Validate data
-        $validator = Validator::make($data, [
-            'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $id,
-            'password' => 'sometimes|string|min:8|confirmed',
-            'role_id' => 'sometimes|exists:roles,id',
-            'is_active' => 'sometimes|boolean',
-        ]);
-
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
-        }
-
-        return $this->userRepository->update($id, $data);
+        return $this->userRepository->update($id, $request->validated());
     }
 
     /**
@@ -95,25 +84,15 @@ class UserService implements UserServiceInterface
     /**
      * Update user profile
      */
-    public function updateProfile(string $id, array $data): bool
+    public function updateProfile(string $id, UserProfileUpdateRequest $request): bool
     {
-        // Validate data
-        $validator = Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-        ]);
-
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
-        }
-
-        return $this->userRepository->update($id, $data);
+        return $this->userRepository->update($id, $request->validated());
     }
 
     /**
      * Change user password
      */
-    public function changePassword(string $id, string $currentPassword, string $newPassword): bool
+    public function changePassword(string $id, UserChangePasswordRequest $request): bool
     {
         $user = $this->userRepository->findById($id);
 
@@ -122,23 +101,12 @@ class UserService implements UserServiceInterface
         }
 
         // Validate current password
-        if (!Hash::check($currentPassword, $user->password)) {
+        if (!Hash::check($request->validated()['current_password'], $user->password)) {
             throw new \Exception('Current password is incorrect');
         }
 
-        // Validate new password
-        $validator = Validator::make([
-            'password' => $newPassword,
-        ], [
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
-        }
-
         return $this->userRepository->update($id, [
-            'password' => $newPassword,
+            'password' => $request->validated()['new_password'],
         ]);
     }
 

@@ -2,6 +2,11 @@
 
 namespace App\Services\Contracts;
 
+use App\Http\Requests\User\UserChangePasswordRequest;
+use App\Http\Requests\User\UserCreateRequest;
+use App\Http\Requests\User\UserProfileUpdateRequest;
+use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Requests\User\UserRegistrationRequest;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -25,12 +30,17 @@ interface UserServiceInterface
     /**
      * Create new user
      */
-    public function createUser(array $data): User;
+    public function createUser(UserCreateRequest $request): User;
+
+    /**
+     * Register new user
+     */
+    public function registerUser(UserRegistrationRequest $request): User;
 
     /**
      * Update user
      */
-    public function updateUser(string $id, array $data): bool;
+    public function updateUser(string $id, UserUpdateRequest $request): bool;
 
     /**
      * Delete user
@@ -40,12 +50,12 @@ interface UserServiceInterface
     /**
      * Update user profile
      */
-    public function updateProfile(string $id, array $data): bool;
+    public function updateProfile(string $id, UserProfileUpdateRequest $request): bool;
 
     /**
      * Change user password
      */
-    public function changePassword(string $id, string $currentPassword, string $newPassword): bool;
+    public function changePassword(string $id, UserChangePasswordRequest $request): bool;
 
     /**
      * Update user last login
