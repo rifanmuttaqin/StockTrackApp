@@ -15,9 +15,37 @@ import {
 
 export default function Sidebar() {
     const { url } = usePage();
-    const { hasPermission, hasRole } = useAuth();
+    const { hasPermission, hasRole, permissions, user, isAuthenticated } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [openMenus, setOpenMenus] = useState({});
+
+    // Debug: Log auth data
+    console.log('Sidebar - Auth data:', {
+        permissions,
+        hasPermission: hasPermission('users.index'),
+        hasRole: hasRole('admin'),
+        permissionsType: typeof permissions,
+        isArray: Array.isArray(permissions),
+        permissionsLength: permissions?.length,
+        permissionsKeys: permissions ? Object.keys(permissions) : null,
+        user: user,
+        isAuthenticated: isAuthenticated
+    });
+
+    // Debug: Log page props
+    const pageProps = usePage().props;
+    console.log('Sidebar - Page props:', {
+        auth: pageProps?.auth,
+        user: pageProps?.auth?.user,
+        permissions: pageProps?.auth?.permissions,
+        roles: pageProps?.auth?.roles
+    });
+
+    // Debug: Simple log to see if component renders
+    console.log('Sidebar - Component is rendering with user:', !!user);
+
+    // Always show sidebar, even if permissions are loading
+    // This ensures menu items are visible once permissions are available
 
     // Refs for keyboard navigation
     const sidebarRef = useRef(null);
@@ -133,7 +161,19 @@ export default function Sidebar() {
 
     const filteredMenuItems = menuItems.filter(item => {
         if (!item.permission) return true;
-        return hasPermission(item.permission);
+        const hasPerm = hasPermission(item.permission);
+
+        // Debug: Log menu filtering
+        console.log(`Filtering menu item "${item.name}":`, {
+            permission: item.permission,
+            hasPermission: hasPerm,
+            hasRole: hasRole('admin'),
+            permissions,
+            permissionsType: typeof permissions,
+            isArray: Array.isArray(permissions)
+        });
+
+        return hasPerm;
     });
 
     // Handle keyboard navigation

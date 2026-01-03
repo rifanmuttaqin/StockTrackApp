@@ -59,6 +59,17 @@ createInertiaApp({
         }
     },
     setup({ el, App, props }) {
+        // Debug: Log props received by Inertia
+        console.log('Inertia App - Props received:', {
+            props,
+            auth: props?.auth,
+            user: props?.auth?.user,
+            permissions: props?.auth?.permissions,
+            roles: props?.auth?.roles,
+            permissionsType: typeof props?.auth?.permissions,
+            isArray: Array.isArray(props?.auth?.permissions)
+        });
+
         const root = createRoot(el);
 
         root.render(

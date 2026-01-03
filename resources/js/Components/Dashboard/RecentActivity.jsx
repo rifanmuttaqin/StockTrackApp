@@ -93,7 +93,7 @@ const RecentActivity = ({
           <div className="space-y-3">
             {activities.slice(0, 5).map((activity, index) => (
               <div
-                key={index}
+                key={`activity-${activity.type}-${activity.title}-${index}`}
                 className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer min-h-[60px]"
               >
                 <div className="flex-shrink-0 mt-0.5">

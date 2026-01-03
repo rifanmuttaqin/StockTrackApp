@@ -81,8 +81,10 @@ export default function Table({
                             </td>
                         </tr>
                     ) : (
-                        data.map((row, rowIndex) => (
-                            <tr key={rowIndex} className="hover:bg-gray-50">
+                        data.map((row, rowIndex) => {
+                            const rowKey = row.id || `row-${rowIndex}-${Date.now()}`;
+                            return (
+                                <tr key={rowKey} className="hover:bg-gray-50">
                                 {columns.map((column) => (
                                     <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {column.render ? column.render(row[column.key], row) : row[column.key]}
@@ -91,9 +93,11 @@ export default function Table({
                                 {actions.length > 0 && (
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div className="flex justify-end space-x-2">
-                                            {actions.map((action, actionIndex) => (
-                                                <button
-                                                    key={actionIndex}
+                                            {actions.map((action, actionIndex) => {
+                                                const actionKey = action.id || action.key || `action-${actionIndex}-${Date.now()}`;
+                                                return (
+                                                    <button
+                                                        key={actionKey}
                                                     onClick={() => action.onClick(row)}
                                                     className={`
                                                         ${action.className || 'text-blue-600 hover:text-blue-900'}
@@ -109,12 +113,14 @@ export default function Table({
                                                         <span>{action.label}</span>
                                                     )}
                                                 </button>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
                                     </td>
                                 )}
-                            </tr>
-                        ))
+                                </tr>
+                            );
+                        })
                     )}
                 </tbody>
             </table>

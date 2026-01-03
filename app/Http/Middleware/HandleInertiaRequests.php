@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -35,6 +36,7 @@ class HandleInertiaRequests extends Middleware
                 $user = $request->user();
 
                 if (!$user) {
+                    Log::debug('HandleInertiaRequests: No user found');
                     return [
                         'user' => null,
                         'permissions' => [],
@@ -47,6 +49,18 @@ class HandleInertiaRequests extends Middleware
 
                 // Get user roles
                 $roles = $user->roles->pluck('name')->toArray();
+
+                // Debug logging
+                Log::debug('HandleInertiaRequests: Auth data', [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'permissions_count' => count($permissions),
+                    'permissions_sample' => array_slice($permissions, 0, 5),
+                    'roles_count' => count($roles),
+                    'roles_sample' => array_slice($roles, 0, 3),
+                    'permissions_type' => gettype($permissions),
+                    'is_array' => is_array($permissions)
+                ]);
 
                 return [
                     'user' => $user,

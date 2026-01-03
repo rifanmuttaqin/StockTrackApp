@@ -32,7 +32,7 @@ export default function Pagination({
         if (startPage > 1) {
             pages.push(
                 <button
-                    key={1}
+                    key={`page-first`}
                     onClick={() => handlePageChange(1)}
                     className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
@@ -53,7 +53,7 @@ export default function Pagination({
         for (let i = startPage; i <= endPage; i++) {
             pages.push(
                 <button
-                    key={i}
+                    key={`page-${i}`}
                     onClick={() => handlePageChange(i)}
                     className={`
                         relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md
@@ -80,7 +80,7 @@ export default function Pagination({
 
             pages.push(
                 <button
-                    key={totalPages}
+                    key={`page-last-${totalPages}`}
                     onClick={() => handlePageChange(totalPages)}
                     className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
@@ -129,7 +129,7 @@ export default function Pagination({
                             className="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         >
                             {perPageOptions.map(option => (
-                                <option key={option} value={option}>
+                                <option key={`per-page-${option}`} value={option}>
                                     {option}
                                 </option>
                             ))}

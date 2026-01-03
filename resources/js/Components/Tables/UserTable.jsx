@@ -341,8 +341,8 @@ const UserTable = ({
                     </td>
                   </tr>
                 ) : (
-                  usersArray.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-50" role="row">
+                  usersArray.map((user, userIndex) => (
+                    <tr key={`user-${user.id || userIndex}-${userIndex}`} className="hover:bg-gray-50" role="row">
                       {can('users.edit') || can('users.delete') ? (
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <input

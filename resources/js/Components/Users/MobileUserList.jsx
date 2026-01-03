@@ -189,7 +189,7 @@ const MobileUserList = ({
         <div>
           {users.map((user) => (
             <MobileUserCard
-              key={user.id}
+              key={`mobile-list-user-${user.id || index}-${index}`}
               user={user}
               onView={onView}
               onEdit={onEdit}

@@ -102,7 +102,7 @@ const QuickActions = ({
           )}>
             {actions.map((action, index) => (
               <MobileButton
-                key={index}
+                key={`action-${action.label}-${index}`}
                 variant="outline"
                 size="lg"
                 onClick={action.onClick}

@@ -240,7 +240,7 @@ const MobileDashboard = ({
                 {/* Stats Grid */}
                 <div className="grid grid-cols-2 gap-4">
                   {statsData.map((stat, index) => (
-                    <StatCard key={index} {...stat} />
+                    <StatCard key={`stat-${stat.title}-${index}`} {...stat} />
                   ))}
                 </div>
 

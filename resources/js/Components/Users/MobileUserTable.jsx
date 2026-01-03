@@ -270,9 +270,9 @@ const MobileUserTable = ({
           </MobileCard>
         ) : (
           <div>
-            {usersArray.map((user) => (
+            {usersArray.map((user, userIndex) => (
               <MobileUserCard
-                key={user.id}
+                key={`mobile-user-${user.id || userIndex}-${userIndex}`}
                 user={user}
                 onView={handleView}
                 onEdit={handleEdit}
