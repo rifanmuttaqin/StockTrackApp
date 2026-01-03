@@ -15,9 +15,9 @@ export const AuthProvider = ({ children, pageProps }) => {
     // Initialize with proper data transformation
     const getInitialPermissions = () => {
         const perms = pageProps?.auth?.permissions || [];
+
         // Ensure permissions is always an array
         if (!Array.isArray(perms)) {
-            console.warn('AuthProvider: Initial permissions is not an array, converting:', perms);
             if (typeof perms === 'object' && perms !== null) {
                 return Object.values(perms);
             }
@@ -28,9 +28,9 @@ export const AuthProvider = ({ children, pageProps }) => {
 
     const getInitialRoles = () => {
         const roles = pageProps?.auth?.roles || [];
+
         // Ensure roles is always an array
         if (!Array.isArray(roles)) {
-            console.warn('AuthProvider: Initial roles is not an array, converting:', roles);
             if (typeof roles === 'object' && roles !== null) {
                 return Object.values(roles);
             }
@@ -44,37 +44,50 @@ export const AuthProvider = ({ children, pageProps }) => {
     const [roles, setRoles] = useState(getInitialRoles());
 
     useEffect(() => {
-
         setUser(pageProps?.auth?.user || null);
 
         // Handle permissions with proper transformation
         const newPermissions = pageProps?.auth?.permissions || [];
+
+        let finalPermissions = [];
         if (!Array.isArray(newPermissions)) {
-            console.warn('AuthProvider: New permissions is not an array, converting:', newPermissions);
             if (typeof newPermissions === 'object' && newPermissions !== null) {
-                setPermissions(Object.values(newPermissions));
+                // Check if it's an indexed object (like {0: "perm1", 1: "perm2"})
+                const keys = Object.keys(newPermissions);
+                const isIndexedObject = keys.length > 0 && keys.every((key, index) => key === String(index));
+
+                if (isIndexedObject) {
+                    // Convert indexed object to array
+                    finalPermissions = Object.values(newPermissions);
+                } else {
+                    // It's a regular object, extract values
+                    finalPermissions = Object.values(newPermissions);
+                }
             } else {
-                // Don't set to empty array if it's not an object
-                // Keep the original value if it's something else
-                console.warn('AuthProvider: Permissions is neither array nor object, keeping as is:', newPermissions);
-                setPermissions([]);
+                // If it's something else, use empty array
+                finalPermissions = [];
             }
         } else {
-            setPermissions(newPermissions);
+            finalPermissions = newPermissions;
         }
+
+        setPermissions(finalPermissions);
 
         // Handle roles with proper transformation
         const newRoles = pageProps?.auth?.roles || [];
+
+        let finalRoles = [];
         if (!Array.isArray(newRoles)) {
-            console.warn('AuthProvider: New roles is not an array, converting:', newRoles);
             if (typeof newRoles === 'object' && newRoles !== null) {
-                setRoles(Object.values(newRoles));
+                finalRoles = Object.values(newRoles);
             } else {
-                setRoles([]);
+                finalRoles = [];
             }
         } else {
-            setRoles(newRoles);
+            finalRoles = newRoles;
         }
+
+        setRoles(finalRoles);
     }, [pageProps?.auth]);
 
     const hasPermission = (permission) => {

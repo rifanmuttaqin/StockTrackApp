@@ -19,34 +19,6 @@ export default function Sidebar() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [openMenus, setOpenMenus] = useState({});
 
-    // Debug: Log auth data
-    console.log('Sidebar - Auth data:', {
-        permissions,
-        hasPermission: hasPermission('users.index'),
-        hasRole: hasRole('admin'),
-        permissionsType: typeof permissions,
-        isArray: Array.isArray(permissions),
-        permissionsLength: permissions?.length,
-        permissionsKeys: permissions ? Object.keys(permissions) : null,
-        user: user,
-        isAuthenticated: isAuthenticated
-    });
-
-    // Debug: Log page props
-    const pageProps = usePage().props;
-    console.log('Sidebar - Page props:', {
-        auth: pageProps?.auth,
-        user: pageProps?.auth?.user,
-        permissions: pageProps?.auth?.permissions,
-        roles: pageProps?.auth?.roles
-    });
-
-    // Debug: Simple log to see if component renders
-    console.log('Sidebar - Component is rendering with user:', !!user);
-
-    // Always show sidebar, even if permissions are loading
-    // This ensures menu items are visible once permissions are available
-
     // Refs for keyboard navigation
     const sidebarRef = useRef(null);
 
@@ -66,12 +38,12 @@ export default function Sidebar() {
             name: 'Dashboard',
             href: '/dashboard',
             icon: HomeIcon,
-            permission: null,
+            permission: 'view_dashboard',
         },
         {
             name: 'Manajemen Pengguna',
             icon: UserGroupIcon,
-            permission: 'users.index',
+            permission: 'manage_users',
             subMenu: [
                 {
                     name: 'Daftar Pengguna',
@@ -91,88 +63,85 @@ export default function Sidebar() {
                 {
                     name: 'Roles',
                     href: '/roles',
-                    permission: 'roles.view',
+                    permission: 'manage_users',
                 },
                 {
                     name: 'Permissions',
                     href: '/permissions',
-                    permission: 'permissions.view',
+                    permission: 'manage_users',
                 },
             ],
         },
         {
             name: 'Produk',
             icon: CubeIcon,
-            permission: 'products.view',
+            permission: 'create_stock_entries',
             subMenu: [
                 {
                     name: 'Daftar Produk',
                     href: '/products',
-                    permission: 'products.view',
+                    permission: 'create_stock_entries',
                 },
                 {
                     name: 'Kategori',
                     href: '/categories',
-                    permission: 'categories.view',
+                    permission: 'create_stock_entries',
                 },
             ],
         },
         {
             name: 'Transaksi',
             icon: ShoppingCartIcon,
-            permission: 'transactions.view',
+            permission: 'create_stock_entries',
             subMenu: [
                 {
                     name: 'Penjualan',
                     href: '/sales',
-                    permission: 'sales.view',
+                    permission: 'create_stock_entries',
                 },
                 {
                     name: 'Pembelian',
                     href: '/purchases',
-                    permission: 'purchases.view',
+                    permission: 'create_stock_entries',
                 },
             ],
         },
         {
             name: 'Laporan',
             icon: ChartBarIcon,
-            permission: 'reports.view',
+            permission: 'view_reports',
             subMenu: [
                 {
                     name: 'Laporan Penjualan',
                     href: '/reports/sales',
-                    permission: 'reports.sales',
+                    permission: 'view_reports',
                 },
                 {
                     name: 'Laporan Stok',
                     href: '/reports/stock',
-                    permission: 'reports.stock',
+                    permission: 'view_reports',
                 },
             ],
         },
         {
             name: 'Pengaturan',
             icon: CogIcon,
-            permission: 'settings.view',
+            permission: 'manage_users',
             href: '/settings',
         },
     ];
 
     const filteredMenuItems = menuItems.filter(item => {
-        if (!item.permission) return true;
+        // Dashboard always shows for authenticated users
+        if (item.name === 'Dashboard' && isAuthenticated) {
+            return true;
+        }
+
+        if (!item.permission) {
+            return true;
+        }
+
         const hasPerm = hasPermission(item.permission);
-
-        // Debug: Log menu filtering
-        console.log(`Filtering menu item "${item.name}":`, {
-            permission: item.permission,
-            hasPermission: hasPerm,
-            hasRole: hasRole('admin'),
-            permissions,
-            permissionsType: typeof permissions,
-            isArray: Array.isArray(permissions)
-        });
-
         return hasPerm;
     });
 
