@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Role;
+// use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class UserController extends Controller
 {
@@ -142,7 +143,18 @@ class UserController extends Controller
 
         // Add additional filtering if needed
         $users = $this->userService->getAllUsers($perPage, $filters);
-        $roles = Role::all();
+        $roles = Role::select('id', 'name', 'display_name', 'description', 'is_active')
+            ->where('is_active', true)
+            ->get()
+            ->map(function ($role) {
+                return [
+                    'id' => (string) $role->id,
+                    'name' => $role->name,
+                    'display_name' => $role->display_name,
+                    'description' => $role->description,
+                    'is_active' => $role->is_active,
+                ];
+            });
 
         // Get user statistics for meta data
         $meta = [
@@ -178,7 +190,18 @@ class UserController extends Controller
         $filters = $request->only(['query', 'per_page', 'role', 'status']);
 
         $users = $this->userService->searchUsers($query, $perPage, $filters);
-        $roles = Role::all();
+        $roles = Role::select('id', 'name', 'display_name', 'description', 'is_active')
+            ->where('is_active', true)
+            ->get()
+            ->map(function ($role) {
+                return [
+                    'id' => (string) $role->id,
+                    'name' => $role->name,
+                    'display_name' => $role->display_name,
+                    'description' => $role->description,
+                    'is_active' => $role->is_active,
+                ];
+            });
 
         $this->logUserAction('search_users', 'all', ['query' => $query, 'filters' => $filters]);
 
@@ -194,7 +217,18 @@ class UserController extends Controller
      */
     public function create(): Response
     {
-        $roles = Role::all();
+        $roles = Role::select('id', 'name', 'display_name', 'description', 'is_active')
+            ->where('is_active', true)
+            ->get()
+            ->map(function ($role) {
+                return [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'display_name' => $role->display_name,
+                    'description' => $role->description,
+                    'is_active' => $role->is_active,
+                ];
+            });
 
         return Inertia::render('Users/Create', [
             'roles' => $roles,
@@ -237,7 +271,18 @@ class UserController extends Controller
     public function show(string $id): Response
     {
         $user = $this->userService->findUserById($id);
-        $roles = Role::all();
+        $roles = Role::select('id', 'name', 'display_name', 'description', 'is_active')
+            ->where('is_active', true)
+            ->get()
+            ->map(function ($role) {
+                return [
+                    'id' => (string) $role->id,
+                    'name' => $role->name,
+                    'display_name' => $role->display_name,
+                    'description' => $role->description,
+                    'is_active' => $role->is_active,
+                ];
+            });
 
         if (!$user) {
             abort(404, 'Pengguna tidak ditemukan.');
@@ -262,7 +307,6 @@ class UserController extends Controller
     public function edit(string $id): Response
     {
         $user = $this->userService->findUserById($id);
-        $roles = Role::all();
 
         if (!$user) {
             abort(404, 'Pengguna tidak ditemukan.');
@@ -273,8 +317,30 @@ class UserController extends Controller
             abort(403, 'Anda tidak memiliki izin untuk mengedit profil pengguna ini.');
         }
 
+        // Get all active roles with proper formatting
+        $roles = Role::select('id', 'name', 'display_name', 'description', 'is_active')
+            ->where('is_active', true)
+            ->get()
+            ->map(function ($role) {
+                return [
+                    'id' => (string) $role->id,
+                    'name' => $role->name,
+                    'display_name' => $role->display_name,
+                    'description' => $role->description,
+                    'is_active' => $role->is_active,
+                ];
+            });
+
         // Get user's current role for the form
-        $userRoles = $user->roles;
+        $userRoles = $user->roles->map(function ($role) {
+            return [
+                'id' => (string) $role->id,
+                'name' => $role->name,
+                'display_name' => $role->display_name,
+                'description' => $role->description,
+                'is_active' => $role->is_active,
+            ];
+        });
 
         // Add status field to user object for the form
         $user->status = $user->is_active ? 'active' : 'inactive';

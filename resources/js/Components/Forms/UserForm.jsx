@@ -20,7 +20,7 @@ const UserForm = ({
     email: user?.email || '',
     password: '',
     password_confirmation: '',
-    role_id: userRoles?.length > 0 ? userRoles[0].id : '',
+    role_id: userRoles?.length > 0 ? userRoles[0].id : (roles?.length > 0 ? roles[0].id : ''),
     status: user?.status || 'active',
   });
 
@@ -354,7 +354,7 @@ const UserForm = ({
                   <p className="text-sm"><strong>Email:</strong> {data.email}</p>
                   {data.role_id && (
                     <p className="text-sm">
-                      <strong>Role:</strong> {roles.find(r => r.id === parseInt(data.role_id))?.name}
+                      <strong>Role:</strong> {roles.find(r => r.id === data.role_id)?.name}
                     </p>
                   )}
                   {isEditing && data.status && (
