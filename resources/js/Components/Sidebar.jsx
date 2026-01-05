@@ -41,7 +41,7 @@ export default function Sidebar() {
             permission: 'view_dashboard',
         },
         {
-            name: 'Manajemen Pengguna',
+            name: 'Pengguna',
             icon: UserGroupIcon,
             permission: 'manage_users',
             subMenu: [
