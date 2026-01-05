@@ -72,23 +72,55 @@ const MobileUserForm = ({
   const confirmSubmit = () => {
     setShowConfirmDialog(false);
 
+    console.log('[MobileUserForm] confirmSubmit called', {
+      isEditing,
+      userId: user?.id,
+      formData: data,
+    });
+
     if (isEditing) {
+      console.log('[MobileUserForm] Calling PUT to update user', {
+        route: route('users.update', user.id),
+        data: data,
+      });
+
       put(route('users.update', user.id), {
-        onSuccess: () => {
+        onSuccess: (page) => {
+          console.log('[MobileUserForm] Update successful - onSuccess callback', {
+            page,
+            props: page.props,
+            flash: page.props.flash,
+          });
           reset();
-          // Redirect to users list after successful update
-          router.visit(route('users.index'));
+          // Note: Redirect is handled by the controller, no need to redirect here
+          console.log('[MobileUserForm] Controller will handle redirect to users.index');
         },
-        onError: (errors) => setError(errors),
+        onError: (errors) => {
+          console.log('[MobileUserForm] Update failed - onError callback', { errors });
+          setError(errors);
+        },
       });
     } else {
+      console.log('[MobileUserForm] Calling POST to create user', {
+        route: route('users.store'),
+        data: data,
+      });
+
       post(route('users.store'), {
-        onSuccess: () => {
+        onSuccess: (page) => {
+          console.log('[MobileUserForm] Create successful - onSuccess callback', {
+            page,
+            props: page.props,
+            flash: page.props.flash,
+          });
           reset();
-          // Redirect to users list after successful creation
-          router.visit(route('users.index'));
+          // Note: Redirect is handled by the controller, no need to redirect here
+          console.log('[MobileUserForm] Controller will handle redirect to users.index');
         },
-        onError: (errors) => setError(errors),
+        onError: (errors) => {
+          console.log('[MobileUserForm] Create failed - onError callback', { errors });
+          setError(errors);
+        },
       });
     }
   };

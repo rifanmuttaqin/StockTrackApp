@@ -7,7 +7,7 @@ import Alert from '../../Components/Alert';
 import { usePermission } from '../../Hooks/usePermission';
 import { useMobileDetection } from '../../Hooks/useMobileDetection';
 
-const Edit = ({ user, roles, userRoles, errors }) => {
+const Edit = ({ user, roles, userRoles, errors, flash }) => {
   const { can } = usePermission();
   const { isMobile } = useMobileDetection();
 
@@ -25,11 +25,11 @@ const Edit = ({ user, roles, userRoles, errors }) => {
         </div>
 
         {/* Flash Messages */}
-        {props.flash?.success && (
-          <Alert type="success" message={props.flash.success} className="mb-4" />
+        {flash?.success && (
+          <Alert type="success" message={flash.success} className="mb-4" />
         )}
-        {props.flash?.error && (
-          <Alert type="error" message={props.flash.error} className="mb-4" />
+        {flash?.error && (
+          <Alert type="error" message={flash.error} className="mb-4" />
         )}
 
         {isMobile ? (

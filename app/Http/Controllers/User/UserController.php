@@ -362,18 +362,37 @@ class UserController extends Controller
             abort(403, 'Anda tidak memiliki izin untuk memperbarui profil pengguna ini.');
         }
 
+        Log::info('UserController::update - Starting update process', [
+            'user_id' => $id,
+            'request_data' => $request->all(),
+            'validated_data' => $request->validated(),
+        ]);
+
         try {
             $validatedData = $request->validated();
             $success = $this->userService->updateUser($id, $request);
+
+            Log::info('UserController::update - Update result', [
+                'user_id' => $id,
+                'success' => $success,
+            ]);
 
             if ($success) {
                 $this->logUserAction('update_user', $id, [
                     'updated_fields' => array_keys($validatedData),
                 ]);
 
+                Log::info('UserController::update - Redirecting to users.index', [
+                    'flash_message' => 'Pengguna berhasil diperbarui.',
+                ]);
+
                 return redirect()->route('users.index')
                     ->with('success', 'Pengguna berhasil diperbarui.');
             }
+
+            Log::warning('UserController::update - Update failed', [
+                'user_id' => $id,
+            ]);
 
             return redirect()->back()
                 ->with('error', 'Gagal memperbarui pengguna.')
@@ -381,6 +400,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             Log::error('Failed to update user', [
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
                 'user_id' => $id,
                 'data' => $request->validated(),
                 'performed_by' => Auth::id(),

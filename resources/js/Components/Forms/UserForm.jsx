@@ -70,23 +70,55 @@ const UserForm = ({
   const confirmSubmit = () => {
     setShowConfirmDialog(false);
 
+    console.log('[UserForm] confirmSubmit called', {
+      isEditing,
+      userId: user?.id,
+      formData: data,
+    });
+
     if (isEditing) {
+      console.log('[UserForm] Calling PUT to update user', {
+        route: route('users.update', user.id),
+        data: data,
+      });
+
       put(route('users.update', user.id), {
-        onSuccess: () => {
+        onSuccess: (page) => {
+          console.log('[UserForm] Update successful - onSuccess callback', {
+            page,
+            props: page.props,
+            flash: page.props.flash,
+          });
           reset();
-          // Redirect to users list after successful update
-          router.visit(route('users.index'));
+          // Note: Redirect is handled by the controller, no need to redirect here
+          console.log('[UserForm] Controller will handle redirect to users.index');
         },
-        onError: (errors) => setError(errors),
+        onError: (errors) => {
+          console.log('[UserForm] Update failed - onError callback', { errors });
+          setError(errors);
+        },
       });
     } else {
+      console.log('[UserForm] Calling POST to create user', {
+        route: route('users.store'),
+        data: data,
+      });
+
       post(route('users.store'), {
-        onSuccess: () => {
+        onSuccess: (page) => {
+          console.log('[UserForm] Create successful - onSuccess callback', {
+            page,
+            props: page.props,
+            flash: page.props.flash,
+          });
           reset();
-          // Redirect to users list after successful creation
-          router.visit(route('users.index'));
+          // Note: Redirect is handled by the controller, no need to redirect here
+          console.log('[UserForm] Controller will handle redirect to users.index');
         },
-        onError: (errors) => setError(errors),
+        onError: (errors) => {
+          console.log('[UserForm] Create failed - onError callback', { errors });
+          setError(errors);
+        },
       });
     }
   };
