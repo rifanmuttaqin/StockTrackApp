@@ -9,6 +9,18 @@ const getRoute = (name, params = {}) => {
   return window.route ? window.route(name, params) : `/${name}`;
 };
 
+// Helper function to format date
+const formatDate = (dateString) => {
+  if (!dateString) return '-';
+  return new Date(dateString).toLocaleDateString('id-ID', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
 const MobileUserActions = ({ user, onToggleStatus, onDelete, onAssignRole }) => {
   const { can } = usePermission();
   const [showActionSheet, setShowActionSheet] = useState(false);
@@ -31,6 +43,12 @@ const MobileUserActions = ({ user, onToggleStatus, onDelete, onAssignRole }) => 
 
   const handleToggleStatus = () => {
     setShowActionSheet(false);
+    // Jika user suspended, tidak bisa toggle status biasa
+    if (user.status === 'suspended') {
+      alert('Pengguna yang ditangguhkan harus diaktifkan kembali terlebih dahulu melalui tombol Unsuspend.');
+      return;
+    }
+    // Toggle antara active dan inactive
     setNewStatus(user.status === 'active' ? 'inactive' : 'active');
     setShowStatusModal(true);
   };

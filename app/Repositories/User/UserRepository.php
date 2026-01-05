@@ -48,8 +48,14 @@ class UserRepository implements UserRepositoryInterface
         $sortOrder = $filters['order'] ?? 'desc';
 
         // Validate sort field to prevent SQL injection
-        $allowedSortFields = ['name', 'email', 'created_at', 'last_login_at', 'is_active'];
-        if (in_array($sortField, $allowedSortFields)) {
+        $allowedSortFields = ['name', 'email', 'created_at', 'last_login_at', 'is_active', 'suspended'];
+
+        // Handle special case for 'status' sorting (it's an accessor, not a DB column)
+        if ($sortField === 'status') {
+            // Sort by suspended first (suspended users at top/bottom), then by is_active
+            $query->orderBy('suspended', $sortOrder)
+                  ->orderBy('is_active', $sortOrder);
+        } elseif (in_array($sortField, $allowedSortFields)) {
             $query->orderBy($sortField, $sortOrder);
         } else {
             $query->orderBy('created_at', 'desc');

@@ -59,6 +59,12 @@ const UserTable = ({
 
   const handleToggleStatus = (user) => {
     setSelectedUser(user);
+    // Jika user suspended, tidak bisa toggle status biasa
+    if (user.status === 'suspended') {
+      alert('Pengguna yang ditangguhkan harus diaktifkan kembali terlebih dahulu melalui tombol Unsuspend.');
+      return;
+    }
+    // Toggle antara active dan inactive
     setNewStatus(user.status === 'active' ? 'inactive' : 'active');
     setShowStatusModal(true);
   };

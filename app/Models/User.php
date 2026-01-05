@@ -22,6 +22,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public $incrementing = false;
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = ['status'];
+
+    /**
      * Boot function for using with User Events
      */
     protected static function boot()
