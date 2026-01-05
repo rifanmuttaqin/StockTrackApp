@@ -51,16 +51,6 @@ export default function Sidebar() {
                     permission: 'users.index',
                 },
                 {
-                    name: 'Buat Pengguna Baru',
-                    href: '/users/create',
-                    permission: 'users.create',
-                },
-                {
-                    name: 'Laporan Pengguna',
-                    href: '/users/reports',
-                    permission: 'users.export',
-                },
-                {
                     name: 'Roles',
                     href: '/roles',
                     permission: 'manage_users',
@@ -85,23 +75,6 @@ export default function Sidebar() {
                 {
                     name: 'Kategori',
                     href: '/categories',
-                    permission: 'create_stock_entries',
-                },
-            ],
-        },
-        {
-            name: 'Transaksi',
-            icon: ShoppingCartIcon,
-            permission: 'create_stock_entries',
-            subMenu: [
-                {
-                    name: 'Penjualan',
-                    href: '/sales',
-                    permission: 'create_stock_entries',
-                },
-                {
-                    name: 'Pembelian',
-                    href: '/purchases',
                     permission: 'create_stock_entries',
                 },
             ],
@@ -178,9 +151,9 @@ export default function Sidebar() {
             <div
                 ref={sidebarRef}
                 className={`
-                    fixed inset-y-0 right-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out
+                    fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out
                     md:translate-x-0 md:static md:inset-0
-                    ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'}
+                    ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
                 `}
                 role="navigation"
                 aria-label="Main navigation"

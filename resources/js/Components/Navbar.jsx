@@ -165,86 +165,9 @@ export default function Navbar() {
                         >
                             <Bars3Icon className="h-6 w-6" />
                         </button>
-                        <div className="hidden md:flex items-center">
-                            <Link href="/dashboard" className="text-xl font-semibold text-gray-900" aria-label="Go to dashboard">
-                                StockTrackApp
-                            </Link>
-                        </div>
                     </div>
 
                     <div className="flex items-center space-x-4">
-                        {/* User Management Menu - Only show if user has permission */}
-                        {hasPermission('users.index') && (
-                            <div className="relative" ref={userMenuRef}>
-                                <button
-                                    type="button"
-                                    className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                                        isUserManagementActive
-                                            ? 'bg-blue-100 text-blue-700'
-                                            : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                                    }`}
-                                    onClick={() => setShowUserMenu(!showUserMenu)}
-                                    onKeyDown={handleUserMenuKeyDown}
-                                    aria-label="Menu Manajemen Pengguna"
-                                    aria-expanded={showUserMenu}
-                                    aria-haspopup="true"
-                                >
-                                    <UserGroupIcon className="h-5 w-5 mr-2" />
-                                    <span className="hidden md:block">Manajemen Pengguna</span>
-                                    {/* Show badge if there are pending or suspended users */}
-                                    {(userStats.pendingUsers > 0 || userStats.suspendedUsers > 0) && (
-                                        <Badge
-                                            variant="warning"
-                                            size="sm"
-                                            className="ml-2 -mr-1"
-                                            aria-label={`${userStats.pendingUsers + userStats.suspendedUsers} pending actions`}
-                                        >
-                                            {userStats.pendingUsers + userStats.suspendedUsers}
-                                        </Badge>
-                                    )}
-                                    <ChevronDownIcon className={`h-4 w-4 ml-1 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
-                                </button>
-
-                                {showUserMenu && (
-                                    <div
-                                        className="origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
-                                        role="menu"
-                                        aria-orientation="vertical"
-                                        aria-labelledby="user-management-menu"
-                                    >
-                                        <div className="py-1">
-                                            {userMenuItems.map((item) => {
-                                                const Icon = item.icon;
-                                                return hasPermission(item.permission) ? (
-                                                    <Link
-                                                        key={item.name}
-                                                        href={item.href}
-                                                        className={`flex items-center justify-between px-4 py-2 text-sm ${
-                                                            url.startsWith(item.href)
-                                                                ? 'bg-blue-50 text-blue-700'
-                                                                : 'text-gray-700 hover:bg-gray-100'
-                                                        }`}
-                                                        onClick={() => setShowUserMenu(false)}
-                                                        role="menuitem"
-                                                    >
-                                                        <div className="flex items-center">
-                                                            <Icon className="mr-3 h-5 w-5 text-gray-400" />
-                                                            {item.name}
-                                                        </div>
-                                                        {item.badge && (
-                                                            <Badge variant={item.badgeVariant} size="sm">
-                                                                {item.badge}
-                                                            </Badge>
-                                                        )}
-                                                    </Link>
-                                                ) : null;
-                                            })}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
                         {/* Notifications */}
                         <div className="relative" ref={notificationMenuRef}>
                             <button

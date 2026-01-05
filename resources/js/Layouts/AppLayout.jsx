@@ -23,6 +23,9 @@ export default function AppLayout({ title, children, header }) {
             <Head title={title} />
 
             <div className="flex h-screen">
+                {/* Sidebar - Now on the left side */}
+                <Sidebar />
+
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col overflow-hidden">
                     {/* Navbar */}
@@ -35,9 +38,6 @@ export default function AppLayout({ title, children, header }) {
                         </div>
                     </main>
                 </div>
-
-                {/* Sidebar - Now on the right side */}
-                <Sidebar />
             </div>
         </div>
     );
