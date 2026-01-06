@@ -20,9 +20,11 @@ const MobileUserForm = ({
   const { data, setData, post, put, reset, setError } = useForm({
     name: user?.name || '',
     email: user?.email || '',
-    password: '',
-    password_confirmation: '',
-    role_id: userRoles?.length > 0 ? userRoles[0].id : '', // Change from roles array to single role_id
+    ...(isEditing ? {} : {
+      password: '',
+      password_confirmation: ''
+    }),
+    role_id: userRoles?.length > 0 ? String(userRoles[0].id) : '',
     status: user?.status || 'active',
   });
 

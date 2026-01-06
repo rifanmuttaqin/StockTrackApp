@@ -13,7 +13,7 @@ class UserUpdateRequest extends FormRequest
     public function authorize(): bool
     {
         $user = Auth::user();
-        $targetUserId = $this->route('id');
+        $targetUserId = $this->route('user');
 
         // User can update their own profile
         if ($user->id === $targetUserId) {
@@ -31,13 +31,20 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = $this->route('user') ?? $this->route('id') ?? $this->input('id');
+        // Get the user ID from route parameter
+        $route = $this->route();
+        $userId = null;
+
+        if ($route) {
+            $parameters = $route->parameters();
+            $userId = $parameters['user'] ?? $parameters['id'] ?? $this->input('id');
+        }
 
         return [
-            'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $userId,
-            'password' => 'sometimes|string|min:8|confirmed',
-            'role_id' => 'sometimes|exists:roles,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $userId,
+            'password' => 'nullable|string|min:8|confirmed',
+            'role_id' => 'required|exists:roles,id',
             'status' => 'sometimes|string|in:active,inactive,suspended',
         ];
     }

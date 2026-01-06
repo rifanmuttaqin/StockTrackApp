@@ -8,6 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -100,7 +101,7 @@ class UserRepository implements UserRepositoryInterface
 
             $user = User::create($data);
 
-            // Assign default role if provided
+            // Assign default role if provided (role_id is already UUID, no conversion needed)
             if (isset($data['role_id'])) {
                 $user->roles()->attach($data['role_id'], ['model_type' => User::class]);
             }
@@ -119,24 +120,51 @@ class UserRepository implements UserRepositoryInterface
      */
     public function update(string $id, array $data): bool
     {
+        Log::info('UserRepository::update - Starting update', [
+            'user_id' => $id,
+            'data' => $data,
+            'data_types' => array_map(function($value) {
+                return is_object($value) ? get_class($value) : gettype($value);
+            }, $data),
+        ]);
+
         DB::beginTransaction();
 
         try {
             $user = User::findOrFail($id);
 
-            // Hash password if provided
-            if (isset($data['password'])) {
+            Log::info('UserRepository::update - User found', [
+                'user_id' => $id,
+                'user_name' => $user->name,
+                'user_email' => $user->email,
+            ]);
+
+            // Hash password if provided and not empty
+            if (isset($data['password']) && !empty($data['password'])) {
                 $data['password'] = Hash::make($data['password']);
+                Log::info('UserRepository::update - Password hashed');
+            } elseif (isset($data['password']) && empty($data['password'])) {
+                // Remove password field if it's empty to avoid overwriting with empty value
+                unset($data['password']);
+                Log::info('UserRepository::update - Password field removed (empty)');
             }
 
             // Handle status field mapping
             if (isset($data['status'])) {
+                Log::info('UserRepository::update - Mapping status field', [
+                    'original_status' => $data['status'],
+                ]);
+
                 if ($data['status'] === 'active') {
                     $data['is_active'] = true;
                 } elseif ($data['status'] === 'inactive' || $data['status'] === 'suspended') {
                     $data['is_active'] = false;
                 }
                 unset($data['status']); // Remove the status field as we've mapped it to is_active
+
+                Log::info('UserRepository::update - Status mapped', [
+                    'is_active' => $data['is_active'] ?? null,
+                ]);
             }
 
             // Handle is_active field directly
@@ -144,18 +172,50 @@ class UserRepository implements UserRepositoryInterface
                 // Keep as is
             }
 
+            Log::info('UserRepository::update - Calling user update', [
+                'user_id' => $id,
+                'data_to_update' => $data,
+            ]);
+
             $user->update($data);
+
+            Log::info('UserRepository::update - User updated successfully', [
+                'user_id' => $id,
+            ]);
 
             // Update role if provided
             if (isset($data['role_id'])) {
-                $user->roles()->sync([$data['role_id'] => ['model_type' => User::class]]);
+                // Keep role_id as UUID string (no conversion needed)
+                $roleId = $data['role_id'];
+
+                Log::info('UserRepository::update - Updating role', [
+                    'user_id' => $id,
+                    'role_id' => $roleId,
+                    'role_id_type' => gettype($roleId),
+                ]);
+
+                $user->roles()->sync([$roleId => ['model_type' => User::class]]);
+
+                Log::info('UserRepository::update - Role updated successfully');
             }
 
             DB::commit();
 
+            Log::info('UserRepository::update - Transaction committed', [
+                'user_id' => $id,
+            ]);
+
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
+
+            Log::error('UserRepository::update - Update failed', [
+                'user_id' => $id,
+                'error' => $e->getMessage(),
+                'error_class' => get_class($e),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             throw $e;
         }
     }

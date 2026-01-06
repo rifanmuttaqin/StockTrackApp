@@ -14,6 +14,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserService implements UserServiceInterface
 {
@@ -77,11 +78,38 @@ class UserService implements UserServiceInterface
      */
     public function updateUser(string $id, $request): bool
     {
+        Log::info('UserService::updateUser - Starting update', [
+            'user_id' => $id,
+            'request_type' => get_class($request),
+        ]);
+
         if ($request instanceof UserUpdateRequest) {
-            return $this->userRepository->update($id, $request->validated());
+            $validatedData = $request->validated();
+
+            Log::info('UserService::updateUser - Calling repository update', [
+                'user_id' => $id,
+                'validated_data' => $validatedData,
+                'validated_data_types' => array_map(function($value) {
+                    return is_object($value) ? get_class($value) : gettype($value);
+                }, $validatedData),
+            ]);
+
+            $result = $this->userRepository->update($id, $validatedData);
+
+            Log::info('UserService::updateUser - Repository update result', [
+                'user_id' => $id,
+                'result' => $result,
+            ]);
+
+            return $result;
         }
 
         // Handle array input
+        Log::info('UserService::updateUser - Calling repository update with array', [
+            'user_id' => $id,
+            'data' => $request,
+        ]);
+
         return $this->userRepository->update($id, $request);
     }
 

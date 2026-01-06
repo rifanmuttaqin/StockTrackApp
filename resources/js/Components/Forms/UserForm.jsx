@@ -18,9 +18,11 @@ const UserForm = ({
   const { data, setData, post, put, reset, setError } = useForm({
     name: user?.name || '',
     email: user?.email || '',
-    password: '',
-    password_confirmation: '',
-    role_id: userRoles?.length > 0 ? userRoles[0].id : (roles?.length > 0 ? roles[0].id : ''),
+    ...(isEditing ? {} : {
+      password: '',
+      password_confirmation: ''
+    }),
+    role_id: userRoles?.length > 0 ? String(userRoles[0].id) : (roles?.length > 0 ? String(roles[0].id) : ''),
     status: user?.status || 'active',
   });
 

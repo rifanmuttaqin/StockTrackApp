@@ -364,12 +364,23 @@ class UserController extends Controller
 
         Log::info('UserController::update - Starting update process', [
             'user_id' => $id,
-            'request_data' => $request->all(),
+            'request_all' => $request->all(),
+            'request_data' => $request->input(),
             'validated_data' => $request->validated(),
+            'route_params' => $request->route()->parameters(),
         ]);
 
         try {
             $validatedData = $request->validated();
+
+            Log::info('UserController::update - Validation passed', [
+                'user_id' => $id,
+                'validated_data' => $validatedData,
+                'validated_data_types' => array_map(function($value) {
+                    return is_object($value) ? get_class($value) : gettype($value);
+                }, $validatedData),
+            ]);
+
             $success = $this->userService->updateUser($id, $request);
 
             Log::info('UserController::update - Update result', [
@@ -397,9 +408,22 @@ class UserController extends Controller
             return redirect()->back()
                 ->with('error', 'Gagal memperbarui pengguna.')
                 ->withInput();
+        } catch (ValidationException $e) {
+            Log::error('Validation failed during user update', [
+                'error' => $e->getMessage(),
+                'errors' => $e->errors(),
+                'user_id' => $id,
+                'data' => $request->validated(),
+                'performed_by' => Auth::id(),
+            ]);
+
+            return redirect()->back()
+                ->withErrors($e->errors())
+                ->withInput();
         } catch (\Exception $e) {
             Log::error('Failed to update user', [
                 'error' => $e->getMessage(),
+                'error_class' => get_class($e),
                 'trace' => $e->getTraceAsString(),
                 'user_id' => $id,
                 'data' => $request->validated(),
