@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
-import Alert from '../../Components/Alert';
-import Modal from '../../Components/Modal';
-import LoadingSpinner from '../../Components/LoadingSpinner';
-import Pagination from '../../Components/Pagination';
+import { Alert, Modal, LoadingSpinner, Pagination } from '../../Components/UI';
 import RoleAssignmentModal from '../../Components/Modals/RoleAssignmentModal';
 import MobileCard from '../../Components/UI/MobileCard';
 import MobileButton from '../../Components/UI/MobileButton';

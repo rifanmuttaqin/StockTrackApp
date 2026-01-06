@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from '@inertiajs/react';
-import Alert from '../Alert';
-import LoadingSpinner from '../LoadingSpinner';
+import { Alert, LoadingSpinner } from '../UI';
 
 export default function EmailVerification({ email }) {
     const [countdown, setCountdown] = useState(0);

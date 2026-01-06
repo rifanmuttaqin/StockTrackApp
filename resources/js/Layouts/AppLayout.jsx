@@ -2,8 +2,7 @@ import React from 'react';
 import { Head } from '@inertiajs/react';
 import { useMobileDetection } from '../Hooks/useMobileDetection';
 import MobileLayout from '../Components/Layouts/MobileLayout';
-import Navbar from '../Components/Navbar';
-import Sidebar from '../Components/Sidebar';
+import { Navbar, Sidebar } from '../Components/Layouts';
 
 export default function AppLayout({ title, children, header }) {
     const { isMobile } = useMobileDetection();

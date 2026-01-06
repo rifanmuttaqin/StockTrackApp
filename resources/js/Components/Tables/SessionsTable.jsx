@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { router, usePage } from '@inertiajs/react';
-import Pagination from '../Pagination';
-import Modal from '../Modal';
+import { Pagination, Modal } from '../UI';
 
 export default function SessionsTable({ sessions, onSessionRevoked }) {
     const { flash } = usePage().props;

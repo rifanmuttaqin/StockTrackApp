@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { router } from '@inertiajs/react';
-import Pagination from '../Pagination';
+import { Pagination } from '../UI';
 
 export default function ActivityLogTable({ activities, onFilterChange }) {
     const [filters, setFilters] = useState({

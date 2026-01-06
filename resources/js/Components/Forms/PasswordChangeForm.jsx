@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, router } from '@inertiajs/react';
-import Alert from '../Alert';
-import LoadingSpinner from '../LoadingSpinner';
-import Modal from '../Modal';
+import { Alert, LoadingSpinner, Modal } from '../UI';
 
 export default function PasswordChangeForm({ user, errors = {}, isOwnProfile = false, onSuccess }) {
     const { data, setData, post, processing, reset, recentlySuccessful } = useForm({

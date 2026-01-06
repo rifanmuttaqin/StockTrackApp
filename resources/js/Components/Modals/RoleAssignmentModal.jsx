@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from '@inertiajs/react';
-import Modal from '../Modal';
-import Alert from '../Alert';
-import LoadingSpinner from '../LoadingSpinner';
+import { Modal, Alert, LoadingSpinner } from '../UI';
 import { usePermission } from '../../Hooks/usePermission';
 
 const RoleAssignmentModal = ({

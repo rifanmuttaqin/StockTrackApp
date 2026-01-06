@@ -3,11 +3,10 @@ export { default as AppLayout } from './AppLayout';
 export { default as AuthLayout } from './AuthLayout';
 
 // UI Components
-export { default as Alert } from './Alert';
-export { default as LoadingSpinner } from './LoadingSpinner';
-export { default as Modal } from './Modal';
-export { default as Pagination } from './Pagination';
-export { default as Table } from './Table';
+export { Alert, LoadingSpinner, Modal, Pagination } from './UI';
+
+// Common Components
+export { ApplicationLogo, Dropdown, Table } from './Common';
 
 // Form Components
 export { default as UserForm } from './Forms/UserForm';
@@ -30,5 +29,4 @@ export { default as ActivityLogTable } from './Tables/ActivityLogTable';
 export { default as RoleAssignmentModal } from './Modals/RoleAssignmentModal';
 
 // Navigation Components
-export { default as Navbar } from './Navbar';
-export { default as Sidebar } from './Sidebar';
+export { Navbar, Sidebar } from './Layouts';

@@ -4,7 +4,7 @@ import MobileCard from '../UI/MobileCard';
 import MobileButton from '../UI/MobileButton';
 import MobileInput from '../UI/MobileInput';
 import MobileAlert from '../UI/MobileAlert';
-import LoadingSpinner from '../LoadingSpinner';
+import { LoadingSpinner } from '../UI';
 import { usePermission } from '../../Hooks/usePermission';
 
 const MobileUserForm = ({

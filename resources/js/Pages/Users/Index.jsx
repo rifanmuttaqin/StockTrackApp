@@ -3,9 +3,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 import UserTable from '../../Components/Tables/UserTable';
 import { MobileUserTable } from '../../Components/Users';
-import Pagination from '../../Components/Pagination';
-import Alert from '../../Components/Alert';
-import LoadingSpinner from '../../Components/LoadingSpinner';
+import { Pagination, Alert, LoadingSpinner } from '../../Components/UI';
 import { usePermission } from '../../Hooks/usePermission';
 import { useMobileDetection } from '../../Hooks/useMobileDetection';
 

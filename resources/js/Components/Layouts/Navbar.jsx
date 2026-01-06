@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useForm, usePage } from '@inertiajs/react';
-import { useAuth } from '../Context/AuthContext';
-import { Badge } from './UI';
+import { useAuth } from '../../Context/AuthContext';
+import { Badge } from '../UI';
 import {
     Bars3Icon,
     BellIcon,

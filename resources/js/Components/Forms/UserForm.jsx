@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, router } from '@inertiajs/react';
-import Alert from '../Alert';
-import LoadingSpinner from '../LoadingSpinner';
-import Modal from '../Modal';
+import { Alert, LoadingSpinner, Modal } from '../UI';
 import { usePermission } from '../../Hooks/usePermission';
 
 const UserForm = ({

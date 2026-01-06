@@ -5,7 +5,7 @@ import { useAuth } from '../../Context/AuthContext';
 import AvatarUpload from '../../Components/Forms/AvatarUpload';
 import SessionsTable from '../../Components/Tables/SessionsTable';
 import ActivityLogTable from '../../Components/Tables/ActivityLogTable';
-import Alert from '../../Components/Alert';
+import { Alert } from '../../Components/UI';
 
 export default function ProfileShow() {
     const { user, sessions, activities } = usePage().props;

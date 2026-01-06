@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 import UserForm from '../../Components/Forms/UserForm';
 import { MobileUserForm } from '../../Components/Users';
-import Alert from '../../Components/Alert';
+import { Alert } from '../../Components/UI';
 import { usePermission } from '../../Hooks/usePermission';
 import { useMobileDetection } from '../../Hooks/useMobileDetection';
 
