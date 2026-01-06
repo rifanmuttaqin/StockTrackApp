@@ -1,8 +1,8 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import Checkbox from '@/Components/UI/Checkbox';
+import InputError from '@/Components/UI/InputError';
+import InputLabel from '@/Components/UI/InputLabel';
+import PrimaryButton from '@/Components/UI/PrimaryButton';
+import TextInput from '@/Components/UI/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useMobileDetection } from '@/Hooks/useMobileDetection';

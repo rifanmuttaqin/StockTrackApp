@@ -35,8 +35,6 @@ Output akhir harus mengikuti format **PRD_Template.md**.
 3. Simpan file `.md` pada direktory PRD/feature dan berikan penamaan PRD_{nama_feature}
 
 # Topik Fitur yang akan di kerjakan
-
-Project masih tahap awal dan baru saja dimulai, perlu design mobile layout untuk arsitektur UI dari aplikasi yang dibangun.
-gunakan shadcn ui untuk komponennya
-fokus pada module yang sudah ada dahulu, dashboard - login dan - user untuk membentuk fondasi awal.
-design akses perangkat mobile dan modern, design UX stadarisasi SAAS modern
+ Master Produk
+   - Produk memiliki banyak Varian (Produk Varian)
+   - Setiap Produk Varian memiliki stock current
