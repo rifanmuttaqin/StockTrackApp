@@ -13,6 +13,7 @@ export default function Table({
     emptyMessage = 'No data available',
     className = '',
     onRowClick = null,
+    rowClassName = null,
 }) {
     // Validate data is an array
     const tableData = Array.isArray(data) ? data : [];
@@ -89,7 +90,7 @@ export default function Table({
                             return (
                                 <tr
                                     key={rowKey}
-                                    className={`hover:bg-gray-50 ${onRowClick ? 'cursor-pointer' : ''}`}
+                                    className={`hover:bg-gray-50 ${onRowClick ? 'cursor-pointer' : ''} ${rowClassName ? rowClassName(row) : ''}`}
                                     onClick={() => onRowClick && onRowClick(row)}
                                 >
                                 {columns.map((column) => (
@@ -100,7 +101,7 @@ export default function Table({
                                 {actions.length > 0 && (
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div className="flex justify-end space-x-2">
-                                            {actions.map((action, actionIndex) => {
+                                            {(typeof actions === 'function' ? actions(row) : actions).map((action, actionIndex) => {
                                                 const actionKey = action.id || action.key || `action-${actionIndex}-${Date.now()}`;
                                                 return (
                                                     <button

@@ -85,7 +85,6 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
 - Bulk actions (edit/delete multiple items)
 - Stock minimum & low stock warning
 - Toggle status produk (active/inactive)
-- Soft delete (delete permanen)
 - Audit trail/history lengkap
 - Complex filtering & sorting (hanya pencarian dasar)
 
@@ -525,6 +524,107 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
 
 ---
 
+### 6.7 Soft Delete Features
+
+**FR-PRD-034: Soft Delete Produk**
+- User dapat melakukan soft delete pada produk
+- Sistem menandai produk dengan timestamp deleted_at
+- Varian-varian terkait otomatis di-soft delete (cascade)
+- Data tidak dihapus permanen dari database
+- Produk yang di-soft delete tidak muncul di daftar produk aktif
+- Sistem melakukan validasi:
+  - Produk tidak boleh digunakan dalam template aktif
+  - Produk tidak boleh memiliki riwayat stock keluar yang belum diarsipkan
+- Sistem menampilkan pesan sukses/error
+
+**FR-PRD-035: Restore Produk**
+- User dapat memulihkan produk yang di-soft delete
+- Sistem menghapus timestamp deleted_at
+- Varian-varian terkait otomatis di-restore (cascade restore)
+- Produk kembali muncul di daftar produk aktif
+- Sistem melakukan validasi:
+  - SKU produk harus unik (tidak boleh bentrok dengan produk lain)
+  - SKU varian harus unik (tidak boleh bentrok dengan varian lain)
+- Sistem menampilkan pesan sukses/error
+
+**FR-PRD-036: Force Delete Produk**
+- User dapat melakukan force delete (hapus permanen) pada produk yang sudah di-soft delete
+- Sistem menghapus produk dan semua varian terkait secara permanen dari database
+- Sistem melakukan validasi:
+  - Produk harus sudah di-soft delete (deleted_at tidak null)
+  - Produk tidak boleh memiliki relasi dengan data lain (template, stock out records)
+- Sistem menampilkan konfirmasi sebelum force delete
+- Sistem menampilkan pesan sukses/error
+
+**FR-PRD-037: Soft Delete Produk Varian**
+- User dapat melakukan soft delete pada varian produk
+- Sistem menandai varian dengan timestamp deleted_at
+- Data tidak dihapus permanen dari database
+- Varian yang di-soft delete tidak muncul di daftar varian aktif
+- Sistem melakukan validasi:
+  - Varian tidak boleh digunakan dalam template aktif
+  - Varian tidak boleh memiliki riwayat stock keluar yang belum diarsipkan
+- Sistem menampilkan pesan sukses/error
+
+**FR-PRD-038: Restore Produk Varian**
+- User dapat memulihkan varian produk yang di-soft delete
+- Sistem menghapus timestamp deleted_at
+- Varian kembali muncul di daftar varian aktif
+- Sistem melakukan validasi:
+  - SKU varian harus unik (tidak boleh bentrok dengan varian lain)
+  - Produk parent harus ada dan tidak di-soft delete
+- Sistem menampilkan pesan sukses/error
+
+**FR-PRD-039: Force Delete Produk Varian**
+- User dapat melakukan force delete (hapus permanen) pada varian yang sudah di-soft delete
+- Sistem menghapus varian secara permanen dari database
+- Sistem melakukan validasi:
+  - Varian harus sudah di-soft delete (deleted_at tidak null)
+  - Varian tidak boleh memiliki relasi dengan data lain (template, stock out records)
+- Sistem menampilkan konfirmasi sebelum force delete
+- Sistem menampilkan pesan sukses/error
+
+**FR-PRD-040: View Produk Terhapus**
+- User dapat melihat daftar produk yang di-soft delete
+- Daftar ditampilkan dalam bentuk tabel/list
+- Setiap produk menampilkan: Nama, SKU, Deskripsi, Jumlah Varian, Tanggal Dihapus
+- User dapat melakukan pencarian dasar berdasarkan nama atau SKU
+- User dapat melihat detail varian untuk setiap produk yang dihapus
+- User dapat melakukan aksi: Restore atau Force Delete
+
+**FR-PRD-041: View Varian Terhapus**
+- User dapat melihat daftar varian yang di-soft delete untuk setiap produk
+- Daftar ditampilkan dalam bentuk tabel/list
+- Setiap varian menampilkan: Nama Varian, SKU, Stock Current, Tanggal Dihapus
+- User dapat melakukan pencarian dasar berdasarkan nama varian atau SKU
+- User dapat melakukan aksi: Restore atau Force Delete
+
+**FR-PRD-042: Cascade Soft Delete**
+- Ketika produk di-soft delete, semua varian terkait otomatis di-soft delete
+- Sistem menggunakan Laravel's soft delete dengan cascade
+- Sistem menampilkan pesan informasi tentang jumlah varian yang di-soft delete
+- User tidak perlu menghapus varian satu per satu
+
+**FR-PRD-043: Cascade Restore**
+- Ketika produk di-restore, semua varian terkait otomatis di-restore
+- Sistem menggunakan Laravel's restore dengan cascade
+- Sistem menampilkan pesan informasi tentang jumlah varian yang di-restore
+- User tidak perlu mengembalikan varian satu per satu
+
+**FR-PRD-044: Validasi SKU Saat Restore**
+- Sistem melakukan validasi SKU unik saat restore produk/varian
+- Jika SKU bentrok dengan produk/varian lain, restore gagal
+- Sistem menampilkan pesan error yang jelas tentang konflik SKU
+- User harus menyelesaikan konflik SKU sebelum dapat restore
+
+**FR-PRD-045: Soft Delete dengan Transaction**
+- Operasi soft delete produk dan varian menggunakan database transaction
+- Jika terjadi error, seluruh operasi akan di-rollback
+- Ini untuk memastikan konsistensi data
+- Sistem menampilkan pesan error yang jelas jika transaction gagal
+
+---
+
 ## 7. Non-Functional Requirements
 
 ### 7.1 Performance
@@ -585,9 +685,11 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
 | description | TEXT | Nullable | Deskripsi produk |
 | created_at | TIMESTAMP | Not Null | Waktu pembuatan record |
 | updated_at | TIMESTAMP | Not Null | Waktu update terakhir |
+| deleted_at | TIMESTAMP | Nullable | Waktu soft delete (null jika aktif) |
 
 **Index:**
 - `sku` (untuk pencarian cepat berdasarkan SKU)
+- `deleted_at` (untuk query soft delete)
 
 #### 8.1.2 Product Variants
 **Deskripsi:** Tabel untuk menyimpan data varian produk.
@@ -601,10 +703,12 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
 | stock_current | INTEGER | Default 0, Not Null | Stock saat ini |
 | created_at | TIMESTAMP | Not Null | Waktu pembuatan record |
 | updated_at | TIMESTAMP | Not Null | Waktu update terakhir |
+| deleted_at | TIMESTAMP | Nullable | Waktu soft delete (null jika aktif) |
 
 **Index:**
 - `sku` (untuk pencarian cepat berdasarkan SKU)
 - `product_id` (untuk query varian berdasarkan produk)
+- `deleted_at` (untuk query soft delete)
 
 **Foreign Key:**
 - `product_id` → `products.id` (Cascade On Delete)
@@ -680,7 +784,9 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
 - **Tipe:** One-to-Many
 - **Deskripsi:** Satu produk dapat memiliki banyak varian
 - **Foreign Key:** `product_variants.product_id` → `products.id`
-- **Cascade:** Delete produk akan menghapus semua varian terkait
+- **Cascade:** Soft delete produk akan soft delete semua varian terkait (cascade soft delete)
+- **Cascade:** Restore produk akan restore semua varian terkait (cascade restore)
+- **Cascade:** Force delete produk akan force delete semua varian terkait
 
 #### 8.2.2 Templates → Template Items
 - **Tipe:** One-to-Many
@@ -720,11 +826,17 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
 |------------|-----------|
 | `products.create` | Membuat produk baru |
 | `products.edit` | Mengedit produk yang sudah ada |
-| `products.delete` | Menghapus produk |
+| `products.delete` | Menghapus produk (soft delete) |
+| `products.restore` | Memulihkan produk yang di-soft delete |
+| `products.force_delete` | Menghapus permanen produk yang sudah di-soft delete |
+| `products.view_deleted` | Melihat daftar produk yang di-soft delete |
 | `products.view` | Melihat daftar produk |
 | `product_variants.create` | Membuat varian produk baru |
 | `product_variants.edit` | Mengedit varian produk yang sudah ada |
-| `product_variants.delete` | Menghapus varian produk |
+| `product_variants.delete` | Menghapus varian produk (soft delete) |
+| `product_variants.restore` | Memulihkan varian produk yang di-soft delete |
+| `product_variants.force_delete` | Menghapus permanen varian produk yang sudah di-soft delete |
+| `product_variants.view_deleted` | Melihat daftar varian produk yang di-soft delete |
 | `product_variants.view` | Melihat daftar varian produk |
 | `templates.manage` | Membuat, mengedit, menghapus template |
 | `templates.set_active` | Mengatur template aktif |
@@ -774,11 +886,17 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
 |-------|-------|----------|------------|
 | Create Produk | ✅ | ❌ | ❌ |
 | Edit Produk | ✅ | ❌ | ❌ |
-| Delete Produk | ✅ | ❌ | ❌ |
+| Delete Produk (Soft Delete) | ✅ | ❌ | ❌ |
+| Restore Produk | ✅ | ❌ | ❌ |
+| Force Delete Produk | ✅ | ❌ | ❌ |
+| View Produk Terhapus | ✅ | ❌ | ❌ |
 | View Produk | ✅ | ✅ | ✅ |
 | Create Varian | ✅ | ❌ | ❌ |
 | Edit Varian | ✅ | ❌ | ❌ |
-| Delete Varian | ✅ | ❌ | ❌ |
+| Delete Varian (Soft Delete) | ✅ | ❌ | ❌ |
+| Restore Varian | ✅ | ❌ | ❌ |
+| Force Delete Varian | ✅ | ❌ | ❌ |
+| View Varian Terhapus | ✅ | ❌ | ❌ |
 | View Varian | ✅ | ✅ | ✅ |
 | Create Template | ✅ | ❌ | ❌ |
 | Edit Template | ✅ | ❌ | ❌ |
@@ -954,6 +1072,53 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
 - **Validasi:** Gunakan database transaction dan locking
 - **Error Message:** "Record sedang diproses oleh user lain, silakan coba lagi"
 
+### 10.7 Validasi Soft Delete
+
+**EC-PRD-030: Produk yang Digunakan dalam Template Aktif Tidak Bisa Di-Soft Delete**
+- **Deskripsi:** Produk yang varian-nya digunakan dalam template aktif tidak bisa di-soft delete
+- **Validasi:** Cek apakah varian produk digunakan dalam template aktif
+- **Error Message:** "Produk tidak dapat dihapus karena varian terkait digunakan dalam template aktif"
+
+**EC-PRD-031: Produk dengan Riwayat Stock Keluar Tidak Bisa Di-Soft Delete**
+- **Deskripsi:** Produk yang memiliki riwayat stock keluar tidak bisa di-soft delete
+- **Validasi:** Cek apakah varian produk memiliki riwayat stock keluar
+- **Error Message:** "Produk tidak dapat dihapus karena memiliki riwayat stock keluar"
+
+**EC-PRD-032: Restore Produk dengan SKU Bentrok**
+- **Deskripsi:** Produk tidak bisa di-restore jika SKU bentrok dengan produk lain
+- **Validasi:** Cek keunikan SKU saat restore
+- **Error Message:** "Produk tidak dapat dipulihkan karena SKU sudah digunakan oleh produk lain"
+
+**EC-PRD-033: Force Delete Produk yang Masih Memiliki Relasi**
+- **Deskripsi:** Produk yang sudah di-soft delete tidak bisa di-force delete jika masih memiliki relasi
+- **Validasi:** Cek apakah produk masih memiliki relasi dengan data lain
+- **Error Message:** "Produk tidak dapat dihapus permanen karena masih memiliki relasi dengan data lain"
+
+**EC-PRD-034: Varian yang Digunakan dalam Template Aktif Tidak Bisa Di-Soft Delete**
+- **Deskripsi:** Varian yang digunakan dalam template aktif tidak bisa di-soft delete
+- **Validasi:** Cek apakah varian digunakan dalam template aktif
+- **Error Message:** "Varian tidak dapat dihapus karena digunakan dalam template aktif"
+
+**EC-PRD-035: Varian dengan Riwayat Stock Keluar Tidak Bisa Di-Soft Delete**
+- **Deskripsi:** Varian yang memiliki riwayat stock keluar tidak bisa di-soft delete
+- **Validasi:** Cek apakah varian memiliki riwayat stock keluar
+- **Error Message:** "Varian tidak dapat dihapus karena memiliki riwayat stock keluar"
+
+**EC-PRD-036: Restore Varian dengan SKU Bentrok**
+- **Deskripsi:** Varian tidak bisa di-restore jika SKU bentrok dengan varian lain
+- **Validasi:** Cek keunikan SKU saat restore
+- **Error Message:** "Varian tidak dapat dipulihkan karena SKU sudah digunakan oleh varian lain"
+
+**EC-PRD-037: Force Delete Varian yang Masih Memiliki Relasi**
+- **Deskripsi:** Varian yang sudah di-soft delete tidak bisa di-force delete jika masih memiliki relasi
+- **Validasi:** Cek apakah varian masih memiliki relasi dengan data lain
+- **Error Message:** "Varian tidak dapat dihapus permanen karena masih memiliki relasi dengan data lain"
+
+**EC-PRD-038: Restore Produk dengan Produk Parent Tidak Ada**
+- **Deskripsi:** Varian tidak bisa di-restore jika produk parent tidak ada atau di-soft delete
+- **Validasi:** Cek apakah produk parent ada dan aktif
+- **Error Message:** "Varian tidak dapat dipulihkan karena produk parent tidak ditemukan atau telah dihapus"
+
 ---
 
 ## 11. Asumsi & Batasan
@@ -997,6 +1162,18 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
 - Operasi submit stock keluar menggunakan database transaction
 - Jika terjadi error, semua perubahan akan di-rollback
 - Ini untuk memastikan konsistensi data
+
+**AS-PRD-009: Soft Delete dengan Cascade**
+- Soft delete produk akan otomatis soft delete semua varian terkait
+- Restore produk akan otomatis restore semua varian terkait
+- Force delete produk akan otomatis force delete semua varian terkait
+- Ini untuk memastikan konsistensi data antara produk dan varian
+
+**AS-PRD-010: Validasi SKU Saat Restore**
+- Sistem melakukan validasi SKU unik saat restore produk/varian
+- Jika SKU bentrok dengan produk/varian lain, restore gagal
+- User harus menyelesaikan konflik SKU sebelum dapat restore
+- Ini untuk mencegah duplikasi SKU
 
 ### 11.2 Batasan
 
@@ -1050,10 +1227,14 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
 - Semua produk dan varian selalu aktif
 - Jika tidak ingin digunakan, harus dihapus
 
-**BT-PRD-011: Tidak Ada Soft Delete**
-- Aplikasi tidak menyediakan fitur soft delete
-- Delete adalah permanen
-- Data yang dihapus tidak bisa dipulihkan
+**BT-PRD-011: Soft Delete**
+- Aplikasi menyediakan fitur soft delete untuk produk dan varian
+- Soft delete: Menghapus produk sementara dengan menandai sebagai deleted_at
+- Restore: Memulihkan produk yang di-soft delete
+- Force delete: Menghapus permanen produk yang sudah di-soft delete
+- Cascade soft delete: Varian otomatis di-soft delete ketika produk di-soft delete
+- Cascade restore: Varian otomatis di-restore ketika produk di-restore
+- **Catatan:** Ini adalah perubahan dari PRD awal yang menyatakan "Tidak Ada Soft Delete"
 
 **BT-PRD-012: Tidak Ada Complex Filtering & Sorting**
 - Aplikasi hanya menyediakan pencarian dasar
@@ -1145,6 +1326,70 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
   ```
 
 - **Penting:** Jika salah satu varian gagal validasi atau terjadi error, seluruh transaksi akan di-rollback dan tidak ada data yang tersimpan
+
+**Soft Delete Implementation:**
+- Gunakan Laravel SoftDeletes trait pada model Product dan ProductVariant:
+  ```php
+  use Illuminate\Database\Eloquent\SoftDeletes;
+  
+  class Product extends Model
+  {
+      use SoftDeletes;
+      // ...
+  }
+  
+  class ProductVariant extends Model
+  {
+      use SoftDeletes;
+      // ...
+  }
+  ```
+
+- Soft delete produk dengan cascade:
+  ```php
+  $product = Product::find($id);
+  $product->delete(); // Soft delete produk dan semua varian terkait
+  ```
+
+- Restore produk dengan cascade:
+  ```php
+  $product = Product::withTrashed()->find($id);
+  $product->restore(); // Restore produk dan semua varian terkait
+  ```
+
+- Force delete produk (hapus permanen):
+  ```php
+  $product = Product::withTrashed()->find($id);
+  $product->forceDelete(); // Hapus permanen produk dan semua varian terkait
+  ```
+
+- Query produk yang dihapus:
+  ```php
+  // Hanya produk aktif
+  $products = Product::all();
+  
+  // Semua produk termasuk yang dihapus
+  $products = Product::withTrashed()->get();
+  
+  // Hanya produk yang dihapus
+  $products = Product::onlyTrashed()->get();
+  ```
+
+- Migration untuk menambahkan soft delete:
+  ```php
+  public function up(): void
+  {
+      Schema::table('products', function (Blueprint $table) {
+          $table->softDeletes();
+      });
+      
+      Schema::table('product_variants', function (Blueprint $table) {
+          $table->softDeletes();
+      });
+  }
+  ```
+
+- **Penting:** Soft delete menggunakan database transaction untuk memastikan konsistensi data antara produk dan varian
 
 ### 12.3 Caching
 
@@ -1632,6 +1877,12 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
 | Template Aktif | Template yang sedang digunakan untuk input stock keluar |
 | Stock Current | Stock saat ini yang tersedia |
 | Stock Keluar | Stock yang berkurang dari gudang |
+| Soft Delete | Menghapus data sementara dengan menandai timestamp deleted_at |
+| Restore | Memulihkan data yang di-soft delete dengan menghapus timestamp deleted_at |
+| Force Delete | Menghapus permanen data yang sudah di-soft delete dari database |
+| Cascade Soft Delete | Soft delete parent otomatis soft delete semua child terkait |
+| Cascade Restore | Restore parent otomatis restore semua child terkait |
+| Deleted At | Timestamp yang menunjukkan kapan data di-soft delete |
 
 ### B. Referensi
 
@@ -1645,12 +1896,13 @@ StockTrackApp adalah aplikasi internal monitoring stock keluar yang dirancang kh
 
 | Versi | Tanggal | Perubahan |
 |-------|---------|-----------|
+| 1.2 | 2026-01-07 | **Perubahan Kebijakan Soft Delete:**<br>- Mengubah kebijakan dari "Tidak Ada Soft Delete" menjadi "Ada Soft Delete"<br>- Menambahkan fitur soft delete untuk produk dan varian<br>- Menambahkan fitur restore untuk memulihkan data yang dihapus<br>- Menambahkan fitur force delete untuk menghapus permanen<br>- Mengimplementasikan cascade soft delete dan cascade restore<br>- Menambahkan field `deleted_at` pada tabel products dan product_variants<br>- Menambahkan 12 functional requirements baru (FR-PRD-034 s/d FR-PRD-045)<br>- Update data model dengan field deleted_at dan index<br>- Update relasi cascade untuk soft delete dan restore<br>- **Alasan Perubahan:** Untuk memberikan fleksibilitas dalam pengelolaan data dan mencegah kehilangan data permanen yang tidak disengaja<br>- **Dampak ke Sistem:** Memerlukan migration database untuk menambahkan field deleted_at, update model Laravel untuk menggunakan SoftDeletes trait, update controller untuk mendukung soft delete, restore, dan force delete, serta update frontend untuk menampilkan fitur-fitur baru |
 | 1.1 | 2026-01-06 | Update pembuatan produk dan varian dalam satu transaksi database |
 | 1.0 | 2026-01-06 | Initial PRD - Master Produk (Simplified Version) |
 
 ---
 
 **Dokumen ini dibuat oleh:** Product Manager
-**Tanggal:** 6 Januari 2026
-**Versi:** 1.1
+**Tanggal:** 7 Januari 2026
+**Versi:** 1.2
 **Status:** Final

@@ -41,9 +41,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('products.update')
         ->middleware('permission:products.update');
 
-    // Delete product
+    // Delete product (soft delete)
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])
         ->name('products.destroy')
+        ->middleware('permission:products.delete');
+
+    // Restore soft deleted product
+    Route::post('/products/{product}/restore', [ProductController::class, 'restore'])
+        ->name('products.restore')
+        ->middleware('permission:products.delete');
+
+    // Permanently delete product (force delete)
+    Route::delete('/products/{product}/force', [ProductController::class, 'forceDelete'])
+        ->name('products.force')
         ->middleware('permission:products.delete');
 
     // ============================================

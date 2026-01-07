@@ -23,7 +23,7 @@ class ProductController extends Controller
         $this->middleware('permission:products.view')->only(['index', 'show']);
         $this->middleware('permission:products.create')->only(['create', 'store']);
         $this->middleware('permission:products.update')->only(['edit', 'update']);
-        $this->middleware('permission:products.delete')->only(['destroy']);
+        $this->middleware('permission:products.delete')->only(['destroy', 'restore', 'forceDelete']);
     }
 
     /**
@@ -71,8 +71,15 @@ class ProductController extends Controller
             $perPage = $request->get('per_page', 15);
             $search = $request->get('search', '');
 
-            // Query products with eager loading variants
-            $query = Product::with('variants');
+            // Check if we should include deleted products
+            $withTrashed = $request->get('with_trashed') === 'true';
+
+            // Build query based on with_trashed parameter
+            if ($withTrashed) {
+                $query = Product::withTrashed()->with('variants');
+            } else {
+                $query = Product::with('variants');
+            }
 
             // Apply search filter if provided
             if (!empty($search)) {
@@ -126,6 +133,7 @@ class ProductController extends Controller
             $this->logProductAction('view_product_list', 'all', [
                 'search' => $search,
                 'per_page' => $perPage,
+                'with_trashed' => $withTrashed ? 'true' : '',
             ]);
 
             return Inertia::render('Products/Index', [
@@ -133,6 +141,7 @@ class ProductController extends Controller
                 'filters' => [
                     'search' => $search,
                     'per_page' => $perPage,
+                    'with_trashed' => $withTrashed ? 'true' : '',
                 ],
                 'meta' => $meta,
             ]);
@@ -409,7 +418,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove specified product
+     * Remove specified product (soft delete)
      */
     public function destroy(string $id)
     {
@@ -422,29 +431,22 @@ class ProductController extends Controller
                     ->with('error', 'Produk tidak ditemukan.');
             }
 
-            // Validation: Product should not have variants
-            if ($product->variants()->count() > 0) {
-                return redirect()->back()
-                    ->with('error', 'Produk tidak dapat dihapus karena masih memiliki varian. Silakan hapus varian terlebih dahulu.');
-            }
-
-            // Validation: Product should not be used in templates (skip for now as template is not created yet)
-            // TODO: Add template validation when template feature is implemented
-
-            // Delete product (cascade will delete variants)
+            // Soft delete product (cascade will soft delete variants)
             $productName = $product->name;
             $productSku = $product->sku;
+            $variantsCount = $product->variants->count();
             $product->delete();
 
-            $this->logProductAction('delete_product', $id, [
+            $this->logProductAction('soft_delete_product', $id, [
                 'name' => $productName,
                 'sku' => $productSku,
+                'variants_count' => $variantsCount,
             ]);
 
             return redirect()->route('products.index')
-                ->with('success', 'Produk berhasil dihapus.');
+                ->with('success', 'Produk berhasil dihapus (soft delete).');
         } catch (\Exception $e) {
-            Log::error('Failed to delete product', [
+            Log::error('Failed to soft delete product', [
                 'error' => $e->getMessage(),
                 'product_id' => $id,
                 'performed_by' => Auth::id(),
@@ -452,6 +454,87 @@ class ProductController extends Controller
 
             return redirect()->back()
                 ->with('error', 'Gagal menghapus produk. Silakan coba lagi.');
+        }
+    }
+
+    /**
+     * Restore soft deleted product
+     */
+    public function restore(string $id)
+    {
+        try {
+            // Find soft deleted product by ID
+            $product = Product::withTrashed()->findOrFail($id);
+
+            if (!$product->trashed()) {
+                return redirect()->back()
+                    ->with('error', 'Produk tidak dalam status terhapus.');
+            }
+
+            // Restore product
+            $productName = $product->name;
+            $productSku = $product->sku;
+            $product->restore();
+
+            // Restore related variants
+            ProductVariant::withTrashed()
+                ->where('product_id', $product->id)
+                ->restore();
+
+            $this->logProductAction('restore_product', $id, [
+                'name' => $productName,
+                'sku' => $productSku,
+            ]);
+
+            return redirect()->route('products.index')
+                ->with('success', 'Produk berhasil dipulihkan.');
+        } catch (\Exception $e) {
+            Log::error('Failed to restore product', [
+                'error' => $e->getMessage(),
+                'product_id' => $id,
+                'performed_by' => Auth::id(),
+            ]);
+
+            return redirect()->back()
+                ->with('error', 'Gagal memulihkan produk. Silakan coba lagi.');
+        }
+    }
+
+    /**
+     * Permanently delete product (force delete)
+     */
+    public function forceDelete(string $id)
+    {
+        try {
+            // Find soft deleted product by ID
+            $product = Product::withTrashed()->findOrFail($id);
+
+            if (!$product->trashed()) {
+                return redirect()->back()
+                    ->with('error', 'Produk harus dalam status terhapus (soft delete) terlebih dahulu.');
+            }
+
+            // Force delete product (cascade will force delete variants)
+            $productName = $product->name;
+            $productSku = $product->sku;
+            $product->forceDelete();
+
+            $this->logProductAction('force_delete_product', $id, [
+                'name' => $productName,
+                'sku' => $productSku,
+            ]);
+
+            return redirect()->route('products.index')
+                ->with('success', 'Produk berhasil dihapus permanen.');
+        } catch (\Exception $e) {
+            Log::error('Failed to force delete product', [
+                'error' => $e->getMessage(),
+                'product_id' => $id,
+                'performed_by' => Auth::id(),
+            ]);
+
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus permanen produk. Silakan coba lagi.');
         }
     }
 }

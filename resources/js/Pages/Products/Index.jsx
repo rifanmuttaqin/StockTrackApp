@@ -5,7 +5,7 @@ import Table from '../../Components/Common/Table';
 import { Pagination, Alert, LoadingSpinner } from '../../Components/UI';
 import { usePermission } from '../../Hooks/usePermission';
 import { useMobileDetection } from '../../Hooks/useMobileDetection';
-import { PencilIcon, TrashIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, TrashIcon, MagnifyingGlassIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import ProductVariantsModal from '../../Components/Products/ProductVariantsModal';
 
 const Index = ({ products, filters, meta }) => {
@@ -15,8 +15,24 @@ const Index = ({ products, filters, meta }) => {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(filters?.search || '');
   const [debouncedSearch, setDebouncedSearch] = useState(filters?.search || '');
+  const [showDeleted, setShowDeleted] = useState(filters?.with_trashed === 'true');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleFilterChange = (key, value) => {
+    const newFilters = { ...filters, [key]: value, page: 1 };
+
+    router.get(
+      route('products.index'),
+      newFilters,
+      {
+        preserveState: true,
+        preserveScroll: true,
+        onStart: () => setLoading(true),
+        onFinish: () => setLoading(false),
+      }
+    );
+  };
 
   // Debounce search query
   useEffect(() => {
@@ -34,19 +50,10 @@ const Index = ({ products, filters, meta }) => {
     }
   }, [debouncedSearch]);
 
-  const handleFilterChange = (key, value) => {
-    const newFilters = { ...filters, [key]: value, page: 1 };
-
-    router.get(
-      route('products.index'),
-      newFilters,
-      {
-        preserveState: true,
-        preserveScroll: true,
-        onStart: () => setLoading(true),
-        onFinish: () => setLoading(false),
-      }
-    );
+  const handleToggleDeleted = () => {
+    const newValue = !showDeleted;
+    setShowDeleted(newValue);
+    handleFilterChange('with_trashed', newValue ? 'true' : '');
   };
 
   const handleSortChange = (field) => {
@@ -81,8 +88,28 @@ const Index = ({ products, filters, meta }) => {
   };
 
   const handleDelete = (product) => {
-    if (confirm('Apakah Anda yakin ingin menghapus produk ini? Semua varian terkait juga akan dihapus.')) {
+    if (confirm('Apakah Anda yakin ingin menghapus produk ini? Produk akan dipindahkan ke sampah dan dapat dipulihkan kembali.')) {
       router.delete(route('products.destroy', product.id), {
+        onSuccess: () => {
+          router.reload({ only: ['products'] });
+        },
+      });
+    }
+  };
+
+  const handleRestore = (product) => {
+    if (confirm('Apakah Anda yakin ingin memulihkan produk ini? Produk akan kembali aktif.')) {
+      router.post(route('products.restore', product.id), {}, {
+        onSuccess: () => {
+          router.reload({ only: ['products'] });
+        },
+      });
+    }
+  };
+
+  const handleForceDelete = (product) => {
+    if (confirm('PERINGATAN: Apakah Anda yakin ingin menghapus produk ini secara permanen? Tindakan ini tidak dapat dibatalkan!')) {
+      router.delete(route('products.force', product.id), {
         onSuccess: () => {
           router.reload({ only: ['products'] });
         },
@@ -110,11 +137,20 @@ const Index = ({ products, filters, meta }) => {
       label: 'Nama Produk',
       sortable: true,
       render: (value, row) => (
-        <div
-          className="font-medium text-gray-900 cursor-pointer hover:text-indigo-600 hover:underline"
-          onClick={() => handleProductClick(row)}
-        >
-          {value}
+        <div className="flex items-center space-x-2">
+          {row.deleted_at && (
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+              Deleted
+            </span>
+          )}
+          <div
+            className={`font-medium cursor-pointer hover:text-indigo-600 hover:underline ${
+              row.deleted_at ? 'text-gray-500 line-through' : 'text-gray-900'
+            }`}
+            onClick={() => handleProductClick(row)}
+          >
+            {value}
+          </div>
         </div>
       ),
     },
@@ -122,8 +158,10 @@ const Index = ({ products, filters, meta }) => {
       key: 'sku',
       label: 'SKU',
       sortable: true,
-      render: (value) => (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+      render: (value, row) => (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+          row.deleted_at ? 'bg-gray-100 text-gray-600' : 'bg-blue-100 text-blue-800'
+        }`}>
           {value}
         </span>
       ),
@@ -132,8 +170,8 @@ const Index = ({ products, filters, meta }) => {
       key: 'description',
       label: 'Deskripsi',
       sortable: false,
-      render: (value) => (
-        <div className="max-w-xs truncate text-gray-600">
+      render: (value, row) => (
+        <div className={`max-w-xs truncate ${row.deleted_at ? 'text-gray-400' : 'text-gray-600'}`}>
           {value || '-'}
         </div>
       ),
@@ -142,8 +180,10 @@ const Index = ({ products, filters, meta }) => {
       key: 'variants_count',
       label: 'Jumlah Varian',
       sortable: true,
-      render: (value) => (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+      render: (value, row) => (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+          row.deleted_at ? 'bg-gray-100 text-gray-600' : 'bg-green-100 text-green-800'
+        }`}>
           {value || 0}
         </span>
       ),
@@ -151,27 +191,53 @@ const Index = ({ products, filters, meta }) => {
   ];
 
   // Define table actions
-  const actions = [];
+  const getActions = (product) => {
+    const actions = [];
 
-  if (can('products.edit')) {
-    actions.push({
-      key: 'edit',
-      icon: PencilIcon,
-      className: 'text-blue-600 hover:text-blue-900',
-      title: 'Edit Produk',
-      onClick: (product) => router.get(route('products.edit', product.id)),
-    });
-  }
+    if (!product.deleted_at) {
+      // Actions untuk produk aktif
+      if (can('products.edit')) {
+        actions.push({
+          key: 'edit',
+          icon: PencilIcon,
+          className: 'text-blue-600 hover:text-blue-900',
+          title: 'Edit Produk',
+          onClick: () => router.get(route('products.edit', product.id)),
+        });
+      }
 
-  if (can('products.delete')) {
-    actions.push({
-      key: 'delete',
-      icon: TrashIcon,
-      className: 'text-red-600 hover:text-red-900',
-      title: 'Hapus Produk',
-      onClick: handleDelete,
-    });
-  }
+      if (can('products.delete')) {
+        actions.push({
+          key: 'delete',
+          icon: TrashIcon,
+          className: 'text-red-600 hover:text-red-900',
+          title: 'Hapus Produk',
+          onClick: () => handleDelete(product),
+        });
+      }
+    } else {
+      // Actions untuk produk yang dihapus
+      if (can('products.delete')) {
+        actions.push({
+          key: 'restore',
+          icon: ArrowPathIcon,
+          className: 'text-green-600 hover:text-green-900',
+          title: 'Pulihkan Produk',
+          onClick: () => handleRestore(product),
+        });
+
+        actions.push({
+          key: 'force-delete',
+          icon: TrashIcon,
+          className: 'text-red-700 hover:text-red-900',
+          title: 'Hapus Permanen',
+          onClick: () => handleForceDelete(product),
+        });
+      }
+    }
+
+    return actions;
+  };
 
   return (
     <AppLayout title="Produk">
@@ -216,9 +282,9 @@ const Index = ({ products, filters, meta }) => {
           </div>
         )}
 
-        {/* Search Bar */}
-        <div className="mb-4">
-          <div className="relative">
+        {/* Search Bar and Filters */}
+        <div className="mb-4 flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
             </div>
@@ -229,6 +295,19 @@ const Index = ({ products, filters, meta }) => {
               placeholder="Cari berdasarkan nama atau SKU..."
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <label className="inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showDeleted}
+                onChange={handleToggleDeleted}
+                className="sr-only peer"
+              />
+              <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900">Tampilkan Produk Dihapus</span>
+            </label>
           </div>
         </div>
 
@@ -242,9 +321,10 @@ const Index = ({ products, filters, meta }) => {
             sortColumn={filters?.sort}
             sortDirection={filters?.order}
             onSort={handleSortChange}
-            actions={actions}
-            emptyMessage="Tidak ada produk ditemukan"
+            actions={getActions}
+            emptyMessage={showDeleted ? "Tidak ada produk yang dihapus ditemukan" : "Tidak ada produk ditemukan"}
             onRowClick={handleProductClick}
+            rowClassName={(row) => row.deleted_at ? 'bg-gray-50' : ''}
           />
         </div>
 

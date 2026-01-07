@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Product extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $keyType = 'string';
 
@@ -27,6 +28,18 @@ class Product extends Model
             if (empty($model->id)) {
                 $model->id = Str::uuid();
             }
+        });
+
+        static::deleting(function ($product) {
+            // Soft delete varian hanya jika bukan force delete
+            if (!$product->isForceDeleting()) {
+                $product->variants()->delete();
+            }
+        });
+
+        static::restoring(function ($product) {
+            // Restore semua varian yang terkait
+            $product->variants()->withTrashed()->restore();
         });
     }
 
