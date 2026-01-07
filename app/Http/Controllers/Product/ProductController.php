@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ProductCreateRequest;
 use App\Http\Requests\Product\ProductUpdateRequest;
-use App\Models\Product;
-use App\Models\ProductVariant;
+use App\Services\Contracts\ProductServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -17,8 +15,12 @@ use Inertia\Response;
 
 class ProductController extends Controller
 {
-    public function __construct()
+    protected ProductServiceInterface $productService;
+
+    public function __construct(ProductServiceInterface $productService)
     {
+        $this->productService = $productService;
+
         // Permission middleware
         $this->middleware('permission:products.view')->only(['index', 'show']);
         $this->middleware('permission:products.create')->only(['create', 'store']);
@@ -69,48 +71,9 @@ class ProductController extends Controller
     {
         try {
             $perPage = $request->get('per_page', 15);
-            $search = $request->get('search', '');
+            $filters = $request->only(['search', 'per_page', 'with_trashed']);
 
-            // Check if we should include deleted products
-            $withTrashed = $request->get('with_trashed') === 'true';
-
-            // Build query based on with_trashed parameter
-            if ($withTrashed) {
-                $query = Product::withTrashed()->with('variants');
-            } else {
-                $query = Product::with('variants');
-            }
-
-            // Apply search filter if provided
-            if (!empty($search)) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('sku', 'like', "%{$search}%");
-                });
-            }
-
-            // Order by created_at desc
-            $query->orderBy('created_at', 'desc');
-
-            // Paginate results
-            $products = $query->paginate($perPage);
-
-            // Transform variants to match frontend expectations
-            // Map 'variant_name' to 'name' for consistency with frontend
-            $products->getCollection()->transform(function ($product) {
-                $variantsCount = $product->variants->count();
-                $product->variants->transform(function ($variant) {
-                    return [
-                        'id' => $variant->id,
-                        'name' => $variant->variant_name, // Map variant_name to name
-                        'sku' => $variant->sku,
-                        'stock_current' => $variant->stock_current,
-                    ];
-                });
-                // Add variants_count to product
-                $product->variants_count = $variantsCount;
-                return $product;
-            });
+            $products = $this->productService->getAllProducts($perPage, $filters);
 
             // Calculate total variants across all products
             $totalVariants = 0;
@@ -131,18 +94,12 @@ class ProductController extends Controller
             ];
 
             $this->logProductAction('view_product_list', 'all', [
-                'search' => $search,
-                'per_page' => $perPage,
-                'with_trashed' => $withTrashed ? 'true' : '',
+                'filters' => $filters,
             ]);
 
             return Inertia::render('Products/Index', [
                 'products' => $products,
-                'filters' => [
-                    'search' => $search,
-                    'per_page' => $perPage,
-                    'with_trashed' => $withTrashed ? 'true' : '',
-                ],
+                'filters' => $filters,
                 'meta' => $meta,
             ]);
         } catch (\Exception $e) {
@@ -156,6 +113,7 @@ class ProductController extends Controller
                 'filters' => [
                     'search' => '',
                     'per_page' => 15,
+                    'with_trashed' => '',
                 ],
                 'meta' => [],
                 'error' => 'Gagal memuat data produk. Silakan coba lagi.',
@@ -178,32 +136,13 @@ class ProductController extends Controller
     {
         try {
             $validatedData = $request->validated();
+            $product = $this->productService->createProduct($request);
 
-            // Use DB transaction to ensure atomicity
-            DB::transaction(function () use ($validatedData) {
-                // Create product first
-                $product = Product::create([
-                    'name' => $validatedData['name'],
-                    'sku' => $validatedData['sku'],
-                    'description' => $validatedData['description'] ?? null,
-                ]);
-
-                // Loop through variants array and create each variant
-                foreach ($validatedData['variants'] as $variantData) {
-                    ProductVariant::create([
-                        'product_id' => $product->id,
-                        'variant_name' => $variantData['name'],
-                        'sku' => $variantData['sku'],
-                        'stock_current' => $variantData['stock_current'],
-                    ]);
-                }
-
-                $this->logProductAction('create_product', $product->id, [
-                    'name' => $product->name,
-                    'sku' => $product->sku,
-                    'variants_count' => count($validatedData['variants']),
-                ]);
-            });
+            $this->logProductAction('create_product', $product->id, [
+                'name' => $product->name,
+                'sku' => $product->sku,
+                'variants_count' => count($validatedData['variants']),
+            ]);
 
             return redirect()->route('products.index')
                 ->with('success', 'Produk berhasil ditambahkan.');
@@ -226,26 +165,11 @@ class ProductController extends Controller
     public function show(string $id): Response
     {
         try {
-            // Find product by ID with eager loading variants
-            $product = Product::with('variants')->find($id);
+            $product = $this->productService->findProductById($id);
 
             if (!$product) {
                 abort(404, 'Produk tidak ditemukan.');
             }
-
-            // Transform variants to match frontend expectations
-            // Map 'variant_name' to 'name' for consistency with frontend
-            $variantsCount = $product->variants->count();
-            $product->variants->transform(function ($variant) {
-                return [
-                    'id' => $variant->id,
-                    'name' => $variant->variant_name, // Map variant_name to name
-                    'sku' => $variant->sku,
-                    'stock_current' => $variant->stock_current,
-                ];
-            });
-            // Add variants_count to product
-            $product->variants_count = $variantsCount;
 
             $this->logProductAction('view_product_detail', $id);
 
@@ -269,26 +193,11 @@ class ProductController extends Controller
     public function edit(string $id): Response
     {
         try {
-            // Find product by ID with eager loading variants
-            $product = Product::with('variants')->find($id);
+            $product = $this->productService->findProductById($id);
 
             if (!$product) {
                 abort(404, 'Produk tidak ditemukan.');
             }
-
-            // Transform variants to match frontend expectations
-            // Map 'variant_name' to 'name' for consistency with frontend
-            $variantsCount = $product->variants->count();
-            $product->variants->transform(function ($variant) {
-                return [
-                    'id' => $variant->id,
-                    'name' => $variant->variant_name, // Map variant_name to name
-                    'sku' => $variant->sku,
-                    'stock_current' => $variant->stock_current,
-                ];
-            });
-            // Add variants_count to product
-            $product->variants_count = $variantsCount;
 
             $this->logProductAction('view_product_edit_form', $id);
 
@@ -312,84 +221,28 @@ class ProductController extends Controller
     public function update(ProductUpdateRequest $request, string $id)
     {
         try {
-            // Log incoming data for debugging
-            Log::info('Product Update Request Data', [
-                'product_id' => $id,
-                'all_input_data' => $request->all(),
-                'validated_data' => $request->validated(),
-            ]);
-
-            // Find product by ID with variants
-            $product = Product::with('variants')->find($id);
-
-            if (!$product) {
-                return redirect()->back()
-                    ->with('error', 'Produk tidak ditemukan.');
-            }
-
             $validatedData = $request->validated();
 
-            // Use DB transaction to ensure atomicity
-            DB::transaction(function () use ($product, $validatedData, $id) {
-                // Update product data
-                $product->update([
-                    'name' => $validatedData['name'],
-                    'sku' => $validatedData['sku'],
-                    'description' => $validatedData['description'] ?? null,
-                ]);
+            Log::info('Product Update Request Data', [
+                'product_id' => $id,
+                'validated_data' => $validatedData,
+            ]);
 
-                // Get existing variant IDs
-                $existingVariantIds = $product->variants->pluck('id')->toArray();
+            $success = $this->productService->updateProduct($id, $request);
 
-                // Get submitted variant IDs (excluding null IDs for new variants)
-                $submittedVariantIds = array_filter(
-                    array_column($validatedData['variants'], 'id'),
-                    function ($id) { return $id !== null; }
-                );
-
-                // Update or create variants
-                foreach ($validatedData['variants'] as $variantData) {
-                    if (isset($variantData['id']) && $variantData['id'] !== null) {
-                        // Update existing variant
-                        $variant = ProductVariant::where('id', $variantData['id'])
-                            ->where('product_id', $product->id)
-                            ->first();
-
-                        if ($variant) {
-                            $variant->update([
-                                'variant_name' => $variantData['name'],
-                                'sku' => $variantData['sku'],
-                                'stock_current' => $variantData['stock_current'],
-                            ]);
-                        }
-                    } else {
-                        // Create new variant
-                        ProductVariant::create([
-                            'product_id' => $product->id,
-                            'variant_name' => $variantData['name'],
-                            'sku' => $variantData['sku'],
-                            'stock_current' => $variantData['stock_current'],
-                        ]);
-                    }
-                }
-
-                // Delete variants that are not in the submitted list
-                $variantsToDelete = array_diff($existingVariantIds, $submittedVariantIds);
-                if (!empty($variantsToDelete)) {
-                    ProductVariant::whereIn('id', $variantsToDelete)->delete();
-                }
-
+            if ($success) {
                 $this->logProductAction('update_product', $id, [
-                    'name' => $product->name,
-                    'sku' => $product->sku,
                     'updated_fields' => array_keys($validatedData),
                     'variants_count' => count($validatedData['variants']),
-                    'variants_deleted' => count($variantsToDelete),
                 ]);
-            });
 
-            return redirect()->route('products.index')
-                ->with('success', 'Produk dan varian berhasil diperbarui.');
+                return redirect()->route('products.index')
+                    ->with('success', 'Produk dan varian berhasil diperbarui.');
+            }
+
+            return redirect()->back()
+                ->with('error', 'Gagal memperbarui produk.')
+                ->withInput();
         } catch (ValidationException $e) {
             Log::error('Validation failed during product update', [
                 'error' => $e->getMessage(),
@@ -423,28 +276,28 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         try {
-            // Find product by ID with eager loading variants
-            $product = Product::with('variants')->find($id);
+            $product = $this->productService->findProductById($id);
 
             if (!$product) {
                 return redirect()->back()
                     ->with('error', 'Produk tidak ditemukan.');
             }
 
-            // Soft delete product (cascade will soft delete variants)
-            $productName = $product->name;
-            $productSku = $product->sku;
-            $variantsCount = $product->variants->count();
-            $product->delete();
+            $success = $this->productService->deleteProduct($id);
 
-            $this->logProductAction('soft_delete_product', $id, [
-                'name' => $productName,
-                'sku' => $productSku,
-                'variants_count' => $variantsCount,
-            ]);
+            if ($success) {
+                $this->logProductAction('soft_delete_product', $id, [
+                    'name' => $product->name,
+                    'sku' => $product->sku,
+                    'variants_count' => $product->variants->count(),
+                ]);
 
-            return redirect()->route('products.index')
-                ->with('success', 'Produk berhasil dihapus (soft delete).');
+                return redirect()->route('products.index')
+                    ->with('success', 'Produk berhasil dihapus (soft delete).');
+            }
+
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus produk.');
         } catch (\Exception $e) {
             Log::error('Failed to soft delete product', [
                 'error' => $e->getMessage(),
@@ -463,31 +316,17 @@ class ProductController extends Controller
     public function restore(string $id)
     {
         try {
-            // Find soft deleted product by ID
-            $product = Product::withTrashed()->findOrFail($id);
+            $success = $this->productService->restoreProduct($id);
 
-            if (!$product->trashed()) {
-                return redirect()->back()
-                    ->with('error', 'Produk tidak dalam status terhapus.');
+            if ($success) {
+                $this->logProductAction('restore_product', $id);
+
+                return redirect()->route('products.index')
+                    ->with('success', 'Produk berhasil dipulihkan.');
             }
 
-            // Restore product
-            $productName = $product->name;
-            $productSku = $product->sku;
-            $product->restore();
-
-            // Restore related variants
-            ProductVariant::withTrashed()
-                ->where('product_id', $product->id)
-                ->restore();
-
-            $this->logProductAction('restore_product', $id, [
-                'name' => $productName,
-                'sku' => $productSku,
-            ]);
-
-            return redirect()->route('products.index')
-                ->with('success', 'Produk berhasil dipulihkan.');
+            return redirect()->back()
+                ->with('error', 'Gagal memulihkan produk.');
         } catch (\Exception $e) {
             Log::error('Failed to restore product', [
                 'error' => $e->getMessage(),
@@ -506,26 +345,17 @@ class ProductController extends Controller
     public function forceDelete(string $id)
     {
         try {
-            // Find soft deleted product by ID
-            $product = Product::withTrashed()->findOrFail($id);
+            $success = $this->productService->forceDeleteProduct($id);
 
-            if (!$product->trashed()) {
-                return redirect()->back()
-                    ->with('error', 'Produk harus dalam status terhapus (soft delete) terlebih dahulu.');
+            if ($success) {
+                $this->logProductAction('force_delete_product', $id);
+
+                return redirect()->route('products.index')
+                    ->with('success', 'Produk berhasil dihapus permanen.');
             }
 
-            // Force delete product (cascade will force delete variants)
-            $productName = $product->name;
-            $productSku = $product->sku;
-            $product->forceDelete();
-
-            $this->logProductAction('force_delete_product', $id, [
-                'name' => $productName,
-                'sku' => $productSku,
-            ]);
-
-            return redirect()->route('products.index')
-                ->with('success', 'Produk berhasil dihapus permanen.');
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus permanen produk.');
         } catch (\Exception $e) {
             Log::error('Failed to force delete product', [
                 'error' => $e->getMessage(),
