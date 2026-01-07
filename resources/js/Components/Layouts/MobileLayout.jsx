@@ -16,7 +16,7 @@ const MobileLayout = ({ title, children, header }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
       <Head title={title} />
 
       {/* Mobile Header */}
@@ -53,7 +53,7 @@ const MobileLayout = ({ title, children, header }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-x-hidden overflow-y-auto pb-16">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto pb-16 custom-scrollbar">
         <div className="px-4 py-4">
           {children}
         </div>

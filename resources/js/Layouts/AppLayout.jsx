@@ -19,24 +19,26 @@ export default function AppLayout({ title, children, header, breadcrumbs }) {
 
     // Desktop layout
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="h-screen bg-gray-50 overflow-hidden">
             <Head title={title} />
 
-            <div className="flex h-screen">
-                {/* Sidebar - Now on the left side */}
+            <div className="flex h-full">
+                {/* Sidebar - Fixed position with proper overflow handling */}
                 <Sidebar />
 
-                {/* Main Content */}
-                <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Main Content Area */}
+                <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
                     {/* Navbar */}
                     <Navbar />
 
-                    {/* Page Content */}
-                    <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
-                        <div className="container mx-auto">
-                            {/* Breadcrumbs - Only show on desktop */}
-                            {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
-                            {children}
+                    {/* Page Content - Scrollable area */}
+                    <main className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 custom-scrollbar">
+                        <div className="p-6">
+                            <div className="container mx-auto max-w-7xl">
+                                {/* Breadcrumbs - Only show on desktop */}
+                                {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+                                {children}
+                            </div>
                         </div>
                     </main>
                 </div>

@@ -115,7 +115,7 @@ export default function Sidebar() {
         return hasPerm;
     });
 
-    // Handle keyboard navigation
+    // Handle keyboard navigation and prevent body scroll on mobile
     useEffect(() => {
         const handleKeyDown = (event) => {
             // ESC key closes sidebar on mobile
@@ -124,9 +124,17 @@ export default function Sidebar() {
             }
         };
 
+        // Prevent body scroll when sidebar is open on mobile
+        if (sidebarOpen) {
+            document.body.classList.add('sidebar-open');
+        } else {
+            document.body.classList.remove('sidebar-open');
+        }
+
         document.addEventListener('keydown', handleKeyDown);
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
+            document.body.classList.remove('sidebar-open');
         };
     }, [sidebarOpen]);
 
@@ -140,26 +148,27 @@ export default function Sidebar() {
                     role="presentation"
                     aria-hidden="true"
                 >
-                    <div className="absolute inset-0 bg-gray-600 opacity-75"></div>
+                    <div className="absolute inset-0 bg-gray-900 opacity-75 backdrop-blur-sm"></div>
                 </div>
             )}
 
             {/* Sidebar */}
-            <div
+            <aside
                 ref={sidebarRef}
                 className={`
-                    fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out
-                    md:translate-x-0 md:static md:inset-0
-                    ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+                    fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-indigo-950 to-indigo-900 shadow-2xl transform transition-transform duration-300 ease-in-out md:static md:inset-auto md:transform-none
+                    flex flex-col h-full
+                    ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
                 `}
                 role="navigation"
                 aria-label="Main navigation"
             >
-                <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-                    <h1 className="text-xl font-semibold text-gray-900">StockTrackApp</h1>
+                {/* Header */}
+                <div className="flex items-center justify-between h-16 px-4 border-b border-indigo-800/50 backdrop-blur-sm flex-shrink-0">
+                    <h1 className="text-xl font-bold text-white tracking-wide">StockTrackApp</h1>
                     <button
                         type="button"
-                        className="md:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
+                        className="md:hidden p-2 rounded-md text-indigo-300 hover:text-white hover:bg-indigo-800/50 transition-all duration-200"
                         onClick={() => setSidebarOpen(false)}
                         aria-label="Close sidebar"
                     >
@@ -167,8 +176,9 @@ export default function Sidebar() {
                     </button>
                 </div>
 
-                <nav className="mt-5 px-2" role="menu">
-                    <ul className="space-y-1">
+                {/* Navigation - Scrollable area */}
+                <nav className="mt-5 px-2 flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar" role="menu">
+                    <div className="space-y-1 pb-4">
                         {filteredMenuItems.map((item) => {
                             const Icon = item.icon;
                             const hasSubMenu = item.subMenu && item.subMenu.length > 0;
@@ -193,10 +203,10 @@ export default function Sidebar() {
                                             <button
                                                 onClick={() => toggleMenu(item.name)}
                                                 className={`
-                                                    w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors
+                                                    w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
                                                     ${isActive(item.href) || filteredSubMenu.some(subItem => isActive(subItem.href))
-                                                        ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                                                        : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                                                        ? 'bg-indigo-500/20 text-indigo-300 border-l-4 border-indigo-400 shadow-lg shadow-indigo-500/20'
+                                                        : 'text-gray-300 hover:bg-indigo-500/10 hover:text-white hover:shadow-md'
                                                     }
                                                 `}
                                                 aria-expanded={isMenuOpen}
@@ -204,13 +214,13 @@ export default function Sidebar() {
                                                 aria-controls={`submenu-${item.name}`}
                                             >
                                                 <div className="flex items-center">
-                                                    <Icon className="mr-3 h-5 w-5" />
+                                                    <Icon className={`mr-3 h-5 w-5 ${isActive(item.href) || filteredSubMenu.some(subItem => isActive(subItem.href)) ? 'text-indigo-300' : 'text-indigo-400'}`} />
                                                     {item.name}
                                                 </div>
                                                 {isMenuOpen ? (
-                                                    <ChevronDownIcon className="h-4 w-4" />
+                                                    <ChevronDownIcon className="h-4 w-4 text-indigo-400" />
                                                 ) : (
-                                                    <ChevronRightIcon className="h-4 w-4" />
+                                                    <ChevronRightIcon className="h-4 w-4 text-indigo-400" />
                                                 )}
                                             </button>
 
@@ -226,10 +236,10 @@ export default function Sidebar() {
                                                             <Link
                                                                 href={subItem.href}
                                                                 className={`
-                                                                    block px-3 py-2 rounded-md text-sm font-medium transition-colors
+                                                                    block px-3 py-2 rounded-md text-sm font-medium transition-all duration-200
                                                                     ${isActive(subItem.href)
-                                                                        ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                                                                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                                                        ? 'bg-indigo-500/20 text-indigo-300 border-l-4 border-indigo-400'
+                                                                        : 'text-gray-400 hover:bg-indigo-500/10 hover:text-white'
                                                                     }
                                                                 `}
                                                                 role="menuitem"
@@ -245,24 +255,31 @@ export default function Sidebar() {
                                         <Link
                                             href={item.href}
                                             className={`
-                                                flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
+                                                flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
                                                 ${isActive(item.href)
-                                                    ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                                                    : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                                                    ? 'bg-indigo-500/20 text-indigo-300 border-l-4 border-indigo-400 shadow-lg shadow-indigo-500/20'
+                                                    : 'text-gray-300 hover:bg-indigo-500/10 hover:text-white hover:shadow-md'
                                                 }
                                             `}
                                             role="menuitem"
                                         >
-                                            <Icon className="mr-3 h-5 w-5" />
+                                            <Icon className={`mr-3 h-5 w-5 ${isActive(item.href) ? 'text-indigo-300' : 'text-indigo-400'}`} />
                                             {item.name}
                                         </Link>
                                     )}
                                 </li>
                             );
                         })}
-                    </ul>
+                    </div>
                 </nav>
-            </div>
+
+                {/* Footer - Optional branding or version info */}
+                <div className="flex-shrink-0 border-t border-indigo-800/50 p-4">
+                    <div className="text-xs text-indigo-400 text-center">
+                        © 2026 StockTrackApp
+                    </div>
+                </div>
+            </aside>
         </>
     );
 }

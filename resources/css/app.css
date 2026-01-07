@@ -181,3 +181,68 @@
   .text-3xl { font-size: calc(1.875rem * 1.12); }
   .text-4xl { font-size: calc(2.25rem * 1.12); }
 }
+
+/* Custom Scrollbar Styles */
+@layer utilities {
+  /* Custom scrollbar for better UX */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.3);
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.5);
+  }
+
+  /* Custom scrollbar for dark theme (sidebar) */
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb,
+  aside .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+  }
+
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover,
+  aside .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  /* Hide scrollbar for Firefox */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(99, 102, 241, 0.3) transparent;
+  }
+
+  /* Ensure no double scrollbar */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Prevent body scroll when sidebar is open on mobile */
+  body.sidebar-open {
+    overflow: hidden;
+  }
+
+  /* Hide browser scrollbar completely */
+  html {
+    overflow-y: hidden;
+  }
+
+  body {
+    overflow-y: hidden;
+  }
+
+  /* Allow scroll only in specific containers */
+  .custom-scrollbar {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
