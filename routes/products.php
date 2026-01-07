@@ -34,12 +34,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Edit product form
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])
         ->name('products.edit')
-        ->middleware('permission:products.edit');
+        ->middleware('permission:products.update');
 
     // Update product
     Route::put('/products/{product}', [ProductController::class, 'update'])
         ->name('products.update')
-        ->middleware('permission:products.edit');
+        ->middleware('permission:products.update');
 
     // Delete product
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])

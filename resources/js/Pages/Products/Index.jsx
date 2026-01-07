@@ -153,7 +153,7 @@ const Index = ({ products, filters, meta }) => {
   // Define table actions
   const actions = [];
 
-  if (can('products.update')) {
+  if (can('products.edit')) {
     actions.push({
       key: 'edit',
       icon: PencilIcon,

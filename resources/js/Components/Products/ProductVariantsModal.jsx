@@ -91,7 +91,7 @@ export default function ProductVariantsModal({ isOpen, onClose, product }) {
                 {product.variants?.map((variant) => (
                   <tr key={variant.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {variant.variant_name}
+                      {variant.name}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
@@ -123,7 +123,7 @@ export default function ProductVariantsModal({ isOpen, onClose, product }) {
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
                     <h5 className="text-sm font-medium text-gray-900">
-                      {variant.variant_name}
+                      {variant.name}
                     </h5>
                     <p className="mt-1 text-xs text-gray-500">SKU: {variant.sku}</p>
                   </div>

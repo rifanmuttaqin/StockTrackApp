@@ -22,7 +22,7 @@ class ProductController extends Controller
         // Permission middleware
         $this->middleware('permission:products.view')->only(['index', 'show']);
         $this->middleware('permission:products.create')->only(['create', 'store']);
-        $this->middleware('permission:products.edit')->only(['edit', 'update']);
+        $this->middleware('permission:products.update')->only(['edit', 'update']);
         $this->middleware('permission:products.delete')->only(['destroy']);
     }
 
@@ -88,9 +88,33 @@ class ProductController extends Controller
             // Paginate results
             $products = $query->paginate($perPage);
 
+            // Transform variants to match frontend expectations
+            // Map 'variant_name' to 'name' for consistency with frontend
+            $products->getCollection()->transform(function ($product) {
+                $variantsCount = $product->variants->count();
+                $product->variants->transform(function ($variant) {
+                    return [
+                        'id' => $variant->id,
+                        'name' => $variant->variant_name, // Map variant_name to name
+                        'sku' => $variant->sku,
+                        'stock_current' => $variant->stock_current,
+                    ];
+                });
+                // Add variants_count to product
+                $product->variants_count = $variantsCount;
+                return $product;
+            });
+
+            // Calculate total variants across all products
+            $totalVariants = 0;
+            foreach ($products as $product) {
+                $totalVariants += $product->variants->count();
+            }
+
             // Get product statistics for meta data
             $meta = [
                 'total' => $products->total(),
+                'total_variants' => $totalVariants,
                 'per_page' => $products->perPage(),
                 'current_page' => $products->currentPage(),
                 'last_page' => $products->lastPage(),
@@ -200,6 +224,20 @@ class ProductController extends Controller
                 abort(404, 'Produk tidak ditemukan.');
             }
 
+            // Transform variants to match frontend expectations
+            // Map 'variant_name' to 'name' for consistency with frontend
+            $variantsCount = $product->variants->count();
+            $product->variants->transform(function ($variant) {
+                return [
+                    'id' => $variant->id,
+                    'name' => $variant->variant_name, // Map variant_name to name
+                    'sku' => $variant->sku,
+                    'stock_current' => $variant->stock_current,
+                ];
+            });
+            // Add variants_count to product
+            $product->variants_count = $variantsCount;
+
             $this->logProductAction('view_product_detail', $id);
 
             return Inertia::render('Products/Show', [
@@ -229,6 +267,20 @@ class ProductController extends Controller
                 abort(404, 'Produk tidak ditemukan.');
             }
 
+            // Transform variants to match frontend expectations
+            // Map 'variant_name' to 'name' for consistency with frontend
+            $variantsCount = $product->variants->count();
+            $product->variants->transform(function ($variant) {
+                return [
+                    'id' => $variant->id,
+                    'name' => $variant->variant_name, // Map variant_name to name
+                    'sku' => $variant->sku,
+                    'stock_current' => $variant->stock_current,
+                ];
+            });
+            // Add variants_count to product
+            $product->variants_count = $variantsCount;
+
             $this->logProductAction('view_product_edit_form', $id);
 
             return Inertia::render('Products/Edit', [
@@ -251,8 +303,15 @@ class ProductController extends Controller
     public function update(ProductUpdateRequest $request, string $id)
     {
         try {
-            // Find product by ID
-            $product = Product::find($id);
+            // Log incoming data for debugging
+            Log::info('Product Update Request Data', [
+                'product_id' => $id,
+                'all_input_data' => $request->all(),
+                'validated_data' => $request->validated(),
+            ]);
+
+            // Find product by ID with variants
+            $product = Product::with('variants')->find($id);
 
             if (!$product) {
                 return redirect()->back()
@@ -261,21 +320,67 @@ class ProductController extends Controller
 
             $validatedData = $request->validated();
 
-            // Update product data
-            $product->update([
-                'name' => $validatedData['name'],
-                'sku' => $validatedData['sku'],
-                'description' => $validatedData['description'] ?? null,
-            ]);
+            // Use DB transaction to ensure atomicity
+            DB::transaction(function () use ($product, $validatedData, $id) {
+                // Update product data
+                $product->update([
+                    'name' => $validatedData['name'],
+                    'sku' => $validatedData['sku'],
+                    'description' => $validatedData['description'] ?? null,
+                ]);
 
-            $this->logProductAction('update_product', $id, [
-                'name' => $product->name,
-                'sku' => $product->sku,
-                'updated_fields' => array_keys($validatedData),
-            ]);
+                // Get existing variant IDs
+                $existingVariantIds = $product->variants->pluck('id')->toArray();
+
+                // Get submitted variant IDs (excluding null IDs for new variants)
+                $submittedVariantIds = array_filter(
+                    array_column($validatedData['variants'], 'id'),
+                    function ($id) { return $id !== null; }
+                );
+
+                // Update or create variants
+                foreach ($validatedData['variants'] as $variantData) {
+                    if (isset($variantData['id']) && $variantData['id'] !== null) {
+                        // Update existing variant
+                        $variant = ProductVariant::where('id', $variantData['id'])
+                            ->where('product_id', $product->id)
+                            ->first();
+
+                        if ($variant) {
+                            $variant->update([
+                                'variant_name' => $variantData['name'],
+                                'sku' => $variantData['sku'],
+                                'stock_current' => $variantData['stock_current'],
+                            ]);
+                        }
+                    } else {
+                        // Create new variant
+                        ProductVariant::create([
+                            'product_id' => $product->id,
+                            'variant_name' => $variantData['name'],
+                            'sku' => $variantData['sku'],
+                            'stock_current' => $variantData['stock_current'],
+                        ]);
+                    }
+                }
+
+                // Delete variants that are not in the submitted list
+                $variantsToDelete = array_diff($existingVariantIds, $submittedVariantIds);
+                if (!empty($variantsToDelete)) {
+                    ProductVariant::whereIn('id', $variantsToDelete)->delete();
+                }
+
+                $this->logProductAction('update_product', $id, [
+                    'name' => $product->name,
+                    'sku' => $product->sku,
+                    'updated_fields' => array_keys($validatedData),
+                    'variants_count' => count($validatedData['variants']),
+                    'variants_deleted' => count($variantsToDelete),
+                ]);
+            });
 
             return redirect()->route('products.index')
-                ->with('success', 'Produk berhasil diperbarui.');
+                ->with('success', 'Produk dan varian berhasil diperbarui.');
         } catch (ValidationException $e) {
             Log::error('Validation failed during product update', [
                 'error' => $e->getMessage(),

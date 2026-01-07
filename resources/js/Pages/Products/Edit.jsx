@@ -106,6 +106,17 @@ const Edit = ({ product, errors, flash }) => {
       return;
     }
 
+    // Log data being sent for debugging
+    console.log('Submitting product update:', {
+      productId: product.id,
+      formData: {
+        name: data.name,
+        sku: data.sku,
+        description: data.description,
+        variants: variants,
+      },
+    });
+
     put(route('products.update', product.id), {
       onSuccess: () => {
         setSkuErrors({});
