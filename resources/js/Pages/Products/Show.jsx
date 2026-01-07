@@ -56,7 +56,14 @@ const Show = ({ product, errors, flash }) => {
   };
 
   return (
-    <AppLayout title="Detail Produk">
+    <AppLayout
+      title="Detail Produk"
+      breadcrumbs={[
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Produk', href: '/products' },
+        { label: 'Detail Produk' }
+      ]}
+    >
       <Head title={product?.name || 'Detail Produk'} />
 
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">

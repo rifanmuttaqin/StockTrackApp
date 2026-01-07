@@ -6,8 +6,9 @@ import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { useMobileDetection } from '@/Hooks/useMobileDetection';
 import MobileLayout from '@/Components/Layouts/MobileLayout';
+import { Breadcrumbs } from '@/Components/Navigation';
 
-export default function AuthenticatedLayout({ header, children }) {
+export default function AuthenticatedLayout({ header, children, breadcrumbs }) {
     const user = usePage().props.auth.user;
     const { isMobile } = useMobileDetection();
 
@@ -183,7 +184,11 @@ export default function AuthenticatedLayout({ header, children }) {
                 </header>
             )}
 
-            <main>{children}</main>
+            <main>
+                {/* Breadcrumbs - Only show on desktop */}
+                {breadcrumbs && !isMobile && <Breadcrumbs items={breadcrumbs} />}
+                {children}
+            </main>
         </div>
     );
 }

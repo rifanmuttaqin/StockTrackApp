@@ -12,6 +12,11 @@ export default function Edit({ mustVerifyEmail, status }) {
                     Profile
                 </h2>
             }
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/dashboard' },
+                { label: 'Profil', href: '/profile' },
+                { label: 'Edit Profil' }
+            ]}
         >
             <Head title="Profile" />
 

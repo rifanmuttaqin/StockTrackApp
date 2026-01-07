@@ -240,7 +240,13 @@ const Index = ({ products, filters, meta }) => {
   };
 
   return (
-    <AppLayout title="Produk">
+    <AppLayout
+      title="Produk"
+      breadcrumbs={[
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Produk' }
+      ]}
+    >
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-6">

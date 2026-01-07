@@ -14,7 +14,14 @@ const Password = ({ user, errors }) => {
   const authUser = props.auth.user;
 
   return (
-    <AppLayout title="Ubah Password">
+    <AppLayout
+      title="Ubah Password"
+      breadcrumbs={[
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Pengguna', href: '/users' },
+        { label: 'Ubah Password' }
+      ]}
+    >
       <Head title={`Ubah Password - ${user.name}`} />
 
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">

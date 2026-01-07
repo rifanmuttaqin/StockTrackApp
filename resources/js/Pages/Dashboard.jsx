@@ -15,7 +15,10 @@ export default function Dashboard() {
 
     // Render desktop dashboard for desktop devices
     return (
-        <AppLayout title="Dashboard">
+        <AppLayout
+            title="Dashboard"
+            breadcrumbs={[{ label: 'Dashboard' }]}
+        >
             <Head title="Dashboard" />
 
             <div className="bg-white shadow-sm rounded-lg p-6">

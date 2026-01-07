@@ -3,8 +3,9 @@ import { Head } from '@inertiajs/react';
 import { useMobileDetection } from '../Hooks/useMobileDetection';
 import MobileLayout from '../Components/Layouts/MobileLayout';
 import { Navbar, Sidebar } from '../Components/Layouts';
+import { Breadcrumbs } from '../Components/Navigation';
 
-export default function AppLayout({ title, children, header }) {
+export default function AppLayout({ title, children, header, breadcrumbs }) {
     const { isMobile } = useMobileDetection();
 
     // If mobile, use MobileLayout
@@ -33,6 +34,8 @@ export default function AppLayout({ title, children, header }) {
                     {/* Page Content */}
                     <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
                         <div className="container mx-auto">
+                            {/* Breadcrumbs - Only show on desktop */}
+                            {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
                             {children}
                         </div>
                     </main>

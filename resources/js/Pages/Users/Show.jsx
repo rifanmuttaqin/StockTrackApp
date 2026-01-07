@@ -113,7 +113,14 @@ const Show = ({ user, roles, userRoles, activityLogs, sessions, meta }) => {
   };
 
   return (
-    <AppLayout title={`User Details: ${user.name}`}>
+    <AppLayout
+      title={`User Details: ${user.name}`}
+      breadcrumbs={[
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Pengguna', href: '/users' },
+        { label: 'Detail Pengguna' }
+      ]}
+    >
       <Head title={`User Details: ${user.name}`} />
 
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">

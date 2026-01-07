@@ -100,7 +100,14 @@ const Create = () => {
   };
 
   return (
-    <AppLayout title="Tambah Produk">
+    <AppLayout
+      title="Tambah Produk"
+      breadcrumbs={[
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Produk', href: '/products' },
+        { label: 'Tambah Produk' }
+      ]}
+    >
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-6">

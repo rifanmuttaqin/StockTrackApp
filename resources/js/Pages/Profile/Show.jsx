@@ -64,7 +64,13 @@ export default function ProfileShow() {
     };
 
     return (
-        <AppLayout title="Profile">
+        <AppLayout
+            title="Profile"
+            breadcrumbs={[
+                { label: 'Dashboard', href: '/dashboard' },
+                { label: 'Profil' }
+            ]}
+        >
             <Head title="Profile" />
 
             <div className="py-6">

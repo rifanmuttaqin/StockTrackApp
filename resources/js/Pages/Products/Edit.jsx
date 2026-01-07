@@ -125,7 +125,14 @@ const Edit = ({ product, errors, flash }) => {
   };
 
   return (
-    <AppLayout title="Edit Produk">
+    <AppLayout
+      title="Edit Produk"
+      breadcrumbs={[
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Produk', href: '/products' },
+        { label: 'Edit Produk' }
+      ]}
+    >
       <Head title={`Edit ${product?.name || 'Produk'}`} />
 
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">

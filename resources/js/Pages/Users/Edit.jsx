@@ -12,7 +12,14 @@ const Edit = ({ user, roles, userRoles, errors, flash }) => {
   const { isMobile } = useMobileDetection();
 
   return (
-    <AppLayout title="Edit User">
+    <AppLayout
+      title="Edit User"
+      breadcrumbs={[
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Pengguna', href: '/users' },
+        { label: 'Edit Pengguna' }
+      ]}
+    >
       <Head title={`Edit ${user.name}`} />
 
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">

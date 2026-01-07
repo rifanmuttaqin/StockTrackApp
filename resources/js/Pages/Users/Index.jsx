@@ -113,7 +113,13 @@ const Index = ({ users, roles, filters, meta }) => {
   };
 
   return (
-    <AppLayout title="User Management">
+    <AppLayout
+      title="User Management"
+      breadcrumbs={[
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Pengguna' }
+      ]}
+    >
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
