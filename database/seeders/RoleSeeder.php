@@ -130,7 +130,15 @@ class RoleSeeder extends Seeder
                 ['name' => 'product_variants.show', 'display_name' => 'View Product Variant Details', 'description' => 'Melihat detail varian produk'],
                 ['name' => 'product_variants.edit', 'display_name' => 'Edit Product Variants', 'description' => 'Mengedit data varian produk'],
                 ['name' => 'product_variants.update', 'display_name' => 'Update Product Variants', 'description' => 'Mengupdate data varian produk'],
-                ['name' => 'product_variants.delete', 'display_name' => 'Delete Product Variants', 'description' => 'Menghapus varian produk']
+                ['name' => 'product_variants.delete', 'display_name' => 'Delete Product Variants', 'description' => 'Menghapus varian produk'],
+                // Template Management Permissions
+                ['name' => 'templates.view', 'display_name' => 'View Templates', 'description' => 'Melihat daftar template'],
+                ['name' => 'templates.create', 'display_name' => 'Create Templates', 'description' => 'Membuat template baru'],
+                ['name' => 'templates.update', 'display_name' => 'Update Templates', 'description' => 'Mengedit template yang sudah ada'],
+                ['name' => 'templates.delete', 'display_name' => 'Delete Templates', 'description' => 'Menghapus template (soft delete)'],
+                ['name' => 'templates.restore', 'display_name' => 'Restore Templates', 'description' => 'Memulihkan template yang di-soft delete'],
+                ['name' => 'templates.force_delete', 'display_name' => 'Force Delete Templates', 'description' => 'Menghapus permanen template yang sudah di-soft delete'],
+                ['name' => 'templates.set_active', 'display_name' => 'Set Active Template', 'description' => 'Mengatur template aktif']
             ],
             'inventory_staff' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -143,7 +151,9 @@ class RoleSeeder extends Seeder
                 ['name' => 'products.show', 'display_name' => 'View Product Details', 'description' => 'Melihat detail produk'],
                 // Product Variant Management Permissions (View Only)
                 ['name' => 'product_variants.index', 'display_name' => 'View Product Variants', 'description' => 'Melihat daftar varian produk'],
-                ['name' => 'product_variants.show', 'display_name' => 'View Product Variant Details', 'description' => 'Melihat detail varian produk']
+                ['name' => 'product_variants.show', 'display_name' => 'View Product Variant Details', 'description' => 'Melihat detail varian produk'],
+                // Template Management Permissions (View Only)
+                ['name' => 'templates.view', 'display_name' => 'View Templates', 'description' => 'Melihat daftar template']
             ],
             'warehouse_supervisor' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -174,7 +184,9 @@ class RoleSeeder extends Seeder
                 // Product Variant Management Permissions
                 ['name' => 'product_variants.index', 'display_name' => 'View Product Variants', 'description' => 'Melihat daftar varian produk'],
                 ['name' => 'product_variants.show', 'display_name' => 'View Product Variant Details', 'description' => 'Melihat detail varian produk'],
-                ['name' => 'product_variants.update', 'display_name' => 'Update Product Variants', 'description' => 'Mengupdate data varian produk']
+                ['name' => 'product_variants.update', 'display_name' => 'Update Product Variants', 'description' => 'Mengupdate data varian produk'],
+                // Template Management Permissions (View Only)
+                ['name' => 'templates.view', 'display_name' => 'View Templates', 'description' => 'Melihat daftar template']
             ],
             'management' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],

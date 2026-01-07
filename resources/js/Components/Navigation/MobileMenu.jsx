@@ -9,7 +9,8 @@ import {
   LogOut,
   User,
   ChevronDown,
-  UserPlus
+  UserPlus,
+  FileText
 } from 'lucide-react';
 import { Button } from '../UI/button';
 import { useAuth } from '../../Context/AuthContext';
@@ -38,6 +39,13 @@ const MobileMenu = ({ isOpen, onClose }) => {
       icon: Package,
       active: url === '/products' || url.startsWith('/products'),
       permission: null
+    },
+    {
+      name: 'Template',
+      href: '/templates',
+      icon: FileText,
+      active: url === '/templates' || url.startsWith('/templates'),
+      permission: 'templates.view'
     },
     {
       name: 'Pengguna',

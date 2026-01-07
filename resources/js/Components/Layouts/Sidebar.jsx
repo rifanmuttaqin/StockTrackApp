@@ -11,6 +11,7 @@ import {
     ChevronDownIcon,
     ChevronRightIcon,
     XMarkIcon,
+    DocumentTextIcon,
 } from '@heroicons/react/24/outline';
 
 export default function Sidebar() {
@@ -71,13 +72,14 @@ export default function Sidebar() {
                     name: 'Daftar Produk',
                     href: '/products',
                     permission: 'create_stock_entries',
-                },
-                {
-                    name: 'Kategori',
-                    href: '/categories',
-                    permission: 'create_stock_entries',
-                },
+                }
             ],
+        },
+        {
+            name: 'Template',
+            icon: DocumentTextIcon,
+            permission: 'templates.view',
+            href: '/templates',
         },
         {
             name: 'Laporan',
@@ -85,12 +87,7 @@ export default function Sidebar() {
             permission: 'view_reports',
             subMenu: [
                 {
-                    name: 'Laporan Penjualan',
-                    href: '/reports/sales',
-                    permission: 'view_reports',
-                },
-                {
-                    name: 'Laporan Stok',
+                    name: 'Pergerakan Stok',
                     href: '/reports/stock',
                     permission: 'view_reports',
                 },

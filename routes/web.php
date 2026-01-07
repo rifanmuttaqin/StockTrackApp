@@ -26,4 +26,5 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/user/users.php';
 require __DIR__.'/products.php';
+require __DIR__.'/templates.php';
 require __DIR__.'/auth.php';

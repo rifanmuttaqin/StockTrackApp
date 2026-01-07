@@ -13,6 +13,12 @@ export { default as UserCreate } from './Users/Create';
 export { default as UserEdit } from './Users/Edit';
 export { default as UserShow } from './Users/Show';
 
+// Template Management Pages
+export { default as TemplateIndex } from './Templates/Index';
+export { default as TemplateCreate } from './Templates/Create';
+export { default as TemplateEdit } from './Templates/Edit';
+export { default as TemplateShow } from './Templates/Show';
+
 // Auth Pages
 export { default as Login } from './Auth/Login';
 export { default as Register } from './Auth/Register';
