@@ -55,11 +55,29 @@ class UserService implements UserServiceInterface
     public function createUser($request): User
     {
         if ($request instanceof UserCreateRequest) {
-            return $this->userRepository->create($request->validated());
+            $userData = $request->validated();
+
+            // Auto-verify email for admin-created users
+            $userData['email_verified_at'] = now();
+
+            // Ensure user is active and not suspended by default
+            $userData['is_active'] = $userData['is_active'] ?? true;
+            $userData['suspended'] = false;
+
+            return $this->userRepository->create($userData);
         }
 
         // Handle array input
-        return $this->userRepository->create($request);
+        $userData = $request;
+
+        // Auto-verify email for admin-created users
+        $userData['email_verified_at'] = now();
+
+        // Ensure user is active and not suspended by default
+        $userData['is_active'] = $userData['is_active'] ?? true;
+        $userData['suspended'] = false;
+
+        return $this->userRepository->create($userData);
     }
 
     /**
