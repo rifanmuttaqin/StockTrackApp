@@ -115,7 +115,20 @@ class RoleSeeder extends Seeder
                 ['name' => 'users.suspend', 'display_name' => 'Suspend Users', 'description' => 'Menangguhkan pengguna'],
                 ['name' => 'users.unsuspend', 'display_name' => 'Unsuspend Users', 'description' => 'Mengaktifkan kembali pengguna yang ditangguhkan'],
                 ['name' => 'users.assign-role', 'display_name' => 'Assign User Roles', 'description' => 'Mengatur role pengguna'],
-                ['name' => 'users.export', 'display_name' => 'Export Users', 'description' => 'Mengekspor data pengguna']
+                ['name' => 'users.export', 'display_name' => 'Export Users', 'description' => 'Mengekspor data pengguna'],
+                // Product Management Permissions
+                ['name' => 'products.index', 'display_name' => 'View Products', 'description' => 'Melihat daftar produk'],
+                ['name' => 'products.create', 'display_name' => 'Create Products', 'description' => 'Membuat produk baru'],
+                ['name' => 'products.show', 'display_name' => 'View Product Details', 'description' => 'Melihat detail produk'],
+                ['name' => 'products.edit', 'display_name' => 'Edit Products', 'description' => 'Mengedit data produk'],
+                ['name' => 'products.delete', 'display_name' => 'Delete Products', 'description' => 'Menghapus produk'],
+                ['name' => 'products.export', 'display_name' => 'Export Products', 'description' => 'Mengekspor data produk'],
+                // Product Variant Management Permissions
+                ['name' => 'product_variants.index', 'display_name' => 'View Product Variants', 'description' => 'Melihat daftar varian produk'],
+                ['name' => 'product_variants.create', 'display_name' => 'Create Product Variants', 'description' => 'Membuat varian produk baru'],
+                ['name' => 'product_variants.show', 'display_name' => 'View Product Variant Details', 'description' => 'Melihat detail varian produk'],
+                ['name' => 'product_variants.edit', 'display_name' => 'Edit Product Variants', 'description' => 'Mengedit data varian produk'],
+                ['name' => 'product_variants.delete', 'display_name' => 'Delete Product Variants', 'description' => 'Menghapus varian produk']
             ],
             'inventory_staff' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -123,6 +136,12 @@ class RoleSeeder extends Seeder
                 ['name' => 'create_stock_entries', 'display_name' => 'Create Stock Entries', 'description' => 'Membuat entri stock'],
                 ['name' => 'edit_stock_entries', 'display_name' => 'Edit Stock Entries', 'description' => 'Mengedit entri stock'],
                 ['name' => 'delete_stock_entries', 'display_name' => 'Delete Stock Entries', 'description' => 'Menghapus entri stock'],
+                // Product Management Permissions (View Only)
+                ['name' => 'products.index', 'display_name' => 'View Products', 'description' => 'Melihat daftar produk'],
+                ['name' => 'products.show', 'display_name' => 'View Product Details', 'description' => 'Melihat detail produk'],
+                // Product Variant Management Permissions (View Only)
+                ['name' => 'product_variants.index', 'display_name' => 'View Product Variants', 'description' => 'Melihat daftar varian produk'],
+                ['name' => 'product_variants.show', 'display_name' => 'View Product Variant Details', 'description' => 'Melihat detail varian produk']
             ],
             'warehouse_supervisor' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -145,7 +164,13 @@ class RoleSeeder extends Seeder
                 ['name' => 'users.suspend', 'display_name' => 'Suspend Users', 'description' => 'Menangguhkan pengguna'],
                 ['name' => 'users.unsuspend', 'display_name' => 'Unsuspend Users', 'description' => 'Mengaktifkan kembali pengguna yang ditangguhkan'],
                 ['name' => 'users.assign-role', 'display_name' => 'Assign User Roles', 'description' => 'Mengatur role pengguna'],
-                ['name' => 'users.export', 'display_name' => 'Export Users', 'description' => 'Mengekspor data pengguna']
+                ['name' => 'users.export', 'display_name' => 'Export Users', 'description' => 'Mengekspor data pengguna'],
+                // Product Management Permissions (View Only)
+                ['name' => 'products.index', 'display_name' => 'View Products', 'description' => 'Melihat daftar produk'],
+                ['name' => 'products.show', 'display_name' => 'View Product Details', 'description' => 'Melihat detail produk'],
+                // Product Variant Management Permissions (View Only)
+                ['name' => 'product_variants.index', 'display_name' => 'View Product Variants', 'description' => 'Melihat daftar varian produk'],
+                ['name' => 'product_variants.show', 'display_name' => 'View Product Variant Details', 'description' => 'Melihat detail varian produk']
             ],
             'management' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],

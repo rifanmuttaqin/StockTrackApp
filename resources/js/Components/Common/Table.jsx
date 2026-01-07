@@ -12,7 +12,10 @@ export default function Table({
     actions = [],
     emptyMessage = 'No data available',
     className = '',
+    onRowClick = null,
 }) {
+    // Validate data is an array
+    const tableData = Array.isArray(data) ? data : [];
     const handleSort = (column) => {
         if (!sortable || !column.sortable) return;
 
@@ -71,7 +74,7 @@ export default function Table({
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {data.length === 0 ? (
+                    {tableData.length === 0 ? (
                         <tr>
                             <td
                                 colSpan={columns.length + (actions.length > 0 ? 1 : 0)}
@@ -81,10 +84,14 @@ export default function Table({
                             </td>
                         </tr>
                     ) : (
-                        data.map((row, rowIndex) => {
+                        tableData.map((row, rowIndex) => {
                             const rowKey = row.id || `row-${rowIndex}-${Date.now()}`;
                             return (
-                                <tr key={rowKey} className="hover:bg-gray-50">
+                                <tr
+                                    key={rowKey}
+                                    className={`hover:bg-gray-50 ${onRowClick ? 'cursor-pointer' : ''}`}
+                                    onClick={() => onRowClick && onRowClick(row)}
+                                >
                                 {columns.map((column) => (
                                     <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {column.render ? column.render(row[column.key], row) : row[column.key]}
@@ -98,21 +105,24 @@ export default function Table({
                                                 return (
                                                     <button
                                                         key={actionKey}
-                                                    onClick={() => action.onClick(row)}
-                                                    className={`
-                                                        ${action.className || 'text-blue-600 hover:text-blue-900'}
-                                                        ${action.disabled ? 'opacity-50 cursor-not-allowed' : ''}
-                                                    `}
-                                                    disabled={action.disabled}
-                                                    title={action.title}
-                                                >
-                                                    {action.icon && (
-                                                        <action.icon className="h-5 w-5" />
-                                                    )}
-                                                    {!action.icon && action.label && (
-                                                        <span>{action.label}</span>
-                                                    )}
-                                                </button>
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            action.onClick(row);
+                                                        }}
+                                                        className={`
+                                                            ${action.className || 'text-blue-600 hover:text-blue-900'}
+                                                            ${action.disabled ? 'opacity-50 cursor-not-allowed' : ''}
+                                                        `}
+                                                        disabled={action.disabled}
+                                                        title={action.title}
+                                                    >
+                                                        {action.icon && (
+                                                            <action.icon className="h-5 w-5" />
+                                                        )}
+                                                        {!action.icon && action.label && (
+                                                            <span>{action.label}</span>
+                                                        )}
+                                                    </button>
                                                 );
                                             })}
                                         </div>
