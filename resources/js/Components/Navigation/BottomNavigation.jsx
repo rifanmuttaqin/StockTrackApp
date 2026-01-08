@@ -5,7 +5,8 @@ import {
   Package,
   Users,
   Settings,
-  Menu
+  Menu,
+  ArrowLeft
 } from 'lucide-react';
 import { useAuth } from '../../Context/AuthContext';
 
@@ -27,6 +28,13 @@ const BottomNavigation = () => {
       icon: Package,
       active: url === '/products' || url.startsWith('/products'),
       permission: null
+    },
+    {
+      name: 'Stock Out',
+      href: '/stock-out',
+      icon: ArrowLeft,
+      active: url === '/stock-out' || url.startsWith('/stock-out'),
+      permission: 'stock_out.view'
     },
     {
       name: 'Pengguna',

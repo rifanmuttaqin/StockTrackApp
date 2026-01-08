@@ -56,11 +56,47 @@ class PermissionSeeder extends Seeder
                 ],
             ];
 
+            // Stock Out Module Permissions
+            $stockOutPermissions = [
+                [
+                    'name' => 'stock_out.view',
+                    'display_name' => 'View Stock Out',
+                    'description' => 'Melihat daftar stock keluar',
+                ],
+                [
+                    'name' => 'stock_out.create',
+                    'display_name' => 'Create Stock Out',
+                    'description' => 'Membuat input stock keluar',
+                ],
+                [
+                    'name' => 'stock_out.edit',
+                    'display_name' => 'Edit Stock Out',
+                    'description' => 'Mengedit draft stock keluar',
+                ],
+                [
+                    'name' => 'stock_out.delete',
+                    'display_name' => 'Delete Stock Out',
+                    'description' => 'Menghapus draft stock keluar',
+                ],
+                [
+                    'name' => 'stock_out.submit',
+                    'display_name' => 'Submit Stock Out',
+                    'description' => 'Submit stock keluar',
+                ],
+            ];
+
             // Permission assignments by role (for reference):
-            // Admin: All template permissions
-            // Inventory Staff: templates.view only
-            // Warehouse Supervisor: templates.view only
-            // Management: No template permissions
+            //
+            // Template Module:
+            // - Admin: All template permissions
+            // - Inventory Staff: templates.view only
+            // - Warehouse Supervisor: templates.view only
+            // - Management: No template permissions
+            //
+            // Stock Out Module:
+            // - Admin: stock_out.view, stock_out.create, stock_out.edit, stock_out.delete, stock_out.submit
+            // - Operator: stock_out.view, stock_out.create, stock_out.edit, stock_out.delete, stock_out.submit
+            // - Supervisor: stock_out.view only
         });
     }
 }

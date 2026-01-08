@@ -12,6 +12,7 @@ import {
     ChevronRightIcon,
     XMarkIcon,
     DocumentTextIcon,
+    ArrowUturnLeftIcon,
 } from '@heroicons/react/24/outline';
 
 export default function Sidebar() {
@@ -73,6 +74,23 @@ export default function Sidebar() {
                     href: '/products',
                     permission: 'create_stock_entries',
                 }
+            ],
+        },
+        {
+            name: 'Stock Out',
+            icon: ArrowUturnLeftIcon,
+            permission: 'stock_out.view',
+            subMenu: [
+                {
+                    name: 'Daftar Stock Out',
+                    href: '/stock-out',
+                    permission: 'stock_out.view',
+                },
+                {
+                    name: 'Input Stock Out',
+                    href: '/stock-out/create',
+                    permission: 'stock_out.create',
+                },
             ],
         },
         {

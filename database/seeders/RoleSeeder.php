@@ -124,6 +124,7 @@ class RoleSeeder extends Seeder
                 ['name' => 'products.update', 'display_name' => 'Update Products', 'description' => 'Mengupdate data produk'],
                 ['name' => 'products.delete', 'display_name' => 'Delete Products', 'description' => 'Menghapus produk'],
                 ['name' => 'products.export', 'display_name' => 'Export Products', 'description' => 'Mengekspor data produk'],
+                ['name' => 'products.view', 'display_name' => 'View Products', 'description' => 'Melihat data produk'],
                 // Product Variant Management Permissions
                 ['name' => 'product_variants.index', 'display_name' => 'View Product Variants', 'description' => 'Melihat daftar varian produk'],
                 ['name' => 'product_variants.create', 'display_name' => 'Create Product Variants', 'description' => 'Membuat varian produk baru'],
@@ -138,7 +139,13 @@ class RoleSeeder extends Seeder
                 ['name' => 'templates.delete', 'display_name' => 'Delete Templates', 'description' => 'Menghapus template (soft delete)'],
                 ['name' => 'templates.restore', 'display_name' => 'Restore Templates', 'description' => 'Memulihkan template yang di-soft delete'],
                 ['name' => 'templates.force_delete', 'display_name' => 'Force Delete Templates', 'description' => 'Menghapus permanen template yang sudah di-soft delete'],
-                ['name' => 'templates.set_active', 'display_name' => 'Set Active Template', 'description' => 'Mengatur template aktif']
+                ['name' => 'templates.set_active', 'display_name' => 'Set Active Template', 'description' => 'Mengatur template aktif'],
+                // Stock Out Management Permissions
+                ['name' => 'stock_out.view', 'display_name' => 'View Stock Out', 'description' => 'Melihat daftar stock out'],
+                ['name' => 'stock_out.create', 'display_name' => 'Create Stock Out', 'description' => 'Membuat stock out baru'],
+                ['name' => 'stock_out.edit', 'display_name' => 'Edit Stock Out', 'description' => 'Mengedit stock out'],
+                ['name' => 'stock_out.delete', 'display_name' => 'Delete Stock Out', 'description' => 'Menghapus stock out'],
+                ['name' => 'stock_out.submit', 'display_name' => 'Submit Stock Out', 'description' => 'Menyetujui stock out']
             ],
             'inventory_staff' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -153,7 +160,13 @@ class RoleSeeder extends Seeder
                 ['name' => 'product_variants.index', 'display_name' => 'View Product Variants', 'description' => 'Melihat daftar varian produk'],
                 ['name' => 'product_variants.show', 'display_name' => 'View Product Variant Details', 'description' => 'Melihat detail varian produk'],
                 // Template Management Permissions (View Only)
-                ['name' => 'templates.view', 'display_name' => 'View Templates', 'description' => 'Melihat daftar template']
+                ['name' => 'templates.view', 'display_name' => 'View Templates', 'description' => 'Melihat daftar template'],
+                // Stock Out Management Permissions
+                ['name' => 'stock_out.view', 'display_name' => 'View Stock Out', 'description' => 'Melihat daftar stock out'],
+                ['name' => 'stock_out.create', 'display_name' => 'Create Stock Out', 'description' => 'Membuat stock out baru'],
+                ['name' => 'stock_out.edit', 'display_name' => 'Edit Stock Out', 'description' => 'Mengedit stock out'],
+                ['name' => 'stock_out.delete', 'display_name' => 'Delete Stock Out', 'description' => 'Menghapus stock out'],
+                ['name' => 'stock_out.submit', 'display_name' => 'Submit Stock Out', 'description' => 'Menyetujui stock out']
             ],
             'warehouse_supervisor' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -186,7 +199,9 @@ class RoleSeeder extends Seeder
                 ['name' => 'product_variants.show', 'display_name' => 'View Product Variant Details', 'description' => 'Melihat detail varian produk'],
                 ['name' => 'product_variants.update', 'display_name' => 'Update Product Variants', 'description' => 'Mengupdate data varian produk'],
                 // Template Management Permissions (View Only)
-                ['name' => 'templates.view', 'display_name' => 'View Templates', 'description' => 'Melihat daftar template']
+                ['name' => 'templates.view', 'display_name' => 'View Templates', 'description' => 'Melihat daftar template'],
+                // Stock Out Management Permissions (View Only)
+                ['name' => 'stock_out.view', 'display_name' => 'View Stock Out', 'description' => 'Melihat daftar stock out']
             ],
             'management' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -194,6 +209,14 @@ class RoleSeeder extends Seeder
                 ['name' => 'view_analytics', 'display_name' => 'View Analytics', 'description' => 'Melihat analytics'],
                 ['name' => 'view_user_activity', 'display_name' => 'View User Activity', 'description' => 'Melihat aktivitas user'],
                 ['name' => 'export_reports', 'display_name' => 'Export Reports', 'description' => 'Mengekspor laporan'],
+                // Product Management Permissions (View Only)
+                ['name' => 'products.index', 'display_name' => 'View Products', 'description' => 'Melihat daftar produk'],
+                ['name' => 'products.show', 'display_name' => 'View Product Details', 'description' => 'Melihat detail produk'],
+                // Product Variant Management Permissions (View Only)
+                ['name' => 'product_variants.index', 'display_name' => 'View Product Variants', 'description' => 'Melihat daftar varian produk'],
+                ['name' => 'product_variants.show', 'display_name' => 'View Product Variant Details', 'description' => 'Melihat detail varian produk'],
+                // Stock Out Management Permissions (View Only)
+                ['name' => 'stock_out.view', 'display_name' => 'View Stock Out', 'description' => 'Melihat daftar stock out']
             ],
         };
     }
