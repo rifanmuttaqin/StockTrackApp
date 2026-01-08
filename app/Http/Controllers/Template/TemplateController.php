@@ -325,10 +325,8 @@ class TemplateController extends Controller
             $template = $this->templateService->getTemplateById($id);
 
             if (!$template) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Template tidak ditemukan.',
-                ], 404);
+                return redirect()->back()
+                    ->with('error', 'Template tidak ditemukan.');
             }
 
             $success = $this->templateService->deleteTemplate($id);
@@ -340,16 +338,12 @@ class TemplateController extends Controller
                     'items_count' => $template->variants->count(),
                 ]);
 
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Template berhasil dihapus (soft delete).',
-                ]);
+                return redirect()->route('templates.index')
+                    ->with('success', 'Template berhasil dihapus (soft delete).');
             }
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal menghapus template.',
-            ], 500);
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus template.');
         } catch (\Exception $e) {
             Log::error('Failed to soft delete template', [
                 'error' => $e->getMessage(),
@@ -357,10 +351,8 @@ class TemplateController extends Controller
                 'performed_by' => Auth::id(),
             ]);
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal menghapus template. ' . $e->getMessage(),
-            ], 500);
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus template. ' . $e->getMessage());
         }
     }
 

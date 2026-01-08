@@ -200,7 +200,7 @@ const Index = ({ templates, filters, meta }) => {
       });
     }
 
-    if (can('templates.delete')) {
+    if (!isActive && can('templates.delete')) {
       actions.push({
         key: 'delete',
         icon: TrashIcon,

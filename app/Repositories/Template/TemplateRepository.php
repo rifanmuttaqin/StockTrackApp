@@ -50,7 +50,7 @@ class TemplateRepository implements TemplateRepositoryInterface
             // Create template
             $template = Template::create([
                 'name' => $data['name'],
-                'is_active' => $data['is_active'] ?? true,
+                'is_active' => $data['is_active'] ?? false,
             ]);
 
             // Create template items (variants)
