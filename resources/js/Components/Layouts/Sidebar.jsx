@@ -178,7 +178,7 @@ export default function Sidebar() {
 
                 {/* Navigation - Scrollable area */}
                 <nav className="mt-5 px-2 flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar" role="menu">
-                    <div className="space-y-1 pb-4">
+                    <ul className="space-y-1 pb-4 list-none">
                         {filteredMenuItems.map((item) => {
                             const Icon = item.icon;
                             const hasSubMenu = item.subMenu && item.subMenu.length > 0;
@@ -197,7 +197,7 @@ export default function Sidebar() {
                             }
 
                             return (
-                                <li key={item.name}>
+                                <li key={item.name} className="list-none">
                                     {hasSubMenu ? (
                                         <div>
                                             <button
@@ -227,12 +227,12 @@ export default function Sidebar() {
                                             {isMenuOpen && (
                                                 <ul
                                                     id={`submenu-${item.name}`}
-                                                    className="mt-1 ml-8 space-y-1"
+                                                    className="mt-1 ml-8 space-y-1 list-none"
                                                     role="menu"
                                                     aria-orientation="vertical"
                                                 >
                                                     {filteredSubMenu.map((subItem) => (
-                                                        <li key={subItem.name}>
+                                                        <li key={subItem.name} className="list-none">
                                                             <Link
                                                                 href={subItem.href}
                                                                 className={`
@@ -270,7 +270,7 @@ export default function Sidebar() {
                                 </li>
                             );
                         })}
-                    </div>
+                    </ul>
                 </nav>
 
                 {/* Footer - Optional branding or version info */}
