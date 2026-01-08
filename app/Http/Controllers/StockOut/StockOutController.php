@@ -63,7 +63,10 @@ class StockOutController extends Controller
         try {
             $statusFilter = $request->get('status');
 
-            $query = StockOutRecord::with(['items.productVariant.product']);
+            // Load stock out records with complete eager loading
+            // items.productVariant: untuk mendapatkan data varian lengkap (variant_name, sku, stock_current)
+            // items.productVariant.product: untuk mendapatkan data produk terkait
+            $query = StockOutRecord::with(['items.productVariant', 'items.productVariant.product']);
 
             // Filter by status if provided
             if ($statusFilter && in_array($statusFilter, ['draft', 'submit'])) {
@@ -120,7 +123,7 @@ class StockOutController extends Controller
     public function create(): Response
     {
         try {
-            // Get active template from cache or database
+            // Get active template from cache or database with complete variant data
             $activeTemplate = Cache::remember('active_template', 60, function () {
                 return Template::with(['items.productVariant.product'])
                     ->where('is_active', true)
@@ -212,7 +215,10 @@ class StockOutController extends Controller
     public function edit(string $id): Response
     {
         try {
-            $stockOutRecord = StockOutRecord::with(['items.productVariant.product'])
+            // Load stock out record with complete eager loading
+            // items.productVariant: untuk mendapatkan data varian lengkap (variant_name, sku, stock_current)
+            // items.productVariant.product: untuk mendapatkan data produk terkait
+            $stockOutRecord = StockOutRecord::with(['items.productVariant', 'items.productVariant.product'])
                 ->findOrFail($id);
 
             // Validate if record is already submitted (EC-PRD-022)

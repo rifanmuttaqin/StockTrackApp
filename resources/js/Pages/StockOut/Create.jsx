@@ -50,7 +50,7 @@ const Create = ({ activeTemplate, defaultDate }) => {
     if (activeTemplate?.items) {
       const initialQuantities = {};
       activeTemplate.items.forEach((item) => {
-        initialQuantities[item.variant_id] = 0;
+        initialQuantities[item.product_variant_id] = 0;
       });
       setQuantities(initialQuantities);
     }
@@ -61,8 +61,8 @@ const Create = ({ activeTemplate, defaultDate }) => {
    */
   useEffect(() => {
     const items = activeTemplate?.items?.map((item) => ({
-      variant_id: item.variant_id,
-      quantity: quantities[item.variant_id] || 0,
+      product_variant_id: item.product_variant_id,
+      quantity: quantities[item.product_variant_id] || 0,
     })) || [];
     setData('items', items);
   }, [quantities, activeTemplate]);
@@ -337,21 +337,21 @@ const Create = ({ activeTemplate, defaultDate }) => {
                 <div className="space-y-4">
                   {activeTemplate.items.map((item, index) => (
                     <div
-                      key={item.variant_id || index}
+                      key={item.product_variant_id || index}
                       className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow"
                     >
                       {/* Variant Header */}
                       <div className="flex justify-between items-start mb-3">
                         <div className="flex-1">
                           <h4 className="text-sm font-medium text-gray-900">
-                            {item.variant?.name || `Varian #${index + 1}`}
+                            {item.product_variant?.variant_name || `Varian #${index + 1}`}
                           </h4>
                           <p className="text-xs text-gray-500 mt-1">
-                            SKU: {item.variant?.sku || '-'}
+                            SKU: {item.product_variant?.sku || '-'}
                           </p>
                         </div>
                         <Badge variant="info">
-                          Stock: {item.variant?.stock_current || 0}
+                          Stock: {item.product_variant?.stock_current || 0}
                         </Badge>
                       </div>
 
@@ -359,17 +359,17 @@ const Create = ({ activeTemplate, defaultDate }) => {
                       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <MobileFormField
                           label="Quantity"
-                          error={errors[`items.${index}.quantity`] || quantityErrors[item.variant_id]}
+                          error={errors[`items.${index}.quantity`] || quantityErrors[item.product_variant_id]}
                           required
                         >
                           <input
                             type="number"
                             min="0"
-                            value={quantities[item.variant_id] || 0}
-                            onChange={(e) => handleQuantityChange(item.variant_id, e.target.value)}
+                            value={quantities[item.product_variant_id] || 0}
+                            onChange={(e) => handleQuantityChange(item.product_variant_id, e.target.value)}
                             placeholder="0"
                             className={`block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-                              quantityErrors[item.variant_id] ? 'border-red-500' : 'border-gray-300'
+                              quantityErrors[item.product_variant_id] ? 'border-red-500' : 'border-gray-300'
                             }`}
                           />
                         </MobileFormField>
@@ -378,15 +378,15 @@ const Create = ({ activeTemplate, defaultDate }) => {
                         <div className="flex items-center">
                           <div className="text-sm text-gray-600">
                             <span className="font-medium">Produk:</span>{' '}
-                            {item.variant?.product?.name || '-'}
+                            {item.product_variant?.product?.name || '-'}
                           </div>
                         </div>
                       </div>
 
                       {/* Error Message */}
-                      {quantityErrors[item.variant_id] && (
+                      {quantityErrors[item.product_variant_id] && (
                         <p className="mt-2 text-sm text-red-600">
-                          {quantityErrors[item.variant_id]}
+                          {quantityErrors[item.product_variant_id]}
                         </p>
                       )}
                     </div>
