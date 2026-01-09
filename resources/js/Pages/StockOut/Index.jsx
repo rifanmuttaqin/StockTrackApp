@@ -2,7 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 import { Alert, LoadingSpinner, Badge } from '../../Components/UI';
-import { MobileCard } from '../../Components/UI';
+import {
+  MobileCard,
+  MobileCardHeader,
+  MobileCardFooter,
+  MobileCardTitle,
+  MobileCardContent
+} from '../../Components/UI';
 import { usePermission } from '../../Hooks/usePermission';
 import { useMobileDetection } from '../../Hooks/useMobileDetection';
 import {

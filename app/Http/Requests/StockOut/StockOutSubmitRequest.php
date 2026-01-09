@@ -21,7 +21,7 @@ class StockOutSubmitRequest extends FormRequest
             return false;
         }
 
-        $stockOutRecord = $this->route('stock_out_record');
+        $stockOutRecord = $this->route('stockOut');
 
         // Jika record tidak ditemukan atau bukan draft, tidak boleh submit
         if (!$stockOutRecord || !$stockOutRecord->isDraft()) {
@@ -39,9 +39,8 @@ class StockOutSubmitRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'items' => 'required|array|min:1',
-            'items.*.product_variant_id' => 'required|exists:product_variants,id',
-            'items.*.quantity' => 'required|integer|min:0',
+            // Items are already validated during draft creation and stored in database
+            // No validation needed for submit request
         ];
     }
 
@@ -61,7 +60,7 @@ class StockOutSubmitRequest extends FormRequest
      */
     private function validateDraftStatus(Validator $validator): void
     {
-        $stockOutRecord = $this->route('stock_out_record');
+        $stockOutRecord = $this->route('stockOut');
 
         if ($stockOutRecord && !$stockOutRecord->isDraft()) {
             $validator->errors()->add(
@@ -76,24 +75,27 @@ class StockOutSubmitRequest extends FormRequest
      */
     private function validateStockAvailability(Validator $validator): void
     {
-        $items = $this->input('items', []);
+        $stockOutRecord = $this->route('stockOut');
+        
+        if (!$stockOutRecord) {
+            return;
+        }
+
+        // Load items from database with productVariant relationship
+        $items = $stockOutRecord->load(['items.productVariant'])->items;
 
         foreach ($items as $index => $item) {
-            $variantId = $item['product_variant_id'] ?? null;
-            $quantity = $item['quantity'] ?? 0;
+            $variant = $item->productVariant;
+            $quantity = $item->quantity;
 
-            if ($variantId && $quantity > 0) {
-                $variant = ProductVariant::find($variantId);
+            if ($variant && $quantity > 0) {
+                $stockCurrent = $variant->stock_current ?? 0;
 
-                if ($variant) {
-                    $stockCurrent = $variant->stock_current ?? 0;
-
-                    if ($quantity > $stockCurrent) {
-                        $validator->errors()->add(
-                            "items.{$index}.quantity",
-                            "Stok tidak mencukupi. Stok saat ini: {$stockCurrent}, diminta: {$quantity}"
-                        );
-                    }
+                if ($quantity > $stockCurrent) {
+                    $validator->errors()->add(
+                        "items.{$index}.quantity",
+                        "Stok tidak mencukupi. Stok saat ini: {$stockCurrent}, diminta: {$quantity}"
+                    );
                 }
             }
         }
@@ -105,14 +107,8 @@ class StockOutSubmitRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'items.required' => 'Item stock out harus diisi',
-            'items.array' => 'Item stock out harus berupa array',
-            'items.min' => 'Minimal harus ada 1 item stock out',
-            'items.*.product_variant_id.required' => 'ID varian produk harus diisi',
-            'items.*.product_variant_id.exists' => 'Varian produk tidak ditemukan',
-            'items.*.quantity.required' => 'Jumlah harus diisi',
-            'items.*.quantity.integer' => 'Jumlah harus berupa angka',
-            'items.*.quantity.min' => 'Jumlah minimal 0',
+            // Items are already validated during draft creation
+            // No custom messages needed for submit request
         ];
     }
 

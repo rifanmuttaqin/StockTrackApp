@@ -194,8 +194,12 @@ class StockOutController extends Controller
                 'items_count' => count($validatedData['items']),
             ]);
 
-            return redirect()->route('stock-out.index')
-                ->with('success', 'Stock out berhasil dibuat sebagai draft.');
+            return Inertia::render('StockOut/Index', [
+                'stockOutRecord' => $stockOutRecord,
+                'flash' => [
+                    'success' => 'Stock out berhasil dibuat sebagai draft.'
+                ]
+            ]);
         } catch (\Exception $e) {
             Log::error('Failed to create stock out record', [
                 'error' => $e->getMessage(),
@@ -304,14 +308,14 @@ class StockOutController extends Controller
     /**
      * Submit stock out record
      */
-    public function submit(StockOutSubmitRequest $request, string $id)
+    public function submit(StockOutSubmitRequest $request, StockOutRecord $stockOut)
     {
         try {
             $validatedData = $request->validated();
 
-            $stockOutRecord = DB::transaction(function () use ($id) {
+            $stockOutRecord = DB::transaction(function () use ($stockOut) {
                 $record = StockOutRecord::with(['items.productVariant'])
-                    ->findOrFail($id);
+                    ->findOrFail($stockOut->id);
 
                 // Validate if record is already submitted (EC-PRD-022)
                 if ($record->isSubmitted()) {
@@ -337,7 +341,7 @@ class StockOutController extends Controller
                 return $record;
             });
 
-            $this->logStockOutAction('submit_stock_out', $id, [
+            $this->logStockOutAction('submit_stock_out', $stockOut->id, [
                 'date' => $stockOutRecord->date,
                 'items_count' => $stockOutRecord->items->count(),
             ]);
@@ -347,7 +351,7 @@ class StockOutController extends Controller
         } catch (\Exception $e) {
             Log::error('Failed to submit stock out record', [
                 'error' => $e->getMessage(),
-                'stock_out_record_id' => $id,
+                'stock_out_record_id' => $stockOut->id,
                 'performed_by' => Auth::id(),
             ]);
 

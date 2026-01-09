@@ -41,6 +41,16 @@ class StockOutRecord extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var list<string>
+     */
+    protected $appends = [
+        'items_count',
+        'total_quantity',
+    ];
+
+    /**
      * Get attributes that should be cast.
      *
      * @return array<string, string>
@@ -80,5 +90,25 @@ class StockOutRecord extends Model
     public function isSubmitted(): bool
     {
         return $this->status === 'submit';
+    }
+
+    /**
+     * Get the items count for the stock out record.
+     *
+     * @return int
+     */
+    public function getItemsCountAttribute(): int
+    {
+        return $this->items->count();
+    }
+
+    /**
+     * Get the total quantity for the stock out record.
+     *
+     * @return int
+     */
+    public function getTotalQuantityAttribute(): int
+    {
+        return (int) $this->items->sum('quantity');
     }
 }

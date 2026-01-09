@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, useForm, usePage, router } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 import { MobileForm, MobileFormSection, MobileFormField } from '../../Components/UI/MobileForm';
 import { Alert, LoadingSpinner, Badge } from '../../Components/UI';
@@ -139,8 +139,8 @@ const Create = ({ activeTemplate, defaultDate }) => {
   };
 
   /**
-   * Handle submit untuk Submit Stock Out
-   * Stock akan berkurang
+   * Handle submit untuk Create & Submit Stock Out
+   * Membuat draft terlebih dahulu, kemudian submit draft tersebut
    *
    * @param {React.FormEvent} e - Event form submit
    */
@@ -160,14 +160,30 @@ const Create = ({ activeTemplate, defaultDate }) => {
       return;
     }
 
-    post(route('stock-out.submit'), {
-      data: { ...data, status: 'submitted' },
-      onSuccess: () => {
-        setMessage({ type: 'success', message: 'Stock out berhasil disubmit' });
-        reset();
+    // Create draft record first
+    post(route('stock-out.store'), {
+      data: { ...data, status: 'draft' },
+      onSuccess: (page) => {
+        // Get the stock out ID from the response
+        const stockOutId = page.props.stockOutRecord?.id;
+        if (stockOutId) {
+          // Submit the draft immediately
+          router.post(route('stock-out.submit', stockOutId), {}, {
+            onSuccess: () => {
+              setMessage({ type: 'success', message: 'Stock out berhasil disubmit' });
+              // Redirect to index page after successful submit
+              router.visit(route('stock-out.index'));
+            },
+            onError: (errors) => {
+              setMessage({ type: 'error', message: 'Gagal submit stock out: ' + (errors.message || 'Unknown error') });
+            },
+          });
+        } else {
+          setMessage({ type: 'error', message: 'Gagal mendapatkan ID stock out' });
+        }
       },
       onError: (errors) => {
-        setMessage({ type: 'error', message: 'Gagal submit stock out' });
+        setMessage({ type: 'error', message: 'Gagal membuat draft stock out' });
       },
     });
   };
