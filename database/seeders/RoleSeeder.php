@@ -145,7 +145,13 @@ class RoleSeeder extends Seeder
                 ['name' => 'stock_out.create', 'display_name' => 'Create Stock Out', 'description' => 'Membuat stock out baru'],
                 ['name' => 'stock_out.edit', 'display_name' => 'Edit Stock Out', 'description' => 'Mengedit stock out'],
                 ['name' => 'stock_out.delete', 'display_name' => 'Delete Stock Out', 'description' => 'Menghapus stock out'],
-                ['name' => 'stock_out.submit', 'display_name' => 'Submit Stock Out', 'description' => 'Menyetujui stock out']
+                ['name' => 'stock_out.submit', 'display_name' => 'Submit Stock Out', 'description' => 'Menyetujui stock out'],
+                ['name' => 'stock_out.index', 'display_name' => 'View Stock Out List', 'description' => 'Melihat daftar stock out'],
+                ['name' => 'stock_out.show', 'display_name' => 'View Stock Out Details', 'description' => 'Melihat detail stock out'],
+                ['name' => 'stock_out.store', 'display_name' => 'Store Stock Out', 'description' => 'Menyimpan stock out baru'],
+                ['name' => 'stock_out.update', 'display_name' => 'Update Stock Out', 'description' => 'Mengupdate stock out'],
+                ['name' => 'stock_out.destroy', 'display_name' => 'Delete Stock Out', 'description' => 'Menghapus stock out'],
+                ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global']
             ],
             'inventory_staff' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -166,7 +172,13 @@ class RoleSeeder extends Seeder
                 ['name' => 'stock_out.create', 'display_name' => 'Create Stock Out', 'description' => 'Membuat stock out baru'],
                 ['name' => 'stock_out.edit', 'display_name' => 'Edit Stock Out', 'description' => 'Mengedit stock out'],
                 ['name' => 'stock_out.delete', 'display_name' => 'Delete Stock Out', 'description' => 'Menghapus stock out'],
-                ['name' => 'stock_out.submit', 'display_name' => 'Submit Stock Out', 'description' => 'Menyetujui stock out']
+                ['name' => 'stock_out.submit', 'display_name' => 'Submit Stock Out', 'description' => 'Menyetujui stock out'],
+                ['name' => 'stock_out.index', 'display_name' => 'View Stock Out List', 'description' => 'Melihat daftar stock out'],
+                ['name' => 'stock_out.show', 'display_name' => 'View Stock Out Details', 'description' => 'Melihat detail stock out'],
+                ['name' => 'stock_out.store', 'display_name' => 'Store Stock Out', 'description' => 'Menyimpan stock out baru'],
+                ['name' => 'stock_out.update', 'display_name' => 'Update Stock Out', 'description' => 'Mengupdate stock out'],
+                ['name' => 'stock_out.destroy', 'display_name' => 'Delete Stock Out', 'description' => 'Menghapus stock out'],
+                ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global']
             ],
             'warehouse_supervisor' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -201,7 +213,9 @@ class RoleSeeder extends Seeder
                 // Template Management Permissions (View Only)
                 ['name' => 'templates.view', 'display_name' => 'View Templates', 'description' => 'Melihat daftar template'],
                 // Stock Out Management Permissions (View Only)
-                ['name' => 'stock_out.view', 'display_name' => 'View Stock Out', 'description' => 'Melihat daftar stock out']
+                ['name' => 'stock_out.view', 'display_name' => 'View Stock Out', 'description' => 'Melihat daftar stock out'],
+                ['name' => 'stock_out.show', 'display_name' => 'View Stock Out Details', 'description' => 'Melihat detail stock out'],
+                ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global']
             ],
             'management' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -216,7 +230,9 @@ class RoleSeeder extends Seeder
                 ['name' => 'product_variants.index', 'display_name' => 'View Product Variants', 'description' => 'Melihat daftar varian produk'],
                 ['name' => 'product_variants.show', 'display_name' => 'View Product Variant Details', 'description' => 'Melihat detail varian produk'],
                 // Stock Out Management Permissions (View Only)
-                ['name' => 'stock_out.view', 'display_name' => 'View Stock Out', 'description' => 'Melihat daftar stock out']
+                ['name' => 'stock_out.view', 'display_name' => 'View Stock Out', 'description' => 'Melihat daftar stock out'],
+                ['name' => 'stock_out.show', 'display_name' => 'View Stock Out Details', 'description' => 'Melihat detail stock out'],
+                ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global']
             ],
         };
     }

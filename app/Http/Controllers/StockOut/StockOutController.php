@@ -398,4 +398,44 @@ class StockOutController extends Controller
                 ->with('error', 'Gagal menghapus stock out. Silakan coba lagi.');
         }
     }
+
+    /**
+     * Display specified stock out record
+     */
+    public function show(StockOutRecord $stockOut)
+    {
+        $stockOut->load(['items.productVariant.product']);
+        
+        // Manually build data structure to ensure nested relationships are properly serialized
+        $items = $stockOut->items->map(function($item) {
+            return [
+                'id' => $item->id,
+                'quantity' => $item->quantity,
+                'product_variant_id' => $item->product_variant_id,
+                'productVariant' => $item->productVariant ? [
+                    'id' => $item->productVariant->id,
+                    'variant_name' => $item->productVariant->variant_name,
+                    'sku' => $item->productVariant->sku,
+                    'stock_current' => $item->productVariant->stock_current,
+                    'product' => $item->productVariant->product ? [
+                        'id' => $item->productVariant->product->id,
+                        'name' => $item->productVariant->product->name,
+                    ] : null,
+                ] : null,
+            ];
+        })->toArray();
+        
+        return Inertia::render('StockOut/Show', [
+            'stockOut' => [
+                'id' => $stockOut->id,
+                'date' => $stockOut->date,
+                'status' => $stockOut->status,
+                'created_at' => $stockOut->created_at,
+                'updated_at' => $stockOut->updated_at,
+            ],
+            'items' => $items,
+            'totalQuantity' => collect($items)->sum('quantity'),
+            'totalVariants' => count($items),
+        ]);
+    }
 }

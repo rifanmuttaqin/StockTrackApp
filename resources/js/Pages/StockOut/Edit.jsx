@@ -127,7 +127,7 @@ const Edit = ({ stockOutRecord }) => {
     e.preventDefault();
 
     // Validasi jika record sudah disubmit - EC-PRD-022
-    if (stockOutRecord?.status === 'submitted') {
+    if (stockOutRecord?.status === 'submit') {
       setMessage({
         type: 'error',
         message: 'Record yang sudah disubmit tidak dapat diedit'
@@ -169,7 +169,7 @@ const Edit = ({ stockOutRecord }) => {
     e.preventDefault();
 
     // Validasi jika record sudah disubmit - EC-PRD-022
-    if (stockOutRecord?.status === 'submitted') {
+    if (stockOutRecord?.status === 'submit') {
       setMessage({
         type: 'error',
         message: 'Record yang sudah disubmit tidak dapat disubmit ulang'
@@ -191,7 +191,7 @@ const Edit = ({ stockOutRecord }) => {
     }
 
     post(route('stock-out.submit', stockOutRecord.id), {
-      data: { ...data, status: 'submitted' },
+      data: { ...data, status: 'submit' },
       onSuccess: () => {
         setMessage({ type: 'success', message: 'Stock out berhasil disubmit' });
       },
@@ -206,7 +206,7 @@ const Edit = ({ stockOutRecord }) => {
    */
   const handleDelete = () => {
     // Validasi jika record sudah disubmit
-    if (stockOutRecord?.status === 'submitted') {
+    if (stockOutRecord?.status === 'submit') {
       setShowDeleteModal(false);
       setMessage({
         type: 'error',
@@ -245,7 +245,7 @@ const Edit = ({ stockOutRecord }) => {
     switch (status) {
       case 'draft':
         return 'warning';
-      case 'submitted':
+      case 'submit':
         return 'success';
       default:
         return 'info';
@@ -262,8 +262,8 @@ const Edit = ({ stockOutRecord }) => {
     switch (status) {
       case 'draft':
         return 'Draft';
-      case 'submitted':
-        return 'Submitted';
+      case 'submit':
+        return 'Submit';
       default:
         return status;
     }
@@ -347,7 +347,7 @@ const Edit = ({ stockOutRecord }) => {
                     type="date"
                     value={data.date}
                     onChange={(e) => setData('date', e.target.value)}
-                    disabled={stockOutRecord?.status === 'submitted'}
+                    disabled={stockOutRecord?.status === 'submit'}
                     className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-100 disabled:text-gray-500"
                   />
                 </MobileFormField>
@@ -424,7 +424,7 @@ const Edit = ({ stockOutRecord }) => {
                             min="0"
                             value={quantities[item.product_variant_id] || 0}
                             onChange={(e) => handleQuantityChange(item.product_variant_id, e.target.value)}
-                            disabled={stockOutRecord?.status === 'submitted'}
+                            disabled={stockOutRecord?.status === 'submit'}
                             placeholder="0"
                             className={`block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
                               quantityErrors[item.product_variant_id] ? 'border-red-500' : 'border-gray-300'
@@ -557,7 +557,7 @@ const Edit = ({ stockOutRecord }) => {
               </button>
             </>
           )}
-          {stockOutRecord?.status === 'submitted' && (
+          {stockOutRecord?.status === 'submit' && (
             <div className="text-center text-sm text-gray-500 py-2">
               Record sudah disubmit, tidak dapat diedit
             </div>
@@ -621,7 +621,7 @@ const Edit = ({ stockOutRecord }) => {
               </button>
             </>
           )}
-          {stockOutRecord?.status === 'submitted' && (
+          {stockOutRecord?.status === 'submit' && (
             <div className="text-sm text-gray-500 py-2">
               Record sudah disubmit, tidak dapat diedit
             </div>
