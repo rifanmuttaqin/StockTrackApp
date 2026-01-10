@@ -75,7 +75,7 @@ const MobileUserCard = ({ user, onView, onEdit, onDelete, onToggleStatus, onAssi
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {can('users.view') && (
+          {can('users.show') && (
             <MobileButton
               variant="outline"
               size="sm"

@@ -389,7 +389,7 @@ const UserTable = ({
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end space-x-2" role="group" aria-label={`Aksi untuk pengguna ${user.name}`}>
-                          {can('users.view') && (
+                          {can('users.show') && (
                             <Link
                               href={route('users.show', user.id)}
                               className="text-indigo-600 hover:text-indigo-900"

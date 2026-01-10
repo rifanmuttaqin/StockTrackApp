@@ -128,7 +128,7 @@ const MobileUserActions = ({ user, onToggleStatus, onDelete, onAssignRole }) => 
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {can('users.view') && (
+        {can('users.show') && (
           <MobileButton
             variant="outline"
             size="sm"

@@ -69,7 +69,7 @@ export const API_ENDPOINTS = {
 // Permission Names
 export const PERMISSIONS = {
     // User Management
-    USERS_VIEW: 'users.view',
+    USERS_VIEW: 'users.show',
     USERS_CREATE: 'users.create',
     USERS_EDIT: 'users.edit',
     USERS_DELETE: 'users.delete',
