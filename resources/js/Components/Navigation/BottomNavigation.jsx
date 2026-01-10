@@ -31,10 +31,10 @@ const BottomNavigation = () => {
     },
     {
       name: 'Stock Out',
-      href: '/stock-out',
+      href: '/stock-out/create',
       icon: ArrowLeft,
       active: url === '/stock-out' || url.startsWith('/stock-out'),
-      permission: 'stock_out.view'
+      permission: 'stock_out.create'
     },
     {
       name: 'Pengguna',
