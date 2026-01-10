@@ -203,6 +203,51 @@ const Create = ({ activeTemplate, defaultDate }) => {
     });
   };
 
+  /**
+   * Custom Date Input Component
+   * Menampilkan tanggal dalam format Indonesia tetapi menyimpan dalam format YYYY-MM-DD
+   */
+  const CustomDateInput = ({ value, onChange, error, disabled }) => {
+    const [showDatePicker, setShowDatePicker] = useState(false);
+
+    const handleInputChange = (e) => {
+      const date = e.target.value;
+      onChange(date);
+    };
+
+    return (
+      <div className="relative">
+        {/* Hidden date input for date picker */}
+        <input
+          type="date"
+          value={value}
+          onChange={handleInputChange}
+          disabled={disabled}
+          className="absolute inset-0 opacity-0 cursor-pointer z-10"
+          style={{ height: '100%' }}
+        />
+        
+        {/* Display input showing formatted date */}
+        <div
+          className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm ${
+            error ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-indigo-500'
+          } ${disabled ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'bg-white cursor-pointer'}`}
+        >
+          {value ? formatDate(value) : 'Pilih tanggal'}
+        </div>
+        
+        {/* Calendar icon indicator */}
+        {!disabled && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   // Tampilkan error jika tidak ada template aktif
   if (!activeTemplate) {
     return (
@@ -314,19 +359,18 @@ const Create = ({ activeTemplate, defaultDate }) => {
               className="p-6 border-b border-gray-200"
             >
               <div className="grid grid-cols-1 gap-6">
-                {/* Date Input */}
-                <MobileFormField
-                  label="Tanggal"
+              {/* Date Input */}
+              <MobileFormField
+                label="Tanggal"
+                error={errors.date}
+                required
+              >
+                <CustomDateInput
+                  value={data.date}
+                  onChange={(value) => setData('date', value)}
                   error={errors.date}
-                  required
-                >
-                  <input
-                    type="date"
-                    value={data.date}
-                    onChange={(e) => setData('date', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </MobileFormField>
+                />
+              </MobileFormField>
 
                 {/* Template Info */}
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
@@ -455,7 +499,7 @@ const Create = ({ activeTemplate, defaultDate }) => {
               <div className="mt-2 text-sm text-blue-700">
                 <ul className="list-disc pl-5 space-y-1">
                   <li>Quantity tidak boleh negatif</li>
-                  <li>Minimal satu varian harus memiliki quantity > 0</li>
+                  <li>Minimal satu varian harus memiliki quantity {'>'} 0</li>
                   <li>Simpan Draft untuk menyimpan tanpa mengurangi stock</li>
                   <li>Submit untuk mengurangi stock secara permanen</li>
                 </ul>

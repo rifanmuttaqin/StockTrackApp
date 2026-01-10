@@ -5,6 +5,16 @@ import { ArrowLeftIcon, PencilIcon, EyeIcon } from '@heroicons/react/24/outline'
 import { Badge } from '../../Components/UI';
 
 export default function Show({ stockOut, items, totalQuantity, totalVariants }) {
+  // Format tanggal ke format Indonesia
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    return new Date(dateString).toLocaleDateString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
   // Status configuration matching Index.jsx
   const statusConfig = {
     draft: {
@@ -21,14 +31,14 @@ export default function Show({ stockOut, items, totalQuantity, totalVariants }) 
   
   return (
     <AppLayout
-      title={`Stock Out - ${stockOut.date}`}
+      title={`Stock Out - ${formatDate(stockOut.date)}`}
       breadcrumbs={[
         { label: 'Dashboard', href: '/dashboard' },
         { label: 'Stock Out', href: '/stock-out' },
         { label: 'Detail' }
       ]}
     >
-      <Head title={`Stock Out - ${stockOut.date}`} />
+      <Head title={`Stock Out - ${formatDate(stockOut.date)}`} />
       
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 pb-20 sm:pb-0">
         {/* Header with back button */}
@@ -50,7 +60,7 @@ export default function Show({ stockOut, items, totalQuantity, totalVariants }) 
                 Stock Out Details
               </h1>
               <p className="text-sm text-gray-500 mt-1">
-                Date: {stockOut.date}
+                Date: {formatDate(stockOut.date)}
               </p>
             </div>
             <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-${status.variant}-100 text-${status.variant}-800 mt-2 sm:mt-0`}>
@@ -73,10 +83,10 @@ export default function Show({ stockOut, items, totalQuantity, totalVariants }) 
           {/* Timestamps */}
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-sm text-gray-500">
-              Created: {new Date(stockOut.created_at).toLocaleString()}
+              Created: {formatDate(stockOut.created_at)}
             </p>
             <p className="text-sm text-gray-500">
-              Updated: {new Date(stockOut.updated_at).toLocaleString()}
+              Updated: {formatDate(stockOut.updated_at)}
             </p>
           </div>
         </div>
