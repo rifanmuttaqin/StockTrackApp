@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
+import axios from 'axios';
 import AppLayout from '../../Layouts/AppLayout';
 import { Alert, LoadingSpinner, Badge } from '../../Components/UI';
 import {
@@ -18,7 +19,8 @@ import {
   DocumentTextIcon,
   CheckCircleIcon,
   ClockIcon,
-  EyeIcon
+  EyeIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 
 /**
@@ -38,6 +40,16 @@ const Index = ({ stockOutRecords, statistics, filters, meta }) => {
   const [loading, setLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState(filters?.status || 'all');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  
+  // Note modal state
+  const [noteModal, setNoteModal] = useState({
+    isOpen: false,
+    recordId: null,
+    currentNote: '',
+  });
+  const [noteText, setNoteText] = useState('');
+  const [noteLoading, setNoteLoading] = useState(false);
+  const [noteMessage, setNoteMessage] = useState({ type: '', text: '' });
 
   /**
    * Handle perubahan filter status
@@ -118,6 +130,101 @@ const Index = ({ stockOutRecords, statistics, filters, meta }) => {
   }, []);
 
   /**
+   * Open note modal for adding/editing note
+   * @param {Object} record - Stock out record
+   */
+  const handleOpenNoteModal = useCallback((record) => {
+    setNoteModal({
+      isOpen: true,
+      recordId: record.id,
+      currentNote: record.note || '',
+    });
+    setNoteText(record.note || '');
+    setNoteMessage({ type: '', text: '' });
+  }, []);
+
+  /**
+   * Close note modal
+   */
+  const handleCloseNoteModal = useCallback(() => {
+    setNoteModal({
+      isOpen: false,
+      recordId: null,
+      currentNote: '',
+    });
+    setNoteText('');
+    setNoteMessage({ type: '', text: '' });
+  }, []);
+
+  /**
+   * Save note via axios (JSON API endpoint)
+   */
+  const handleSaveNote = useCallback(async () => {
+    if (!noteModal.recordId) return;
+
+    setNoteLoading(true);
+    setNoteMessage({ type: '', text: '' });
+
+    try {
+      const response = await axios.put(
+        route('stock-out.updateNote', noteModal.recordId),
+        { note: noteText.trim() || null }
+      );
+
+      if (response.data.success) {
+        setNoteMessage({ type: 'success', text: response.data.message || 'Catatan berhasil disimpan' });
+        // Reload the page to show updated note
+        router.reload({ only: ['stockOutRecords'] });
+        handleCloseNoteModal();
+      } else {
+        setNoteMessage({ type: 'error', text: response.data.message || 'Gagal menyimpan catatan' });
+      }
+    } catch (error) {
+      console.error('Error saving note:', error);
+      const errorMessage = error.response?.data?.message ||
+                          error.response?.data?.errors?.note?.[0] ||
+                          'Gagal menyimpan catatan. Silakan coba lagi.';
+      setNoteMessage({ type: 'error', text: errorMessage });
+    } finally {
+      setNoteLoading(false);
+    }
+  }, [noteModal.recordId, noteText, handleCloseNoteModal]);
+
+  /**
+   * Remove note via axios (JSON API endpoint)
+   * @param {string} recordId - Stock out record ID
+   */
+  const handleRemoveNote = useCallback(async (recordId) => {
+    if (!confirm('Apakah Anda yakin ingin menghapus catatan ini?')) {
+      return;
+    }
+
+    setNoteLoading(true);
+
+    try {
+      const response = await axios.put(
+        route('stock-out.updateNote', recordId),
+        { note: null }
+      );
+
+      if (response.data.success) {
+        // Reload the page to show updated note
+        router.reload({ only: ['stockOutRecords'] });
+      } else {
+        alert(response.data.message || 'Gagal menghapus catatan');
+      }
+    } catch (error) {
+      console.error('Error removing note:', error);
+      const errorMessage = error.response?.data?.message ||
+                          error.response?.data?.errors?.note?.[0] ||
+                          'Gagal menghapus catatan. Silakan coba lagi.';
+      alert(errorMessage);
+    } finally {
+      setNoteLoading(false);
+    }
+  }, []);
+
+  /**
    * Handle perubahan halaman pagination
    * @param {number} page - Nomor halaman
    */
@@ -175,18 +282,65 @@ const Index = ({ stockOutRecords, statistics, filters, meta }) => {
     const isDraft = record.status === 'draft';
 
     return (
-      <MobileCard key={record.id} className="mb-4">
-        <MobileCardHeader>
+      <MobileCard key={record.id} className="mb-4 relative">
+        {/* Note Badge with Actions - Top Right Corner */}
+        {record.note ? (
+          <div className="absolute top-2 right-2 z-10 flex items-center gap-1">
+            <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200 max-w-[200px] truncate">
+              <DocumentTextIcon className="w-3 h-3 mr-1 flex-shrink-0" />
+              {record.note}
+            </span>
+            {/* Edit Note Button */}
+            <button
+              onClick={() => handleOpenNoteModal(record)}
+              className="p-1.5 rounded-md bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+              title="Edit Catatan"
+            >
+              <PencilIcon className="w-3 h-3 text-gray-600" />
+            </button>
+            {/* Remove Note Button */}
+            <button
+              onClick={() => handleRemoveNote(record.id)}
+              disabled={noteLoading}
+              className="p-1.5 rounded-md bg-white border border-gray-200 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Hapus Catatan"
+            >
+              <XMarkIcon className="w-3 h-3 text-gray-600" />
+            </button>
+          </div>
+        ) : (
+          /* Add Note Button - Top Right Corner */
+          <div className="absolute top-2 right-2 z-10">
+            <button
+              onClick={() => handleOpenNoteModal(record)}
+              className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200 transition-colors"
+              title="Tambah Catatan"
+            >
+              <DocumentTextIcon className="w-3 h-3 mr-1" />
+              Tambah Catatan
+            </button>
+          </div>
+        )}
+
+        <MobileCardHeader className="pr-24">
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-2">
-              <DocumentTextIcon className="w-5 h-5 text-gray-400" />
-              <MobileCardTitle className="text-sm">
+            <div className="flex-1">
+              {/* Transaction Code - Prominent Display */}
+              <div className="flex items-center gap-2 mb-1">
+                <DocumentTextIcon className="w-5 h-5 text-indigo-600" />
+                <MobileCardTitle className="text-base font-bold text-gray-900">
+                  {record.transaction_code || 'N/A'}
+                </MobileCardTitle>
+              </div>
+              {/* Date Display */}
+              <div className="flex items-center gap-1 text-sm text-gray-600">
+                <ClockIcon className="w-4 h-4" />
                 {new Date(record.date).toLocaleDateString('id-ID', {
                   day: 'numeric',
                   month: 'long',
                   year: 'numeric',
                 })}
-              </MobileCardTitle>
+              </div>
             </div>
             {renderStatusBadge(record.status)}
           </div>
@@ -194,12 +348,12 @@ const Index = ({ stockOutRecords, statistics, filters, meta }) => {
         <MobileCardContent>
           <div className="space-y-2">
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-600">Jumlah Varian:</span>
-              <span className="font-medium text-gray-900">{record.items_count || 0}</span>
+              <span className="text-gray-600">Total Produk:</span>
+              <span className="font-semibold text-gray-900">{record.items_count || 0}</span>
             </div>
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-600">Total Quantity:</span>
-              <span className="font-medium text-gray-900">{record.total_quantity || 0}</span>
+              <span className="text-gray-600">Total Quantity Out:</span>
+              <span className="font-semibold text-gray-900">{record.total_quantity || 0}</span>
             </div>
           </div>
         </MobileCardContent>
@@ -243,7 +397,7 @@ const Index = ({ stockOutRecords, statistics, filters, meta }) => {
         </MobileCardFooter>
       </MobileCard>
     );
-  }, [can, handleEdit, handleSubmit, handleDelete, renderStatusBadge]);
+  }, [can, handleEdit, handleSubmit, handleDelete, renderStatusBadge, handleOpenNoteModal, handleRemoveNote, noteLoading]);
 
   /**
    * Render empty state
@@ -504,14 +658,22 @@ const Index = ({ stockOutRecords, statistics, filters, meta }) => {
               </div>
               <div className="bg-gray-50 rounded-md p-3 mb-4">
                 <p className="text-sm text-gray-600">
+                  <span className="font-medium">Transaction Code:</span> {deleteConfirm.transaction_code || 'N/A'}
+                </p>
+                <p className="text-sm text-gray-600">
                   <span className="font-medium">Tanggal:</span> {new Date(deleteConfirm.date).toLocaleDateString('id-ID')}
                 </p>
                 <p className="text-sm text-gray-600">
-                  <span className="font-medium">Jumlah Varian:</span> {deleteConfirm.items_count}
+                  <span className="font-medium">Total Produk:</span> {deleteConfirm.items_count}
                 </p>
                 <p className="text-sm text-gray-600">
-                  <span className="font-medium">Total Quantity:</span> {deleteConfirm.total_quantity}
+                  <span className="font-medium">Total Quantity Out:</span> {deleteConfirm.total_quantity}
                 </p>
+                {deleteConfirm.note && (
+                  <p className="text-sm text-gray-600">
+                    <span className="font-medium">Catatan:</span> {deleteConfirm.note}
+                  </p>
+                )}
               </div>
               <div className="flex justify-end space-x-3">
                 <button
@@ -525,6 +687,79 @@ const Index = ({ stockOutRecords, statistics, filters, meta }) => {
                   className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 >
                   Hapus
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Note Modal */}
+        {noteModal.isOpen && (
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+              {/* Modal Header */}
+              <div className="px-4 py-3 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium text-gray-900">
+                    {noteModal.currentNote ? 'Edit Catatan' : 'Tambah Catatan'}
+                  </h3>
+                  <button
+                    onClick={handleCloseNoteModal}
+                    className="p-1 rounded-md hover:bg-gray-100 transition-colors"
+                  >
+                    <XMarkIcon className="w-5 h-5 text-gray-500" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Body */}
+              <div className="px-4 py-4">
+                <label htmlFor="note-text" className="block text-sm font-medium text-gray-700 mb-2">
+                  Catatan
+                </label>
+                <textarea
+                  id="note-text"
+                  value={noteText}
+                  onChange={(e) => setNoteText(e.target.value)}
+                  maxLength={500}
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+                  placeholder="Masukkan catatan..."
+                  disabled={noteLoading}
+                />
+                <div className="mt-1 text-right">
+                  <span className={`text-xs ${noteText.length > 450 ? 'text-amber-600' : 'text-gray-500'}`}>
+                    {noteText.length} / 500 karakter
+                  </span>
+                </div>
+
+                {/* Note Message */}
+                {noteMessage.text && (
+                  <div className={`mt-3 p-2 rounded-md text-sm ${
+                    noteMessage.type === 'success'
+                      ? 'bg-green-50 text-green-800'
+                      : 'bg-red-50 text-red-800'
+                  }`}>
+                    {noteMessage.text}
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="px-4 py-3 border-t border-gray-200 flex justify-end space-x-3">
+                <button
+                  onClick={handleCloseNoteModal}
+                  disabled={noteLoading}
+                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Batal
+                </button>
+                <button
+                  onClick={handleSaveNote}
+                  disabled={noteLoading || noteText.trim() === ''}
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {noteLoading ? 'Menyimpan...' : 'Simpan'}
                 </button>
               </div>
             </div>

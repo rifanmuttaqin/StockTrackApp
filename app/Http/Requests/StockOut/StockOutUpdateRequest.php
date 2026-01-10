@@ -39,6 +39,7 @@ class StockOutUpdateRequest extends FormRequest
     {
         return [
             'date' => 'required|date|date_format:Y-m-d',
+            'note' => 'nullable|string|max:500',
             'items' => 'required|array|min:1',
             'items.*.product_variant_id' => 'required|exists:product_variants,id',
             'items.*.quantity' => 'required|integer|min:0',
@@ -79,6 +80,8 @@ class StockOutUpdateRequest extends FormRequest
             'date.required' => 'Tanggal stock out harus diisi',
             'date.date' => 'Format tanggal tidak valid',
             'date.date_format' => 'Format tanggal harus Y-m-d (contoh: 2026-01-08)',
+            'note.string' => 'Catatan harus berupa teks',
+            'note.max' => 'Catatan maksimal 500 karakter',
             'items.required' => 'Item stock out harus diisi',
             'items.array' => 'Item stock out harus berupa array',
             'items.min' => 'Minimal harus ada 1 item stock out',

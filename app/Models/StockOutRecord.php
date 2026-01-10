@@ -27,6 +27,9 @@ class StockOutRecord extends Model
             if (empty($model->id)) {
                 $model->id = Str::uuid();
             }
+            if (empty($model->transaction_code)) {
+                $model->setTransactionCode();
+            }
         });
     }
 
@@ -38,6 +41,8 @@ class StockOutRecord extends Model
     protected $fillable = [
         'date',
         'status',
+        'transaction_code',
+        'note',
     ];
 
     /**
@@ -61,6 +66,7 @@ class StockOutRecord extends Model
             'id' => 'string',
             'date' => 'date',
             'status' => 'string',
+            'note' => 'string',
         ];
     }
 
@@ -110,5 +116,47 @@ class StockOutRecord extends Model
     public function getTotalQuantityAttribute(): int
     {
         return (int) $this->items->sum('quantity');
+    }
+    /**
+     * Generate a unique transaction code.
+     *
+     * @return string
+     */
+    public function generateTransactionCode(): string
+    {
+        $maxAttempts = 5;
+        $attempts = 0;
+
+        while ($attempts < $maxAttempts) {
+            // Generate a random 12-digit integer
+            $randomNumber = random_int(0, 999999999999);
+            // Pad with leading zeros to ensure 12 digits
+            $paddedNumber = str_pad($randomNumber, 12, '0', STR_PAD_LEFT);
+            // Format as ALBR-{12 digit integer}
+            $transactionCode = 'ALBR-' . $paddedNumber;
+
+            // Check if the code is unique
+            if (!self::where('transaction_code', $transactionCode)->exists()) {
+                return $transactionCode;
+            }
+
+            $attempts++;
+        }
+
+        // If all attempts fail, use timestamp-based fallback
+        $timestamp = microtime(true);
+        $fallbackNumber = (int) ($timestamp * 1000000);
+        $paddedFallback = str_pad(substr($fallbackNumber, -12), 12, '0', STR_PAD_LEFT);
+        return 'ALBR-' . $paddedFallback;
+    }
+
+    /**
+     * Set the transaction code for the model.
+     *
+     * @return void
+     */
+    public function setTransactionCode(): void
+    {
+        $this->transaction_code = $this->generateTransactionCode();
     }
 }

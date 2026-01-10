@@ -49,4 +49,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/stock-out/{stockOut}/submit', [StockOutController::class, 'submit'])
         ->name('stock-out.submit')
         ->middleware('permission:stock_out.submit');
+
+    // Update stock out note (quick note update)
+    Route::put('/stock-out/{stockOut}/note', [StockOutController::class, 'updateNote'])
+        ->name('stock-out.updateNote')
+        ->middleware('permission:stock_out.edit');
 });
