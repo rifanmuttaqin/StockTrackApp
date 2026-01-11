@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\StockOut\StockOutController;
+use App\Http\Controllers\StockOut\StockOutReportController;
 use Illuminate\Support\Facades\Route;
 
 // All stock out routes require authentication and email verification
@@ -54,4 +55,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/stock-out/{stockOut}/note', [StockOutController::class, 'updateNote'])
         ->name('stock-out.updateNote')
         ->middleware('permission:stock_out.edit');
+
+    // ============================================
+    // STOCK OUT REPORT ROUTES
+    // ============================================
+
+    // Stock out report view
+    Route::get('/reports/stock', [StockOutReportController::class, 'index'])
+        ->name('stock-out-report.index')
+        ->middleware('permission:view_reports');
 });
