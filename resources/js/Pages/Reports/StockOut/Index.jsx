@@ -233,7 +233,9 @@ const Index = ({ products, stockOutData, filters, error }) => {
                   value={localFilters.start_date}
                   onChange={(e) => handleFilterChange('start_date', e.target.value)}
                   placeholder="DD Bulan Tahun"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer"
+                  className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer ${
+                    localFilters.start_date ? 'text-transparent' : ''
+                  }`}
                   style={{ colorScheme: 'light' }}
                 />
                 {localFilters.start_date && (
@@ -257,7 +259,9 @@ const Index = ({ products, stockOutData, filters, error }) => {
                   value={localFilters.end_date}
                   onChange={(e) => handleFilterChange('end_date', e.target.value)}
                   placeholder="DD Bulan Tahun"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer"
+                  className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer ${
+                    localFilters.end_date ? 'text-transparent' : ''
+                  }`}
                   style={{ colorScheme: 'light' }}
                 />
                 {localFilters.end_date && (
