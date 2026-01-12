@@ -29,16 +29,6 @@ class ProductUpdateRequest extends FormRequest
     {
         $productId = $this->route('id');
 
-        // Log untuk debugging
-        Log::info('ProductUpdateRequest Validation', [
-            'route_id' => $productId,
-            'route_id_type' => gettype($productId),
-            'route_id_empty' => empty($productId),
-            'all_route_params' => $this->route()->parameters(),
-            'request_url' => $this->url(),
-            'request_method' => $this->method(),
-        ]);
-
         // Build validation rules
         $rules = [
             'name' => 'required|string|max:255',

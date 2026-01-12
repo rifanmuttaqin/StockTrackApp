@@ -246,7 +246,6 @@ const Index = ({ products, filters, meta }) => {
         toast: true,
       });
     } catch (error) {
-      console.error('Error updating stock:', error);
       
       // Show SweetAlert2 error toast
       Swal.fire({

@@ -5,6 +5,7 @@ import { MobileForm, MobileFormSection, MobileFormField, MobileFormActions } fro
 import { Alert, LoadingSpinner, Badge } from '../../Components/UI';
 import { usePermission } from '../../Hooks/usePermission';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import Swal from 'sweetalert2';
 
 const Create = ({ productVariants }) => {
   const { props } = usePage();
@@ -40,7 +41,7 @@ const Create = ({ productVariants }) => {
     e.preventDefault();
 
     if (selectedVariants.length === 0) {
-      alert('Minimal 1 varian harus dipilih');
+      Swal.fire('Validasi', 'Minimal 1 varian harus dipilih', 'warning');
       return;
     }
 

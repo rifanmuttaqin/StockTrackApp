@@ -5,6 +5,7 @@ import { MobileForm, MobileFormSection, MobileFormField, MobileFormActions } fro
 import { Alert, LoadingSpinner } from '../../Components/UI';
 import { usePermission } from '../../Hooks/usePermission';
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline';
+import Swal from 'sweetalert2';
 
 const Create = () => {
   const { props } = usePage();
@@ -86,7 +87,7 @@ const Create = () => {
 
     // Check for SKU errors before submission
     if (Object.keys(skuErrors).length > 0) {
-      alert('Harap perbaiki error SKU varian sebelum menyimpan');
+      Swal.fire('Validasi', 'Harap perbaiki error SKU varian sebelum menyimpan', 'warning');
       return;
     }
 

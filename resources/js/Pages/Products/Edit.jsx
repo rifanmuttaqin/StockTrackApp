@@ -5,6 +5,7 @@ import { MobileForm, MobileFormSection, MobileFormField, MobileFormActions } fro
 import { Alert, LoadingSpinner } from '../../Components/UI';
 import { usePermission } from '../../Hooks/usePermission';
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline';
+import Swal from 'sweetalert2';
 
 const Edit = ({ product, errors, flash }) => {
   const { props } = usePage();
@@ -102,20 +103,9 @@ const Edit = ({ product, errors, flash }) => {
 
     // Check for SKU errors before submission
     if (Object.keys(skuErrors).length > 0) {
-      alert('Harap perbaiki error SKU varian sebelum menyimpan');
+      Swal.fire('Validasi', 'Harap perbaiki error SKU varian sebelum menyimpan', 'warning');
       return;
     }
-
-    // Log data being sent for debugging
-    console.log('Submitting product update:', {
-      productId: product.id,
-      formData: {
-        name: data.name,
-        sku: data.sku,
-        description: data.description,
-        variants: variants,
-      },
-    });
 
     put(route('products.update', product.id), {
       onSuccess: () => {

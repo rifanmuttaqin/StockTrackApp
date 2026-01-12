@@ -22,6 +22,7 @@ import {
   EyeIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
+import Swal from 'sweetalert2';
 
 /**
  * Komponen Index untuk Stock Out
@@ -180,7 +181,6 @@ const Index = ({ stockOutRecords, statistics, filters, meta }) => {
         setNoteMessage({ type: 'error', text: response.data.message || 'Gagal menyimpan catatan' });
       }
     } catch (error) {
-      console.error('Error saving note:', error);
       const errorMessage = error.response?.data?.message ||
                           error.response?.data?.errors?.note?.[0] ||
                           'Gagal menyimpan catatan. Silakan coba lagi.';
@@ -211,14 +211,13 @@ const Index = ({ stockOutRecords, statistics, filters, meta }) => {
         // Reload the page to show updated note
         router.reload({ only: ['stockOutRecords'] });
       } else {
-        alert(response.data.message || 'Gagal menghapus catatan');
+        Swal.fire('Error', response.data.message || 'Gagal menghapus catatan', 'error');
       }
     } catch (error) {
-      console.error('Error removing note:', error);
       const errorMessage = error.response?.data?.message ||
                           error.response?.data?.errors?.note?.[0] ||
                           'Gagal menghapus catatan. Silakan coba lagi.';
-      alert(errorMessage);
+      Swal.fire('Error', errorMessage, 'error');
     } finally {
       setNoteLoading(false);
     }

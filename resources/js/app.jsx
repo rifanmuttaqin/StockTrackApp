@@ -23,13 +23,11 @@ if (typeof window !== 'undefined') {
 
     // Monitor network status
     monitorNetworkStatus((status) => {
-        console.log(`Network status: ${status}`);
         // You can show/hide offline indicators here
     });
-
+    
     // Measure mobile performance
     const mobileMetrics = measureMobilePerformance();
-    console.log('Mobile Performance Metrics:', mobileMetrics);
 
     // Preload critical components for mobile
     if (mobileMetrics.device?.userAgent?.includes('Mobile')) {

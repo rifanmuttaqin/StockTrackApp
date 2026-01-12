@@ -46,26 +46,17 @@ class AuthController extends Controller
             'remember' => 'boolean',
         ]);
 
-        // Debug logging
-        Log::info('Login attempt for email: ' . $credentials['email']);
-
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
             // Get authenticated user
             $user = Auth::user();
 
-            // Debug logging
-            Log::info('User authenticated: ' . $user->email);
-
             // Update last login
             // $this->userService->updateLastLogin($user->id);
 
             return redirect()->intended(route('dashboard'));
         }
-
-        // Debug logging
-        Log::info('Login failed for email: ' . $credentials['email']);
 
         throw ValidationException::withMessages([
             'email' => ['Email atau password salah.'],

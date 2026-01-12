@@ -75,7 +75,6 @@ const MobilePasswordChangeForm = ({ user, errors = {}, isOwnProfile = false }) =
         }
       },
       onError: (errors) => {
-        console.error('Password change errors:', errors);
       },
     });
   };

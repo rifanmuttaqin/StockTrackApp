@@ -120,7 +120,7 @@ export default function Navbar() {
                 });
             }
         } catch (error) {
-            console.error('Failed to fetch user stats:', error);
+            // Failed to fetch user stats
         }
     };
 

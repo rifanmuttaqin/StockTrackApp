@@ -7,6 +7,7 @@ import { Modal, LoadingSpinner } from '../UI';
 import MobileUserCard from './MobileUserCard';
 import { usePermission } from '../../Hooks/usePermission';
 import { useDebouncedCallback, useStableCallback } from '../../utils/performance';
+import Swal from 'sweetalert2';
 
 const MobileUserTable = ({
   users,
@@ -62,7 +63,7 @@ const MobileUserTable = ({
     setSelectedUser(user);
     // Jika user suspended, tidak bisa toggle status biasa
     if (user.status === 'suspended') {
-      alert('Pengguna yang ditangguhkan harus diaktifkan kembali terlebih dahulu melalui tombol Unsuspend.');
+      Swal.fire('Peringatan', 'Pengguna yang ditangguhkan harus diaktifkan kembali terlebih dahulu melalui tombol Unsuspend.', 'warning');
       return;
     }
     // Toggle antara active dan inactive

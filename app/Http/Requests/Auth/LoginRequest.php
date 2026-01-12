@@ -42,11 +42,7 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // Debug logging
-        \Log::info('Login attempt for email: ' . $this->input('email'));
-
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            \Log::error('Login failed for email: ' . $this->input('email'));
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -54,7 +50,6 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        \Log::info('Login successful for email: ' . $this->input('email'));
         RateLimiter::clear($this->throttleKey());
     }
 

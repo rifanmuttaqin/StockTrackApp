@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useForm, router } from '@inertiajs/react';
 import { Alert, Modal, LoadingSpinner } from '../UI';
 import { usePermission } from '../../Hooks/usePermission';
+import Swal from 'sweetalert2';
 
 const UserTable = ({
   users,
@@ -59,7 +60,7 @@ const UserTable = ({
     setSelectedUser(user);
     // Jika user suspended, tidak bisa toggle status biasa
     if (user.status === 'suspended') {
-      alert('Pengguna yang ditangguhkan harus diaktifkan kembali terlebih dahulu melalui tombol Unsuspend.');
+      Swal.fire('Peringatan', 'Pengguna yang ditangguhkan harus diaktifkan kembali terlebih dahulu melalui tombol Unsuspend.', 'warning');
       return;
     }
     // Toggle antara active dan inactive
@@ -657,8 +658,7 @@ const UserTable = ({
                   setSelectedUsers([]);
                   setShowBulkModal(false);
                 } catch (error) {
-                  console.error('Bulk action failed:', error);
-                  alert('Terjadi kesalahan saat melakukan bulk action. Silakan coba lagi.');
+                  Swal.fire('Error', 'Terjadi kesalahan saat melakukan bulk action. Silakan coba lagi.', 'error');
                 }
               };
 

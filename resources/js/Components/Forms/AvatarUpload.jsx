@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useForm } from '@inertiajs/react';
+import Swal from 'sweetalert2';
 
 export default function AvatarUpload({ user, onSuccess }) {
     const [preview, setPreview] = useState(user?.avatar ? `/storage/${user.avatar}` : null);
@@ -22,13 +23,13 @@ export default function AvatarUpload({ user, onSuccess }) {
     const processFile = (file) => {
         // Validate file type
         if (!file.type.match('image.*')) {
-            alert('Please select an image file.');
+            Swal.fire('Error', 'Please select an image file.', 'error');
             return;
         }
 
         // Validate file size (2MB)
         if (file.size > 2 * 1024 * 1024) {
-            alert('File size must be less than 2MB.');
+            Swal.fire('Error', 'File size must be less than 2MB.', 'error');
             return;
         }
 

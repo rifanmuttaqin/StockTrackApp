@@ -111,12 +111,12 @@ export default function Sidebar() {
                 },
             ],
         },
-        {
-            name: 'Pengaturan',
-            icon: CogIcon,
-            permission: 'manage_users',
-            href: '/settings',
-        },
+        // {
+        //     name: 'Pengaturan',
+        //     icon: CogIcon,
+        //     permission: 'manage_users',
+        //     href: '/settings',
+        // },
     ];
 
     const filteredMenuItems = menuItems.filter(item => {

@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/react';
 import MobileButton from '../UI/MobileButton';
 import MobileCard from '../UI/MobileCard';
 import { usePermission } from '../../Hooks/usePermission';
+import Swal from 'sweetalert2';
 
 // Helper function for routing
 const getRoute = (name, params = {}) => {
@@ -45,7 +46,7 @@ const MobileUserActions = ({ user, onToggleStatus, onDelete, onAssignRole }) => 
     setShowActionSheet(false);
     // Jika user suspended, tidak bisa toggle status biasa
     if (user.status === 'suspended') {
-      alert('Pengguna yang ditangguhkan harus diaktifkan kembali terlebih dahulu melalui tombol Unsuspend.');
+      Swal.fire('Peringatan', 'Pengguna yang ditangguhkan harus diaktifkan kembali terlebih dahulu melalui tombol Unsuspend.', 'warning');
       return;
     }
     // Toggle antara active dan inactive
