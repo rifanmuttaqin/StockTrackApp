@@ -7,6 +7,49 @@ import { usePermission } from '../../Hooks/usePermission';
 import { ArrowLeftIcon, DocumentCheckIcon, CheckIcon } from '@heroicons/react/24/outline';
 
 /**
+ * Color palette for product cards
+ * 15 prominent colors for visual distinction
+ */
+const PRODUCT_COLORS = [
+  { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-900', badge: 'bg-red-100 text-red-800' },
+  { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-900', badge: 'bg-blue-100 text-blue-800' },
+  { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-900', badge: 'bg-green-100 text-green-800' },
+  { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-900', badge: 'bg-yellow-100 text-yellow-800' },
+  { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-900', badge: 'bg-purple-100 text-purple-800' },
+  { bg: 'bg-pink-50', border: 'border-pink-200', text: 'text-pink-900', badge: 'bg-pink-100 text-pink-800' },
+  { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-900', badge: 'bg-indigo-100 text-indigo-800' },
+  { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-900', badge: 'bg-orange-100 text-orange-800' },
+  { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-900', badge: 'bg-teal-100 text-teal-800' },
+  { bg: 'bg-cyan-50', border: 'border-cyan-200', text: 'text-cyan-900', badge: 'bg-cyan-100 text-cyan-800' },
+  { bg: 'bg-rose-50', border: 'border-rose-200', text: 'text-rose-900', badge: 'bg-rose-100 text-rose-800' },
+  { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-900', badge: 'bg-emerald-100 text-emerald-800' },
+  { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-900', badge: 'bg-amber-100 text-amber-800' },
+  { bg: 'bg-violet-50', border: 'border-violet-200', text: 'text-violet-900', badge: 'bg-violet-100 text-violet-800' },
+  { bg: 'bg-fuchsia-50', border: 'border-fuchsia-200', text: 'text-fuchsia-900', badge: 'bg-fuchsia-100 text-fuchsia-800' },
+];
+
+/**
+ * Get color for a product based on its ID
+ * Uses deterministic hash to ensure same product always gets same color
+ *
+ * @param {string} productId - Product ID
+ * @returns {Object} Color object with bg, border, text, and badge classes
+ */
+const getProductColor = (productId) => {
+  if (!productId) return PRODUCT_COLORS[0];
+  
+  // Create a simple hash from the product ID
+  const hash = productId.split('').reduce((acc, char) => {
+    return ((acc << 5) - acc) + char.charCodeAt(0);
+  }, 0);
+  
+  // Use absolute value and modulo to get a consistent index
+  const index = Math.abs(hash) % PRODUCT_COLORS.length;
+  
+  return PRODUCT_COLORS[index];
+};
+
+/**
  * Komponen Create untuk input Stock Keluar
  *
  * @component
@@ -395,62 +438,68 @@ const Create = ({ activeTemplate, defaultDate }) => {
             >
               {activeTemplate.items?.length > 0 ? (
                 <div className="space-y-4">
-                  {activeTemplate.items.map((item, index) => (
-                    <div
-                      key={item.product_variant_id || index}
-                      className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow"
-                    >
-                      {/* Variant Header */}
-                      <div className="flex justify-between items-start mb-3">
-                        <div className="flex-1">
-                          <h4 className="text-sm font-medium text-gray-900">
-                            {item.product_variant?.variant_name || `Varian #${index + 1}`}
-                          </h4>
-                          <p className="text-xs text-gray-500 mt-1">
-                            SKU: {item.product_variant?.sku || '-'}
-                          </p>
+                  {activeTemplate.items.map((item, index) => {
+                    // Get color based on product ID for consistent coloring
+                    const productId = item.product_variant?.product?.id;
+                    const color = getProductColor(productId);
+                    
+                    return (
+                      <div
+                        key={item.product_variant_id || index}
+                        className={`p-4 ${color.bg} rounded-lg border ${color.border} hover:shadow-md transition-shadow`}
+                      >
+                        {/* Variant Header */}
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex-1">
+                            <h4 className={`text-sm font-medium ${color.text}`}>
+                              {item.product_variant?.variant_name || `Varian #${index + 1}`}
+                            </h4>
+                            <p className={`text-xs ${color.text} mt-1 opacity-75`}>
+                              SKU: {item.product_variant?.sku || '-'}
+                            </p>
+                          </div>
+                          <Badge variant={color.badge.includes('red') ? 'error' : color.badge.includes('green') ? 'success' : 'info'}>
+                            Stock: {item.product_variant?.stock_current || 0}
+                          </Badge>
                         </div>
-                        <Badge variant="info">
-                          Stock: {item.product_variant?.stock_current || 0}
-                        </Badge>
-                      </div>
 
-                      {/* Quantity Input */}
-                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <MobileFormField
-                          label="Quantity"
-                          error={errors[`items.${index}.quantity`] || quantityErrors[item.product_variant_id]}
-                          required
-                        >
-                          <input
-                            type="number"
-                            min="0"
-                            value={quantities[item.product_variant_id] || 0}
-                            onChange={(e) => handleQuantityChange(item.product_variant_id, e.target.value)}
-                            placeholder="0"
-                            className={`block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-                              quantityErrors[item.product_variant_id] ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                          />
-                        </MobileFormField>
+                        {/* Quantity Input */}
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                          <MobileFormField
+                            label="Quantity"
+                            error={errors[`items.${index}.quantity`] || quantityErrors[item.product_variant_id]}
+                            required
+                          >
+                            <input
+                              type="number"
+                              min="0"
+                              value={quantities[item.product_variant_id] || 0}
+                              onChange={(e) => handleQuantityChange(item.product_variant_id, e.target.value)}
+                              placeholder="0"
+                              className={`block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+                                quantityErrors[item.product_variant_id] ? 'border-red-500' : 'border-gray-300'
+                              }`}
+                            />
+                          </MobileFormField>
 
-                        {/* Product Info */}
-                        <div className="flex items-center">
-                          <div className="text-sm text-gray-600">
-                            <span className="font-medium">Produk:</span>{' '}
-                            {item.product_variant?.product?.name || '-'}
+                          {/* Product Info */}
+                          <div className="flex items-center">
+                            <div className={`text-sm ${color.text}`}>
+                              <span className="font-medium">Produk:</span>{' '}
+                              {item.product_variant?.product?.name || '-'}
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Error Message */}
-                      {quantityErrors[item.product_variant_id] && (
-                        <p className="mt-2 text-sm text-red-600">
-                          {quantityErrors[item.product_variant_id]}
-                        </p>
-                      )}
-                    </div>
-                  ))}
+                        {/* Error Message */}
+                        {quantityErrors[item.product_variant_id] && (
+                          <p className="mt-2 text-sm text-red-600">
+                            {quantityErrors[item.product_variant_id]}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="text-center py-8">

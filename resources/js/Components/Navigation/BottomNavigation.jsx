@@ -23,33 +23,33 @@ const BottomNavigation = () => {
       permission: null
     },
     {
-      name: 'Produk',
-      href: '/products',
+      name: 'Daftar Stock',
+      href: '/stock-out',
       icon: Package,
-      active: url === '/products' || url.startsWith('/products'),
+      active: url === '/stock-out' || url.startsWith('/stock-out'),
       permission: null
     },
     {
-      name: 'Stock Out',
+      name: 'Input Stock',
       href: '/stock-out/create',
       icon: ArrowLeft,
-      active: url === '/stock-out' || url.startsWith('/stock-out'),
+      active: url === '/stock-out/create' || url.startsWith('/stock-out/create'),
       permission: 'stock_out.create'
     },
-    {
-      name: 'Pengguna',
-      href: '/users',
-      icon: Users,
-      active: url === '/users' || url.startsWith('/users'),
-      permission: 'users.index'
-    },
-    {
-      name: 'Pengaturan',
-      href: '/settings',
-      icon: Settings,
-      active: url === '/settings' || url.startsWith('/settings'),
-      permission: null
-    }
+    // {
+    //   name: 'Pengguna',
+    //   href: '/users',
+    //   icon: Users,
+    //   active: url === '/users' || url.startsWith('/users'),
+    //   permission: 'users.index'
+    // },
+    // {
+    //   name: 'Pengaturan',
+    //   href: '/settings',
+    //   icon: Settings,
+    //   active: url === '/settings' || url.startsWith('/settings'),
+    //   permission: null
+    // }
   ];
 
   // Filter navigation items based on permissions
