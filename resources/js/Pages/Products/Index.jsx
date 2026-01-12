@@ -1,12 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
-import Table from '../../Components/Common/Table';
 import { Pagination, Alert, LoadingSpinner } from '../../Components/UI';
 import { usePermission } from '../../Hooks/usePermission';
 import { useMobileDetection } from '../../Hooks/useMobileDetection';
-import { PencilIcon, TrashIcon, MagnifyingGlassIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import {
+  PencilIcon,
+  TrashIcon,
+  MagnifyingGlassIcon,
+  ArrowPathIcon,
+  ChevronDownIcon,
+  ChevronRightIcon
+} from '@heroicons/react/24/outline';
 import ProductVariantsModal from '../../Components/Products/ProductVariantsModal';
+import axios from 'axios';
 
 const Index = ({ products, filters, meta }) => {
   const { props } = usePage();
@@ -18,6 +25,11 @@ const Index = ({ products, filters, meta }) => {
   const [showDeleted, setShowDeleted] = useState(filters?.with_trashed === 'true');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [expandedRows, setExpandedRows] = useState(new Set());
+  const [editingStock, setEditingStock] = useState({});
+  const [stockUpdates, setStockUpdates] = useState({});
+  const [updatingStock, setUpdatingStock] = useState({});
+  const [notification, setNotification] = useState({ type: null, message: null });
 
   const handleFilterChange = (key, value) => {
     const newFilters = { ...filters, [key]: value, page: 1 };
@@ -130,65 +142,102 @@ const Index = ({ products, filters, meta }) => {
     setIsModalOpen(false);
   };
 
-  // Define table columns
-  const columns = [
-    {
-      key: 'name',
-      label: 'Nama Produk',
-      sortable: true,
-      render: (value, row) => (
-        <div className="flex items-center space-x-2">
-          {row.deleted_at && (
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
-              Deleted
-            </span>
-          )}
-          <div
-            className={`font-medium cursor-pointer hover:text-indigo-600 hover:underline ${
-              row.deleted_at ? 'text-gray-500 line-through' : 'text-gray-900'
-            }`}
-            onClick={() => handleProductClick(row)}
-          >
-            {value}
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: 'sku',
-      label: 'SKU',
-      sortable: true,
-      render: (value, row) => (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-          row.deleted_at ? 'bg-gray-100 text-gray-600' : 'bg-blue-100 text-blue-800'
-        }`}>
-          {value}
-        </span>
-      ),
-    },
-    {
-      key: 'description',
-      label: 'Deskripsi',
-      sortable: false,
-      render: (value, row) => (
-        <div className={`max-w-xs truncate ${row.deleted_at ? 'text-gray-400' : 'text-gray-600'}`}>
-          {value || '-'}
-        </div>
-      ),
-    },
-    {
-      key: 'variants_count',
-      label: 'Jumlah Varian',
-      sortable: true,
-      render: (value, row) => (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-          row.deleted_at ? 'bg-gray-100 text-gray-600' : 'bg-green-100 text-green-800'
-        }`}>
-          {value || 0}
-        </span>
-      ),
-    },
-  ];
+  const toggleRowExpansion = (productId) => {
+    const newExpandedRows = new Set(expandedRows);
+    if (newExpandedRows.has(productId)) {
+      newExpandedRows.delete(productId);
+    } else {
+      newExpandedRows.add(productId);
+    }
+    setExpandedRows(newExpandedRows);
+  };
+
+  const handleStockEdit = (variantId, currentStock) => {
+    setEditingStock((prev) => ({ ...prev, [variantId]: true }));
+    setStockUpdates((prev) => ({ ...prev, [variantId]: currentStock }));
+  };
+
+  const handleStockChange = (variantId, value) => {
+    const newValue = parseInt(value) || 0;
+    setStockUpdates((prev) => ({ ...prev, [variantId]: newValue }));
+  };
+
+  const handleStockBlur = async (variantId) => {
+    const newStock = stockUpdates[variantId];
+    setEditingStock((prev) => ({ ...prev, [variantId]: false }));
+
+    if (newStock === undefined) return;
+
+    setUpdatingStock((prev) => ({ ...prev, [variantId]: true }));
+
+    try {
+      await axios.put(`/variants/${variantId}/stock`, {
+        stock_current: newStock,
+      });
+
+      // Update local state
+      const updatedProducts = products.data.map((product) => {
+        if (product.variants) {
+          const updatedVariants = product.variants.map((variant) => {
+            if (variant.id === variantId) {
+              return { ...variant, stock_current: newStock };
+            }
+            return variant;
+          });
+
+          // Recalculate total_stock
+          const newTotalStock = updatedVariants.reduce((sum, v) => sum + v.stock_current, 0);
+          return {
+            ...product,
+            variants: updatedVariants,
+            total_stock: newTotalStock,
+          };
+        }
+        return product;
+      });
+
+      // Update products data
+      products.data = updatedProducts;
+
+      setNotification({
+        type: 'success',
+        message: 'Stok berhasil diperbarui',
+      });
+
+      setTimeout(() => {
+        setNotification({ type: null, message: null });
+      }, 3000);
+    } catch (error) {
+      console.error('Error updating stock:', error);
+      setNotification({
+        type: 'error',
+        message: error.response?.data?.message || 'Gagal memperbarui stok',
+      });
+
+      setTimeout(() => {
+        setNotification({ type: null, message: null });
+      }, 3000);
+    } finally {
+      setUpdatingStock((prev) => ({ ...prev, [variantId]: false }));
+      setStockUpdates((prev) => {
+        const newState = { ...prev };
+        delete newState[variantId];
+        return newState;
+      });
+    }
+  };
+
+  const handleStockKeyPress = (e, variantId) => {
+    if (e.key === 'Enter') {
+      e.target.blur();
+    }
+  };
+
+  const getStockBadgeColor = (stock) => {
+    if (stock > 10) return 'bg-green-100 text-green-800';
+    if (stock > 0) return 'bg-yellow-100 text-yellow-800';
+    return 'bg-red-100 text-red-800';
+  };
 
   // Define table actions
   const getActions = (product) => {
@@ -239,6 +288,11 @@ const Index = ({ products, filters, meta }) => {
     return actions;
   };
 
+  const getSortIcon = (field) => {
+    if (filters?.sort !== field) return null;
+    return filters?.order === 'asc' ? '↑' : '↓';
+  };
+
   return (
     <AppLayout
       title="Produk"
@@ -280,6 +334,9 @@ const Index = ({ products, filters, meta }) => {
         {props.flash?.error && (
           <Alert type="error" message={props.flash.error} className="mb-4" />
         )}
+        {notification.type && (
+          <Alert type={notification.type} message={notification.message} className="mb-4" />
+        )}
 
         {/* Loading Overlay */}
         {loading && (
@@ -319,19 +376,223 @@ const Index = ({ products, filters, meta }) => {
 
         {/* Products Table */}
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-          <Table
-            columns={columns}
-            data={products?.data || []}
-            loading={loading}
-            sortable={true}
-            sortColumn={filters?.sort}
-            sortDirection={filters?.order}
-            onSort={handleSortChange}
-            actions={getActions}
-            emptyMessage={showDeleted ? "Tidak ada produk yang dihapus ditemukan" : "Tidak ada produk ditemukan"}
-            onRowClick={handleProductClick}
-            rowClassName={(row) => row.deleted_at ? 'bg-gray-50' : ''}
-          />
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10">
+                    {/* Expand/Collapse column */}
+                  </th>
+                  <th
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSortChange('name')}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Nama Produk</span>
+                      {getSortIcon('name')}
+                    </div>
+                  </th>
+                  <th
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSortChange('sku')}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>SKU</span>
+                      {getSortIcon('sku')}
+                    </div>
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Deskripsi
+                  </th>
+                  <th
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSortChange('variants_count')}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Jumlah Varian</span>
+                      {getSortIcon('variants_count')}
+                    </div>
+                  </th>
+                  <th
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSortChange('total_stock')}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Stok Saat Ini</span>
+                      {getSortIcon('total_stock')}
+                    </div>
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Aksi
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {products?.data && products.data.length > 0 ? (
+                  products.data.map((product) => (
+                    <React.Fragment key={product.id}>
+                      {/* Product Row */}
+                      <tr
+                        className={`hover:bg-gray-50 ${product.deleted_at ? 'bg-gray-50' : ''}`}
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {product.variants && product.variants.length > 0 && (
+                            <button
+                              onClick={() => toggleRowExpansion(product.id)}
+                              className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                            >
+                              {expandedRows.has(product.id) ? (
+                                <ChevronDownIcon className="h-5 w-5" />
+                              ) : (
+                                <ChevronRightIcon className="h-5 w-5" />
+                              )}
+                            </button>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center space-x-2">
+                            {product.deleted_at && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                Deleted
+                              </span>
+                            )}
+                            <div
+                              className={`font-medium ${
+                                product.deleted_at ? 'text-gray-500 line-through' : 'text-gray-900'
+                              }`}
+                            >
+                              {product.name}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            product.deleted_at ? 'bg-gray-100 text-gray-600' : 'bg-blue-100 text-blue-800'
+                          }`}>
+                            {product.sku}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className={`max-w-xs truncate ${product.deleted_at ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {product.description || '-'}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            product.deleted_at ? 'bg-gray-100 text-gray-600' : 'bg-green-100 text-green-800'
+                          }`}>
+                            {product.variants_count || 0}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStockBadgeColor(product.total_stock || 0)}`}>
+                            {product.total_stock || 0} unit
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex justify-end space-x-2">
+                            {getActions(product).map((action, actionIndex) => (
+                              <button
+                                key={action.key || actionIndex}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  action.onClick(product);
+                                }}
+                                className={action.className || 'text-blue-600 hover:text-blue-900'}
+                                title={action.title}
+                              >
+                                <action.icon className="h-5 w-5" />
+                              </button>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* Variant Details Row (Collapsible) */}
+                      {expandedRows.has(product.id) && product.variants && product.variants.length > 0 && (
+                        <tr className="bg-gray-50">
+                          <td colSpan="7" className="px-6 py-4">
+                            <div className="ml-8">
+                              <h4 className="text-sm font-medium text-gray-700 mb-3">Detail Varian</h4>
+                              <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-100">
+                                  <tr>
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                      Nama Varian
+                                    </th>
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                      SKU Varian
+                                    </th>
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                      Stock Saat Ini
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                  {product.variants.map((variant) => (
+                                    <tr key={variant.id} className="hover:bg-gray-50">
+                                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                        {variant.name}
+                                      </td>
+                                      <td className="px-4 py-3 whitespace-nowrap">
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                          {variant.sku}
+                                        </span>
+                                      </td>
+                                      <td className="px-4 py-3 whitespace-nowrap">
+                                        {editingStock[variant.id] ? (
+                                          <div className="flex items-center space-x-2">
+                                            <input
+                                              type="number"
+                                              min="0"
+                                              value={stockUpdates[variant.id] ?? variant.stock_current}
+                                              onChange={(e) => handleStockChange(variant.id, e.target.value)}
+                                              onBlur={() => handleStockBlur(variant.id)}
+                                              onKeyDown={(e) => handleStockKeyPress(e, variant.id)}
+                                              className="w-20 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                                              autoFocus
+                                            />
+                                            {updatingStock[variant.id] && (
+                                              <LoadingSpinner size="sm" />
+                                            )}
+                                          </div>
+                                        ) : (
+                                          <div className="flex items-center space-x-2">
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStockBadgeColor(variant.stock_current)}`}>
+                                              {variant.stock_current} unit
+                                            </span>
+                                            {can('product_variants.edit') && (
+                                              <button
+                                                onClick={() => handleStockEdit(variant.id, variant.stock_current)}
+                                                className="text-blue-600 hover:text-blue-900 focus:outline-none"
+                                                title="Edit Stok"
+                                              >
+                                                <PencilIcon className="h-4 w-4" />
+                                              </button>
+                                            )}
+                                          </div>
+                                        )}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">
+                      {showDeleted ? "Tidak ada produk yang dihapus ditemukan" : "Tidak ada produk ditemukan"}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Pagination */}

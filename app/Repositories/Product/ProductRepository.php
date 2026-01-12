@@ -55,16 +55,22 @@ class ProductRepository implements ProductRepositoryInterface
         // Map 'variant_name' to 'name' for consistency with frontend
         $products->getCollection()->transform(function ($product) {
             $variantsCount = $product->variants->count();
-            $product->variants->transform(function ($variant) {
+            $totalStock = 0;
+            
+            $product->variants->transform(function ($variant) use (&$totalStock) {
+                $totalStock += $variant->stock_current;
                 return [
                     'id' => $variant->id,
                     'name' => $variant->variant_name, // Map variant_name to name
                     'sku' => $variant->sku,
                     'stock_current' => $variant->stock_current,
+                    'product_id' => $variant->product_id,
                 ];
             });
-            // Add variants_count to product
+            
+            // Add variants_count and total_stock to product
             $product->variants_count = $variantsCount;
+            $product->total_stock = $totalStock;
             return $product;
         });
 
@@ -85,16 +91,21 @@ class ProductRepository implements ProductRepositoryInterface
         // Transform variants to match frontend expectations
         // Map 'variant_name' to 'name' for consistency with frontend
         $variantsCount = $product->variants->count();
-        $product->variants->transform(function ($variant) {
+        $totalStock = 0;
+        
+        $product->variants->transform(function ($variant) use (&$totalStock) {
+            $totalStock += $variant->stock_current;
             return [
                 'id' => $variant->id,
                 'name' => $variant->variant_name, // Map variant_name to name
                 'sku' => $variant->sku,
                 'stock_current' => $variant->stock_current,
+                'product_id' => $variant->product_id,
             ];
         });
-        // Add variants_count to product
+        // Add variants_count and total_stock to product
         $product->variants_count = $variantsCount;
+        $product->total_stock = $totalStock;
 
         return $product;
     }
@@ -133,15 +144,20 @@ class ProductRepository implements ProductRepositoryInterface
 
             // Transform variants to match frontend expectations
             $variantsCount = $product->variants->count();
-            $product->variants->transform(function ($variant) {
+            $totalStock = 0;
+            
+            $product->variants->transform(function ($variant) use (&$totalStock) {
+                $totalStock += $variant->stock_current;
                 return [
                     'id' => $variant->id,
                     'name' => $variant->variant_name,
                     'sku' => $variant->sku,
                     'stock_current' => $variant->stock_current,
+                    'product_id' => $variant->product_id,
                 ];
             });
             $product->variants_count = $variantsCount;
+            $product->total_stock = $totalStock;
 
             return $product;
         } catch (\Exception $e) {
@@ -368,16 +384,21 @@ class ProductRepository implements ProductRepositoryInterface
         // Map 'variant_name' to 'name' for consistency with frontend
         $products->getCollection()->transform(function ($product) {
             $variantsCount = $product->variants->count();
-            $product->variants->transform(function ($variant) {
+            $totalStock = 0;
+            
+            $product->variants->transform(function ($variant) use (&$totalStock) {
+                $totalStock += $variant->stock_current;
                 return [
                     'id' => $variant->id,
                     'name' => $variant->variant_name, // Map variant_name to name
                     'sku' => $variant->sku,
                     'stock_current' => $variant->stock_current,
+                    'product_id' => $variant->product_id,
                 ];
             });
-            // Add variants_count to product
+            // Add variants_count and total_stock to product
             $product->variants_count = $variantsCount;
+            $product->total_stock = $totalStock;
             return $product;
         });
 

@@ -90,6 +90,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('variants.update')
         ->middleware('permission:product_variants.edit');
 
+    // Update variant stock only (for inline editing)
+    Route::put('/variants/{variant}/stock', [ProductVariantController::class, 'updateStock'])
+        ->name('variants.updateStock')
+        ->middleware('permission:product_variants.edit');
+
     // Delete product variant
     Route::delete('/variants/{variant}', [ProductVariantController::class, 'destroy'])
         ->name('variants.destroy')

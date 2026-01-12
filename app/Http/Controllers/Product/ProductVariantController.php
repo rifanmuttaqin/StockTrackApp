@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ProductVariantCreateRequest;
 use App\Http\Requests\Product\ProductVariantUpdateRequest;
+use App\Http\Requests\Product\ProductVariantStockUpdateRequest;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class ProductVariantController extends Controller
         // Permission middleware
         $this->middleware('permission:product_variants.view')->only(['index', 'show']);
         $this->middleware('permission:product_variants.create')->only(['create', 'store']);
-        $this->middleware('permission:product_variants.edit')->only(['edit', 'update']);
+        $this->middleware('permission:product_variants.edit')->only(['edit', 'update', 'updateStock']);
         $this->middleware('permission:product_variants.delete')->only(['destroy']);
     }
 
@@ -346,6 +347,73 @@ class ProductVariantController extends Controller
             return redirect()->back()
                 ->with('error', 'Gagal memperbarui varian produk. Silakan coba lagi.')
                 ->withInput();
+        }
+    }
+
+    /**
+     * Update variant stock only (for inline editing)
+     */
+    public function updateStock(ProductVariantStockUpdateRequest $request, string $id)
+    {
+        try {
+            // Find variant by ID
+            $variant = ProductVariant::find($id);
+
+            if (!$variant) {
+                return response()->json([
+                    'message' => 'Varian produk tidak ditemukan.',
+                ], 404);
+            }
+
+            $validatedData = $request->validated();
+
+            // Update only the stock_current field
+            $variant->update([
+                'stock_current' => $validatedData['stock_current'],
+            ]);
+
+            $this->logVariantAction('update_variant_stock', $id, [
+                'variant_name' => $variant->variant_name,
+                'sku' => $variant->sku,
+                'stock_current' => $variant->stock_current,
+                'product_id' => $variant->product_id,
+            ]);
+
+            return response()->json([
+                'message' => 'Stok varian berhasil diperbarui.',
+                'variant' => [
+                    'id' => $variant->id,
+                    'name' => $variant->variant_name,
+                    'sku' => $variant->sku,
+                    'stock_current' => $variant->stock_current,
+                    'product_id' => $variant->product_id,
+                ],
+            ], 200);
+        } catch (ValidationException $e) {
+            Log::error('Validation failed during variant stock update', [
+                'error' => $e->getMessage(),
+                'errors' => $e->errors(),
+                'variant_id' => $id,
+                'data' => $request->validated(),
+                'performed_by' => Auth::id(),
+            ]);
+
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Failed to update variant stock', [
+                'error' => $e->getMessage(),
+                'error_class' => get_class($e),
+                'variant_id' => $id,
+                'data' => $request->validated(),
+                'performed_by' => Auth::id(),
+            ]);
+
+            return response()->json([
+                'message' => 'Gagal memperbarui stok varian. Silakan coba lagi.',
+            ], 500);
         }
     }
 
