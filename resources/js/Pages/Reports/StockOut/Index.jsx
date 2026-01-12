@@ -345,7 +345,12 @@ const Index = ({ products, stockOutData, filters, error }) => {
                         product.variants.map((variant) => (
                           <tr key={variant.id} className="hover:bg-gray-50">
                             <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-700 sticky left-0 bg-white shadow-r pl-10">
-                              {variant.name}
+                              <div className="flex items-center space-x-2">
+                                <span>{variant.name}</span>
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800">
+                                  Stok: {variant.stock}
+                                </span>
+                              </div>
                             </td>
                             {stockOutData.dates.map((date) => (
                               <td

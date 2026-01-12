@@ -135,6 +135,7 @@ class StockOutReportController extends Controller
                         'id' => $variant->id,
                         'name' => $variant->variant_name,
                         'sku' => $variant->sku,
+                        'stock' => $variant->stock_current,
                         'stock_out_by_date' => $stockOutByDate,
                     ];
                 }
