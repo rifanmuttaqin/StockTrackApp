@@ -14,6 +14,8 @@ import {
 } from '@heroicons/react/24/outline';
 import ProductVariantsModal from '../../Components/Products/ProductVariantsModal';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 const Index = ({ products, filters, meta }) => {
   const { props } = usePage();
@@ -28,6 +30,8 @@ const Index = ({ products, filters, meta }) => {
   const [expandedRows, setExpandedRows] = useState(new Set());
   const [editingStock, setEditingStock] = useState({});
   const [stockUpdates, setStockUpdates] = useState({});
+  const [originalStock, setOriginalStock] = useState({});
+  const [variantNames, setVariantNames] = useState({});
   const [updatingStock, setUpdatingStock] = useState({});
   const [notification, setNotification] = useState({ type: null, message: null });
 
@@ -152,9 +156,11 @@ const Index = ({ products, filters, meta }) => {
     setExpandedRows(newExpandedRows);
   };
 
-  const handleStockEdit = (variantId, currentStock) => {
+  const handleStockEdit = (variantId, currentStock, variantName) => {
     setEditingStock((prev) => ({ ...prev, [variantId]: true }));
     setStockUpdates((prev) => ({ ...prev, [variantId]: currentStock }));
+    setOriginalStock((prev) => ({ ...prev, [variantId]: currentStock }));
+    setVariantNames((prev) => ({ ...prev, [variantId]: variantName }));
   };
 
   const handleStockChange = (variantId, value) => {
@@ -164,9 +170,40 @@ const Index = ({ products, filters, meta }) => {
 
   const handleStockBlur = async (variantId) => {
     const newStock = stockUpdates[variantId];
+    const oldStock = originalStock[variantId];
+    const variantName = variantNames[variantId] || 'Varian';
+
     setEditingStock((prev) => ({ ...prev, [variantId]: false }));
 
     if (newStock === undefined) return;
+
+    // Show confirmation dialog
+    const result = await Swal.fire({
+      title: 'Konfirmasi Perubahan Stok',
+      text: `Apakah Anda yakin ingin mengubah stok varian '${variantName}' dari ${oldStock} menjadi ${newStock}?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Ubah',
+      cancelButtonText: 'Batal',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+    });
+
+    // If cancelled, revert the input value
+    if (!result.isConfirmed) {
+      setStockUpdates((prev) => ({ ...prev, [variantId]: oldStock }));
+      setOriginalStock((prev) => {
+        const newState = { ...prev };
+        delete newState[variantId];
+        return newState;
+      });
+      setVariantNames((prev) => {
+        const newState = { ...prev };
+        delete newState[variantId];
+        return newState;
+      });
+      return;
+    }
 
     setUpdatingStock((prev) => ({ ...prev, [variantId]: true }));
 
@@ -199,27 +236,43 @@ const Index = ({ products, filters, meta }) => {
       // Update products data
       products.data = updatedProducts;
 
-      setNotification({
-        type: 'success',
-        message: 'Stok berhasil diperbarui',
+      // Show SweetAlert2 success toast
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Stok berhasil diperbarui',
+        showConfirmButton: false,
+        timer: 3000,
+        toast: true,
       });
-
-      setTimeout(() => {
-        setNotification({ type: null, message: null });
-      }, 3000);
     } catch (error) {
       console.error('Error updating stock:', error);
-      setNotification({
-        type: 'error',
-        message: error.response?.data?.message || 'Gagal memperbarui stok',
+      
+      // Show SweetAlert2 error toast
+      Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title: error.response?.data?.message || 'Gagal memperbarui stok',
+        showConfirmButton: false,
+        timer: 3000,
+        toast: true,
       });
 
-      setTimeout(() => {
-        setNotification({ type: null, message: null });
-      }, 3000);
+      // Revert the input value on error
+      setStockUpdates((prev) => ({ ...prev, [variantId]: oldStock }));
     } finally {
       setUpdatingStock((prev) => ({ ...prev, [variantId]: false }));
       setStockUpdates((prev) => {
+        const newState = { ...prev };
+        delete newState[variantId];
+        return newState;
+      });
+      setOriginalStock((prev) => {
+        const newState = { ...prev };
+        delete newState[variantId];
+        return newState;
+      });
+      setVariantNames((prev) => {
         const newState = { ...prev };
         delete newState[variantId];
         return newState;
@@ -563,7 +616,7 @@ const Index = ({ products, filters, meta }) => {
                                             </span>
                                             {can('product_variants.edit') && (
                                               <button
-                                                onClick={() => handleStockEdit(variant.id, variant.stock_current)}
+                                                onClick={() => handleStockEdit(variant.id, variant.stock_current, variant.name)}
                                                 className="text-blue-600 hover:text-blue-900 focus:outline-none"
                                                 title="Edit Stok"
                                               >

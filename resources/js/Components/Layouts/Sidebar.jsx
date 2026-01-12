@@ -77,7 +77,7 @@ export default function Sidebar() {
             ],
         },
         {
-            name: 'Stock Out',
+            name: 'Stock Keluar',
             icon: ArrowUturnLeftIcon,
             permission: 'stock_out.view',
             subMenu: [

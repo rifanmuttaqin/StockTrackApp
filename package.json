@@ -32,6 +32,7 @@
         "clsx": "^2.1.1",
         "lucide-react": "^0.562.0",
         "shadcn-ui": "^0.9.5",
+        "sweetalert2": "^11.26.17",
         "tailwind-merge": "^3.4.0",
         "tailwindcss-animate": "^1.0.7"
     }
