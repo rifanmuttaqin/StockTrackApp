@@ -451,20 +451,22 @@ const Create = ({ activeTemplate, defaultDate }) => {
                         {/* Variant Header */}
                         <div className="flex justify-between items-start mb-3">
                           <div className="flex-1">
-                            <h4 className={`text-sm font-medium ${color.text}`}>
-                              {item.product_variant?.variant_name || `Varian #${index + 1}`}
+                            <h4 className={`text-lg font-bold ${color.text}`}>
+                              {item.product_variant?.product?.name || '-'} - {item.product_variant?.variant_name || `Varian #${index + 1}`}
                             </h4>
                             <p className={`text-xs ${color.text} mt-1 opacity-75`}>
                               SKU: {item.product_variant?.sku || '-'}
                             </p>
                           </div>
-                          <Badge variant={color.badge.includes('red') ? 'error' : color.badge.includes('green') ? 'success' : 'info'}>
-                            Stock: {item.product_variant?.stock_current || 0}
-                          </Badge>
+                          <div className="text-lg font-bold">
+                            <Badge variant={color.badge.includes('red') ? 'error' : color.badge.includes('green') ? 'success' : 'info'} className="text-base px-3 py-1">
+                              Stock: {item.product_variant?.stock_current || 0}
+                            </Badge>
+                          </div>
                         </div>
 
                         {/* Quantity Input */}
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div className="grid grid-cols-1 gap-4">
                           <MobileFormField
                             label="Quantity"
                             error={errors[`items.${index}.quantity`] || quantityErrors[item.product_variant_id]}
@@ -481,14 +483,6 @@ const Create = ({ activeTemplate, defaultDate }) => {
                               }`}
                             />
                           </MobileFormField>
-
-                          {/* Product Info */}
-                          <div className="flex items-center">
-                            <div className={`text-sm ${color.text}`}>
-                              <span className="font-medium">Produk:</span>{' '}
-                              {item.product_variant?.product?.name || '-'}
-                            </div>
-                          </div>
                         </div>
 
                         {/* Error Message */}

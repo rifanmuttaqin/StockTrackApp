@@ -22,24 +22,6 @@ services:
 
   # Service untuk Node.js (build frontend React)
 
-  node:
-    image: node:18-alpine
-    user: "${UID}:${GID}"
-    container_name: stocktrack_node
-    restart: unless-stopped
-    working_dir: /var/www/html
-    volumes:
-      # Mount source code untuk development
-      - ./:/var/www/html
-      # Mount untuk cache npm
-      - node-cache:/root/.npm
-    networks:
-      - laravel
-    # Command untuk development dengan hot-reload
-    command: sh -c "npm install && npm run dev"
-    env_file:
-      - .env
-
   # Service untuk web server (Nginx)
   nginx:
     image: nginx:alpine
@@ -60,14 +42,10 @@ services:
       - laravel
     depends_on:
       - app
-      - node
 
 # Volume untuk persistensi data
 volumes:
   composer-cache:
-    driver: local
-  # # Volume untuk cache npm
-  node-cache:
     driver: local
   # # Volume untuk log Nginx
   nginx-logs:
