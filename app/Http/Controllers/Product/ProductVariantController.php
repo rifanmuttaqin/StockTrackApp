@@ -355,6 +355,16 @@ class ProductVariantController extends Controller
      */
     public function updateStock(ProductVariantStockUpdateRequest $request, string $id)
     {
+        // Debug logging for CSRF investigation
+        Log::info('updateStock called', [
+            'variant_id' => $id,
+            'csrf_token' => $request->header('X-CSRF-TOKEN') ? 'present' : 'missing',
+            'xsrf_token' => $request->header('X-XSRF-TOKEN') ? 'present' : 'missing',
+            'session_id' => session()->getId(),
+            'has_session' => session()->isStarted(),
+            'request_data' => $request->all(),
+        ]);
+
         try {
             // Find variant by ID
             $variant = ProductVariant::find($id);

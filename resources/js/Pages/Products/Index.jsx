@@ -208,6 +208,17 @@ const Index = ({ products, filters, meta }) => {
     setUpdatingStock((prev) => ({ ...prev, [variantId]: true }));
 
     try {
+      // Debug logging for CSRF investigation
+      console.log('Sending stock update request:', {
+        url: `/variants/${variantId}/stock`,
+        data: { stock_current: newStock },
+        csrfToken: document.head.querySelector('meta[name="csrf-token"]')?.content,
+        axiosDefaults: {
+          'X-CSRF-TOKEN': window.axios.defaults.headers.common['X-CSRF-TOKEN'],
+          'X-Requested-With': window.axios.defaults.headers.common['X-Requested-With'],
+        },
+      });
+
       await axios.put(`/variants/${variantId}/stock`, {
         stock_current: newStock,
       });
