@@ -17,9 +17,15 @@ import {
 
 export default function Sidebar() {
     const { url } = usePage();
-    const { hasPermission, hasRole, permissions, user, isAuthenticated } = useAuth();
+    const { hasPermission, hasRole, permissions, user, isAuthenticated, isLoading, isInitialized } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [openMenus, setOpenMenus] = useState({});
+    
+    console.log('[Sidebar] Render - permissions:', permissions);
+    console.log('[Sidebar] Render - user:', user);
+    console.log('[Sidebar] Render - isAuthenticated:', isAuthenticated);
+    console.log('[Sidebar] Render - isLoading:', isLoading);
+    console.log('[Sidebar] Render - isInitialized:', isInitialized);
 
     // Refs for keyboard navigation
     const sidebarRef = useRef(null);
@@ -119,19 +125,35 @@ export default function Sidebar() {
         // },
     ];
 
-    const filteredMenuItems = menuItems.filter(item => {
-        // Dashboard always shows for authenticated users
-        if (item.name === 'Dashboard' && isAuthenticated) {
-            return true;
-        }
+    // Only filter menu items when AuthContext is fully initialized
+    let filteredMenuItems = [];
+    if (isInitialized) {
+        console.log('[Sidebar] AuthContext is initialized - performing menu filtering');
+        
+        filteredMenuItems = menuItems.filter(item => {
+            console.log('[Sidebar] Filtering item:', item.name, 'permission:', item.permission);
+            
+            // Dashboard always shows for authenticated users
+            if (item.name === 'Dashboard' && isAuthenticated) {
+                console.log('[Sidebar] Dashboard allowed (isAuthenticated):', isAuthenticated);
+                return true;
+            }
 
-        if (!item.permission) {
-            return true;
-        }
+            if (!item.permission) {
+                console.log('[Sidebar] Item has no permission requirement, allowing:', item.name);
+                return true;
+            }
 
-        const hasPerm = hasPermission(item.permission);
-        return hasPerm;
-    });
+            const hasPerm = hasPermission(item.permission);
+            console.log('[Sidebar] hasPermission for', item.permission, ':', hasPerm);
+            return hasPerm;
+        });
+        
+        console.log('[Sidebar] filteredMenuItems count:', filteredMenuItems.length);
+        console.log('[Sidebar] filteredMenuItems:', filteredMenuItems.map(item => item.name));
+    } else {
+        console.log('[Sidebar] AuthContext not yet initialized - skipping menu filtering');
+    }
 
     // Handle keyboard navigation and prevent body scroll on mobile
     useEffect(() => {
@@ -155,6 +177,32 @@ export default function Sidebar() {
             document.body.classList.remove('sidebar-open');
         };
     }, [sidebarOpen]);
+
+    // Don't render sidebar while loading auth data or before AuthContext is initialized
+    if (isLoading || !isInitialized) {
+        console.log('[Sidebar] Loading state - isLoading:', isLoading, 'isInitialized:', isInitialized, '- showing loading indicator');
+        return (
+            <aside
+                ref={sidebarRef}
+                className="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-indigo-950 to-indigo-900 shadow-2xl md:static md:inset-auto flex flex-col h-full"
+                role="navigation"
+                aria-label="Main navigation"
+            >
+                {/* Header */}
+                <div className="flex items-center justify-between h-16 px-4 border-b border-indigo-800/50 backdrop-blur-sm flex-shrink-0">
+                    <h1 className="text-xl font-bold text-white tracking-wide">StockTrackApp</h1>
+                </div>
+
+                {/* Loading indicator with spinner */}
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-3">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-300"></div>
+                        <div className="text-indigo-300 text-sm">Loading menu...</div>
+                    </div>
+                </div>
+            </aside>
+        );
+    }
 
     return (
         <>

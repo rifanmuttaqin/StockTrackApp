@@ -4,12 +4,15 @@ import InputLabel from '@/Components/UI/InputLabel';
 import PrimaryButton from '@/Components/UI/PrimaryButton';
 import TextInput from '@/Components/UI/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { useMobileDetection } from '@/Hooks/useMobileDetection';
 import MobileLogin from '@/Components/Auth/MobileLogin';
+import { useAuth } from '@/Context/AuthContext';
 
 export default function Login({ status, canResetPassword }) {
     const { isMobile } = useMobileDetection();
+    const { login } = useAuth();
+    const { props } = usePage();
 
     // Desktop login component (original code)
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -23,6 +26,13 @@ export default function Login({ status, canResetPassword }) {
 
         post(route('login'), {
             onFinish: () => reset('password'),
+            onSuccess: (page) => {
+                console.log('[Login] Login successful, updating AuthContext immediately');
+                // Call the login function to immediately update auth state
+                if (page.props.auth) {
+                    login(page.props.auth);
+                }
+            },
         });
     };
 

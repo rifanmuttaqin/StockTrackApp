@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { MobileCard, MobileCardHeader, MobileCardTitle, MobileCardContent, MobileCardFooter } from '@/Components/UI/MobileCard';
 import { MobileInput } from '@/Components/UI/MobileInput';
 import { MobileButton } from '@/Components/UI/MobileButton';
 import { MobileLoadingSpinner } from '@/Components/UI/MobileLoadingSpinner';
 import { MobileAlert } from '@/Components/UI/MobileAlert';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/Context/AuthContext';
 
 export default function MobileLogin({ status, canResetPassword }) {
+    const { login } = useAuth();
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -21,6 +23,13 @@ export default function MobileLogin({ status, canResetPassword }) {
 
         post(route('login'), {
             onFinish: () => reset('password'),
+            onSuccess: (page) => {
+                console.log('[MobileLogin] Login successful, updating AuthContext immediately');
+                // Call the login function to immediately update auth state
+                if (page.props.auth) {
+                    login(page.props.auth);
+                }
+            },
         });
     };
 

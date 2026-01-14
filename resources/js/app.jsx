@@ -47,6 +47,11 @@ createInertiaApp({
     },
     setup({ el, App, props }) {
         const root = createRoot(el);
+        
+        console.log('[app.jsx] Initial props:', props);
+        console.log('[app.jsx] props.initialPage:', props.initialPage);
+        console.log('[app.jsx] props.initialPage?.props:', props.initialPage?.props);
+        console.log('[app.jsx] props.initialPage?.props?.auth:', props.initialPage?.props?.auth);
 
         root.render(
             <AuthProvider pageProps={props.initialPage?.props || {}}>
