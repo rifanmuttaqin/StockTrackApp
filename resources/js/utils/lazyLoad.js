@@ -11,8 +11,8 @@ export const LazyMobileMenu = lazy(() => import('@/Components/Navigation/MobileM
 export const LazyMobileLogin = lazy(() => import('@/Components/Auth/MobileLogin'));
 
 // Lazy load heavy UI components
-export const LazyModal = lazy(() => import('@/Components/Modal'));
-export const LazyLoadingSpinner = lazy(() => import('@/Components/LoadingSpinner'));
+export const LazyModal = lazy(() => import('@/Components/UI/Modal'));
+export const LazyLoadingSpinner = lazy(() => import('@/Components/UI/LoadingSpinner'));
 
 // Preload critical components
 export const preloadCriticalComponents = () => {
