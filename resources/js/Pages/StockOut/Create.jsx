@@ -592,12 +592,12 @@ const Create = ({ activeTemplate, defaultDate }) => {
         </div>
       </div>
 
-      {/* Desktop Action Buttons */}
-      <div className="hidden sm:block max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6">
-        <div className="bg-white shadow overflow-hidden sm:rounded-lg px-6 py-4 flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
+      {/* Desktop Action Buttons - Floating */}
+      <div className="hidden sm:block fixed bottom-6 right-6 z-50">
+        <div className="bg-white shadow-lg rounded-lg px-4 py-3 flex items-center space-x-3 border border-gray-200">
           <Link
             href={route('stock-out.index')}
-            className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <ArrowLeftIcon className="h-4 w-4 mr-2" />
             Batal
@@ -605,7 +605,7 @@ const Create = ({ activeTemplate, defaultDate }) => {
           <button
             onClick={handleSaveDraft}
             disabled={processing || Object.keys(quantityErrors).length > 0}
-            className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {processing ? (
               <>
@@ -622,7 +622,7 @@ const Create = ({ activeTemplate, defaultDate }) => {
           <button
             onClick={handleSubmit}
             disabled={processing || Object.keys(quantityErrors).length > 0}
-            className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {processing ? (
               <>
