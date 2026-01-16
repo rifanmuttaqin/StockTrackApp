@@ -47,7 +47,19 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            // Diagnostic logging for CSRF investigation
+            \Illuminate\Support\Facades\Log::info('AuthController::login - Before session regeneration', [
+                'csrf_token_before' => csrf_token(),
+                'session_id_before' => session()->getId(),
+            ]);
+
             $request->session()->regenerate();
+
+            // Diagnostic logging for CSRF investigation
+            \Illuminate\Support\Facades\Log::info('AuthController::login - After session regeneration', [
+                'csrf_token_after' => csrf_token(),
+                'session_id_after' => session()->getId(),
+            ]);
 
             // Get authenticated user
             $user = Auth::user();

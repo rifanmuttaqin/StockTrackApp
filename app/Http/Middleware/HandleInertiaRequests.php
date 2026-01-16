@@ -29,8 +29,19 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        // Diagnostic logging for CSRF investigation
+        \Illuminate\Support\Facades\Log::info('HandleInertiaRequests::share called', [
+            'csrf_token' => csrf_token(),
+            'session_id' => session()->getId(),
+            'has_session' => session()->isStarted(),
+            'url' => $request->url(),
+            'method' => $request->method(),
+            'user_authenticated' => auth()->check(),
+        ]);
+
         return [
             ...parent::share($request),
+            'csrf_token' => csrf_token(),
             'auth' => function () use ($request) {
                 $user = $request->user();
 

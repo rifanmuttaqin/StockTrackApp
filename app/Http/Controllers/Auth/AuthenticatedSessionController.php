@@ -31,7 +31,20 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        // Diagnostic logging for CSRF investigation
+        \Illuminate\Support\Facades\Log::info('Before session regeneration', [
+            'csrf_token_before' => csrf_token(),
+            'session_id_before' => session()->getId(),
+        ]);
+
         $request->session()->regenerate();
+
+        // Diagnostic logging for CSRF investigation
+        \Illuminate\Support\Facades\Log::info('After session regeneration', [
+            'csrf_token_after' => csrf_token(),
+            'session_id_after' => session()->getId(),
+            'csrf_token_changed' => csrf_token() !== session()->get('_token'),
+        ]);
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

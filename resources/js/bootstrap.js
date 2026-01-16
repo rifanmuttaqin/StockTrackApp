@@ -3,25 +3,29 @@ window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-// Configure CSRF token for axios
-// Laravel uses X-XSRF-TOKEN header by default (reads from encrypted cookie)
-// Also support X-CSRF-TOKEN for backward compatibility
-let token = document.head.querySelector('meta[name="csrf-token"]');
+// Function to update CSRF token in axios headers
+function updateCsrfToken(token) {
+    if (token) {
+        // Set both headers for maximum compatibility
+        window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+        window.axios.defaults.headers.common['X-XSRF-TOKEN'] = token;
+        
+        // Log for debugging
+        console.log('CSRF token updated:', {
+            hasToken: !!token,
+            tokenLength: token.length,
+            headers: {
+                'X-CSRF-TOKEN': window.axios.defaults.headers.common['X-CSRF-TOKEN'],
+                'X-XSRF-TOKEN': window.axios.defaults.headers.common['X-XSRF-TOKEN'],
+            }
+        });
+    }
+}
 
-if (token) {
-    // Set both headers for maximum compatibility
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-    window.axios.defaults.headers.common['X-XSRF-TOKEN'] = token.content;
-    
-    // Log for debugging
-    console.log('CSRF token configured:', {
-        hasToken: !!token.content,
-        tokenLength: token.content.length,
-        headers: {
-            'X-CSRF-TOKEN': window.axios.defaults.headers.common['X-CSRF-TOKEN'],
-            'X-XSRF-TOKEN': window.axios.defaults.headers.common['X-XSRF-TOKEN'],
-        }
-    });
+// Initialize CSRF token from meta tag (fallback for initial page load)
+let metaToken = document.head.querySelector('meta[name="csrf-token"]');
+if (metaToken) {
+    updateCsrfToken(metaToken.content);
 } else {
     console.error('CSRF token meta tag not found in document head');
 }
