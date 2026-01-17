@@ -6,6 +6,7 @@ use App\Models\Template;
 use App\Models\TemplateItem;
 use App\Models\ProductVariant;
 use App\Repositories\Contracts\TemplateRepositoryInterface;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -263,6 +264,9 @@ class TemplateRepository implements TemplateRepositoryInterface
             $template->save();
 
             DB::commit();
+
+            // Clear the active template cache
+            Cache::forget('active_template');
 
             return true;
         } catch (\Exception $e) {

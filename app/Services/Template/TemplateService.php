@@ -5,6 +5,7 @@ namespace App\Services\Template;
 use App\Models\Template;
 use App\Repositories\Contracts\TemplateRepositoryInterface;
 use App\Services\Contracts\TemplateServiceInterface;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -302,6 +303,9 @@ class TemplateService implements TemplateServiceInterface
             $result = $this->templateRepository->setActiveTemplate($id);
 
             if ($result) {
+                // Clear the active template cache
+                Cache::forget('active_template');
+
                 Log::info('TemplateService::setActiveTemplate - Template set as active successfully', [
                     'template_id' => $id,
                 ]);
