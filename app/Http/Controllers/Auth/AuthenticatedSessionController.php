@@ -29,8 +29,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
-
         // Diagnostic logging for CSRF investigation
         \Illuminate\Support\Facades\Log::info('Before session regeneration', [
             'csrf_token_before' => csrf_token(),
@@ -45,6 +43,8 @@ class AuthenticatedSessionController extends Controller
             'session_id_after' => session()->getId(),
             'csrf_token_changed' => csrf_token() !== session()->get('_token'),
         ]);
+
+        $request->authenticate();
 
         return redirect()->intended(route('dashboard', absolute: false));
     }
