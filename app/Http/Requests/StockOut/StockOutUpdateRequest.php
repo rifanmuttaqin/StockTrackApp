@@ -20,7 +20,7 @@ class StockOutUpdateRequest extends FormRequest
             return false;
         }
 
-        $stockOutRecord = $this->route('stock_out_record');
+        $stockOutRecord = $this->route('stockOut');
 
         // Jika record tidak ditemukan atau bukan draft, tidak boleh update
         if (!$stockOutRecord || !$stockOutRecord->isDraft()) {
@@ -38,7 +38,7 @@ class StockOutUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => 'required|date|date_format:Y-m-d',
+            'date' => 'required|date',
             'note' => 'nullable|string|max:500',
             'items' => 'required|array|min:1',
             'items.*.product_variant_id' => 'required|exists:product_variants,id',
@@ -61,7 +61,7 @@ class StockOutUpdateRequest extends FormRequest
      */
     private function validateDraftStatus(Validator $validator): void
     {
-        $stockOutRecord = $this->route('stock_out_record');
+        $stockOutRecord = $this->route('stockOut');
 
         if ($stockOutRecord && !$stockOutRecord->isDraft()) {
             $validator->errors()->add(
@@ -79,7 +79,6 @@ class StockOutUpdateRequest extends FormRequest
         return [
             'date.required' => 'Tanggal stock out harus diisi',
             'date.date' => 'Format tanggal tidak valid',
-            'date.date_format' => 'Format tanggal harus Y-m-d (contoh: 2026-01-08)',
             'note.string' => 'Catatan harus berupa teks',
             'note.max' => 'Catatan maksimal 500 karakter',
             'items.required' => 'Item stock out harus diisi',
@@ -99,10 +98,9 @@ class StockOutUpdateRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(
-            response()->json([
-                'message' => 'Validasi gagal',
-                'errors' => $validator->errors()
-            ], 422)
+            redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
         );
     }
 }

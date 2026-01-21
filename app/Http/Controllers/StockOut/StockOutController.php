@@ -256,13 +256,13 @@ class StockOutController extends Controller
     /**
      * Update specified stock out record
      */
-    public function update(StockOutUpdateRequest $request, string $id)
+    public function update(StockOutUpdateRequest $request, StockOutRecord $stockOut)
     {
         try {
             $validatedData = $request->validated();
 
-            $stockOutRecord = DB::transaction(function () use ($id, $validatedData) {
-                $record = StockOutRecord::findOrFail($id);
+            $stockOutRecord = DB::transaction(function () use ($stockOut, $validatedData) {
+                $record = StockOutRecord::findOrFail($stockOut->id);
 
                 // Validate if record is already submitted (EC-PRD-022)
                 if ($record->isSubmitted()) {
@@ -290,7 +290,7 @@ class StockOutController extends Controller
                 return $record;
             });
 
-            $this->logStockOutAction('update_stock_out', $id, [
+            $this->logStockOutAction('update_stock_out', $stockOut->id, [
                 'date' => $stockOutRecord->date,
                 'transaction_code' => $stockOutRecord->transaction_code,
                 'note' => $stockOutRecord->note,
@@ -302,7 +302,7 @@ class StockOutController extends Controller
         } catch (\Exception $e) {
             Log::error('Failed to update stock out record', [
                 'error' => $e->getMessage(),
-                'stock_out_record_id' => $id,
+                'stock_out_record_id' => $stockOut->id,
                 'data' => $request->validated(),
                 'performed_by' => Auth::id(),
             ]);

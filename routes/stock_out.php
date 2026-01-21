@@ -39,7 +39,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Update stock out (update draft)
     Route::put('/stock-out/{stockOut}', [StockOutController::class, 'update'])
         ->name('stock-out.update')
-        ->middleware('permission:stock_out.edit');
+        ->middleware('permission:stock_out.update');
 
     // Delete stock out (delete draft)
     Route::delete('/stock-out/{stockOut}', [StockOutController::class, 'destroy'])
@@ -54,7 +54,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Update stock out note (quick note update)
     Route::put('/stock-out/{stockOut}/note', [StockOutController::class, 'updateNote'])
         ->name('stock-out.updateNote')
-        ->middleware('permission:stock_out.edit');
+        ->middleware('permission:stock_out.update');
 
     // ============================================
     // STOCK OUT REPORT ROUTES
