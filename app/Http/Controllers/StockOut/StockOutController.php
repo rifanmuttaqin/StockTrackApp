@@ -262,7 +262,7 @@ class StockOutController extends Controller
             $validatedData = $request->validated();
 
             $stockOutRecord = DB::transaction(function () use ($stockOut, $validatedData) {
-                $record = StockOutRecord::findOrFail($stockOut->id);
+                $record = $stockOut;
 
                 // Validate if record is already submitted (EC-PRD-022)
                 if ($record->isSubmitted()) {

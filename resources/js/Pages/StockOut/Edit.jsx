@@ -67,12 +67,6 @@ const Edit = ({ stockOutRecord }) => {
   const { can } = usePermission();
 
   /**
-   * State untuk menyimpan quantity untuk setiap varian
-   * @type {Object.<string, number>}
-   */
-  const [quantities, setQuantities] = useState({});
-
-  /**
    * State untuk menyimpan error validasi quantity
    * @type {Object.<string, string>}
    */
@@ -95,33 +89,12 @@ const Edit = ({ stockOutRecord }) => {
    */
   const { data, setData, put, post, processing, errors, reset } = useForm({
     date: stockOutRecord?.date || new Date().toISOString().split('T')[0],
-    items: [],
-  });
-
-  /**
-   * Inisialisasi quantities saat component mount
-   * Setiap varian di-set ke quantity dari record
-   */
-  useEffect(() => {
-    if (stockOutRecord?.items) {
-      const initialQuantities = {};
-      stockOutRecord.items.forEach((item) => {
-        initialQuantities[item.product_variant_id] = item.quantity || 0;
-      });
-      setQuantities(initialQuantities);
-    }
-  }, [stockOutRecord]);
-
-  /**
-   * Update form data saat quantities berubah
-   */
-  useEffect(() => {
-    const items = stockOutRecord?.items?.map((item) => ({
+    note: stockOutRecord?.note || '',
+    items: stockOutRecord?.items?.map((item) => ({
       product_variant_id: item.product_variant_id,
-      quantity: quantities[item.product_variant_id] || 0,
-    })) || [];
-    setData('items', items);
-  }, [quantities, stockOutRecord]);
+      quantity: item.quantity || 0,
+    })) || [],
+  });
 
   /**
    * Validasi quantity untuk varian tertentu
@@ -154,10 +127,13 @@ const Edit = ({ stockOutRecord }) => {
   const handleQuantityChange = (variantId, value) => {
     const numValue = parseInt(value) || 0;
     validateQuantity(numValue, variantId);
-    setQuantities((prev) => ({
-      ...prev,
-      [variantId]: numValue,
-    }));
+    
+    // Update data.items directly to avoid race condition
+    setData('items', data.items.map((item) =>
+      item.product_variant_id === variantId
+        ? { ...item, quantity: numValue }
+        : item
+    ));
   };
 
   /**
@@ -516,7 +492,7 @@ const Edit = ({ stockOutRecord }) => {
                             <input
                               type="number"
                               min="0"
-                              value={quantities[item.product_variant_id] || 0}
+                              value={data.items.find(i => i.product_variant_id === item.product_variant_id)?.quantity || 0}
                               onChange={(e) => handleQuantityChange(item.product_variant_id, e.target.value)}
                               disabled={stockOutRecord?.status === 'submit'}
                               placeholder="0"
