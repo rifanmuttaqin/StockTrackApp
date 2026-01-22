@@ -131,12 +131,24 @@ class StockOutReportController extends Controller
                         $stockOutByDate[$date] = $totalQuantity;
                     }
 
+                    // Calculate average of numeric values in stock_out_by_date
+                    // Ignore empty (0) values and non-numeric values
+                    $numericValues = array_filter($stockOutByDate, function ($value) {
+                        return is_numeric($value) && $value > 0;
+                    });
+                    
+                    $average = 0;
+                    if (!empty($numericValues)) {
+                        $average = round(array_sum($numericValues) / count($numericValues), 2);
+                    }
+
                     $productData['variants'][] = [
                         'id' => $variant->id,
                         'name' => $variant->variant_name,
                         'sku' => $variant->sku,
                         'stock' => $variant->stock_current,
                         'stock_out_by_date' => $stockOutByDate,
+                        'average' => $average,
                     ];
                 }
 
