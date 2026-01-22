@@ -39,8 +39,11 @@ class StockOutSubmitRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Items are already validated during draft creation and stored in database
-            // No validation needed for submit request
+            'date' => 'required|date',
+            'note' => 'nullable|string|max:500',
+            'items' => 'required|array|min:1',
+            'items.*.product_variant_id' => 'required|exists:product_variants,id',
+            'items.*.quantity' => 'required|integer|min:0',
         ];
     }
 
@@ -75,18 +78,11 @@ class StockOutSubmitRequest extends FormRequest
      */
     private function validateStockAvailability(Validator $validator): void
     {
-        $stockOutRecord = $this->route('stockOut');
-        
-        if (!$stockOutRecord) {
-            return;
-        }
-
-        // Load items from database with productVariant relationship
-        $items = $stockOutRecord->load(['items.productVariant'])->items;
+        $items = $this->input('items', []);
 
         foreach ($items as $index => $item) {
-            $variant = $item->productVariant;
-            $quantity = $item->quantity;
+            $variant = ProductVariant::find($item['product_variant_id']);
+            $quantity = $item['quantity'];
 
             if ($variant && $quantity > 0) {
                 $stockCurrent = $variant->stock_current ?? 0;
@@ -107,8 +103,18 @@ class StockOutSubmitRequest extends FormRequest
     public function messages(): array
     {
         return [
-            // Items are already validated during draft creation
-            // No custom messages needed for submit request
+            'date.required' => 'Tanggal stock out harus diisi',
+            'date.date' => 'Format tanggal tidak valid',
+            'note.string' => 'Catatan harus berupa teks',
+            'note.max' => 'Catatan maksimal 500 karakter',
+            'items.required' => 'Item stock out harus diisi',
+            'items.array' => 'Item stock out harus berupa array',
+            'items.min' => 'Minimal harus ada 1 item stock out',
+            'items.*.product_variant_id.required' => 'ID varian produk harus diisi',
+            'items.*.product_variant_id.exists' => 'Varian produk tidak ditemukan',
+            'items.*.quantity.required' => 'Jumlah harus diisi',
+            'items.*.quantity.integer' => 'Jumlah harus berupa angka',
+            'items.*.quantity.min' => 'Jumlah minimal 0',
         ];
     }
 

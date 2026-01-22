@@ -380,7 +380,7 @@ class StockOutController extends Controller
         try {
             $validatedData = $request->validated();
 
-            $stockOutRecord = DB::transaction(function () use ($stockOut) {
+            $stockOutRecord = DB::transaction(function () use ($stockOut, $validatedData) {
                 $record = StockOutRecord::with(['items.productVariant'])
                     ->findOrFail($stockOut->id);
 
@@ -389,14 +389,28 @@ class StockOutController extends Controller
                     throw new \Exception('Stock out sudah disubmit sebelumnya.');
                 }
 
-                // Validate stock current >= quantity for each item
+                // Delete old items
+                $record->items()->delete();
+
+                // Create new items from validated data
+                foreach ($validatedData['items'] as $item) {
+                    $record->items()->create([
+                        'product_variant_id' => $item['product_variant_id'],
+                        'quantity' => $item['quantity'],
+                    ]);
+                }
+
+                // Reload items to get the newly created items with productVariant relationship
+                $record->load(['items.productVariant']);
+
+                // Validate stock current >= quantity for each item using NEW quantities
                 foreach ($record->items as $item) {
                     $variant = $item->productVariant;
                     if ($variant->stock_current < $item->quantity) {
                         throw new \Exception("Stok tidak mencukupi untuk varian: {$variant->variant_name}. Stok tersedia: {$variant->stock_current}, diminta: {$item->quantity}");
                     }
 
-                    // Decrease stock current for each variant
+                    // Decrease stock current for each variant using NEW quantities
                     $variant->decrement('stock_current', $item->quantity);
                 }
 
