@@ -57,17 +57,7 @@ export default function Sidebar() {
                     name: 'Daftar Pengguna',
                     href: '/users',
                     permission: 'users.index',
-                },
-                {
-                    name: 'Roles',
-                    href: '/roles',
-                    permission: 'manage_users',
-                },
-                {
-                    name: 'Permissions',
-                    href: '/permissions',
-                    permission: 'manage_users',
-                },
+                }
             ],
         },
         {
