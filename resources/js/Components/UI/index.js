@@ -48,6 +48,7 @@ export { MobileAlert } from './MobileAlert';
 
 // Custom UI Components
 export { default as Alert } from './Alert';
+export { default as AutoSelectInput } from './AutoSelectInput';
 export { default as Checkbox } from './Checkbox';
 export { default as DangerButton } from './DangerButton';
 export { default as InputError } from './InputError';

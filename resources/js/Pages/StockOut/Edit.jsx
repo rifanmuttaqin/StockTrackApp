@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 import { MobileForm, MobileFormSection, MobileFormField } from '../../Components/UI/MobileForm';
-import { Alert, LoadingSpinner, Badge, Modal } from '../../Components/UI';
+import { Alert, LoadingSpinner, Badge, Modal, AutoSelectInput } from '../../Components/UI';
 import { usePermission } from '../../Hooks/usePermission';
 import {
   ArrowLeftIcon,
@@ -489,7 +489,7 @@ const Edit = ({ stockOutRecord }) => {
                             error={errors[`items.${index}.quantity`] || quantityErrors[item.product_variant_id]}
                             required
                           >
-                            <input
+                            <AutoSelectInput
                               type="number"
                               min="0"
                               value={data.items.find(i => i.product_variant_id === item.product_variant_id)?.quantity || 0}

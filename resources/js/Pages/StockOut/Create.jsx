@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Head, Link, useForm, usePage, router } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 import { MobileForm, MobileFormSection, MobileFormField } from '../../Components/UI/MobileForm';
-import { Alert, LoadingSpinner, Badge } from '../../Components/UI';
+import { Alert, LoadingSpinner, Badge, AutoSelectInput } from '../../Components/UI';
 import { usePermission } from '../../Hooks/usePermission';
 import { ArrowLeftIcon, DocumentCheckIcon, CheckIcon } from '@heroicons/react/24/outline';
 
@@ -472,7 +472,7 @@ const Create = ({ activeTemplate, defaultDate }) => {
                             error={errors[`items.${index}.quantity`] || quantityErrors[item.product_variant_id]}
                             required
                           >
-                            <input
+                            <AutoSelectInput
                               type="number"
                               min="0"
                               value={quantities[item.product_variant_id] || 0}
