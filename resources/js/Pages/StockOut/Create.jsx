@@ -211,7 +211,11 @@ const Create = ({ activeTemplate, defaultDate }) => {
         const stockOutId = page.props.stockOutRecord?.id;
         if (stockOutId) {
           // Submit the draft immediately
-          router.post(route('stock-out.submit', stockOutId), {}, {
+          router.post(route('stock-out.submit', stockOutId), {
+            date: data.date,
+            note: data.note,
+            items: data.items,
+          }, {
             onSuccess: () => {
               setMessage({ type: 'success', message: 'Stock out berhasil disubmit' });
               // Redirect to index page after successful submit

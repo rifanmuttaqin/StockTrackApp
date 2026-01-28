@@ -5,7 +5,6 @@ namespace App\Http\Requests\StockOut;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Models\StockOutRecord;
 use App\Models\ProductVariant;
 
@@ -116,18 +115,5 @@ class StockOutSubmitRequest extends FormRequest
             'items.*.quantity.integer' => 'Jumlah harus berupa angka',
             'items.*.quantity.min' => 'Jumlah minimal 0',
         ];
-    }
-
-    /**
-     * Handle a failed validation attempt.
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'message' => 'Validasi gagal',
-                'errors' => $validator->errors()
-            ], 422)
-        );
     }
 }

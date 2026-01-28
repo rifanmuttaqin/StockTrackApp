@@ -210,7 +210,6 @@ const Edit = ({ stockOutRecord }) => {
     }
 
     post(route('stock-out.submit', stockOutRecord.id), {
-      data: { ...data, status: 'submit' },
       onSuccess: () => {
         setMessage({ type: 'success', message: 'Stock out berhasil disubmit' });
       },
