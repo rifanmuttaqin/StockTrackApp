@@ -151,6 +151,17 @@ class RoleSeeder extends Seeder
                 ['name' => 'stock_out.store', 'display_name' => 'Store Stock Out', 'description' => 'Menyimpan stock out baru'],
                 ['name' => 'stock_out.update', 'display_name' => 'Update Stock Out', 'description' => 'Mengupdate stock out'],
                 ['name' => 'stock_out.destroy', 'display_name' => 'Delete Stock Out', 'description' => 'Menghapus stock out'],
+                // Stock In Management Permissions
+                ['name' => 'stock_in.view', 'display_name' => 'Lihat Stock Masuk', 'description' => 'Melihat daftar stock masuk'],
+                ['name' => 'stock_in.create', 'display_name' => 'Buat Stock Masuk', 'description' => 'Membuat stock masuk baru'],
+                ['name' => 'stock_in.edit', 'display_name' => 'Edit Stock Masuk', 'description' => 'Mengedit stock masuk'],
+                ['name' => 'stock_in.update', 'display_name' => 'Update Stock Masuk', 'description' => 'Mengupdate stock masuk'],
+                ['name' => 'stock_in.delete', 'display_name' => 'Hapus Stock Masuk', 'description' => 'Menghapus stock masuk'],
+                ['name' => 'stock_in.submit', 'display_name' => 'Submit Stock Masuk', 'description' => 'Menyetujui stock masuk'],
+                ['name' => 'stock_in.index', 'display_name' => 'View Stock In List', 'description' => 'Melihat daftar stock in'],
+                ['name' => 'stock_in.show', 'display_name' => 'View Stock In Details', 'description' => 'Melihat detail stock in'],
+                ['name' => 'stock_in.store', 'display_name' => 'Store Stock In', 'description' => 'Menyimpan stock in baru'],
+                ['name' => 'stock_in.destroy', 'display_name' => 'Delete Stock In', 'description' => 'Menghapus stock in'],
                 ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global']
             ],
             'inventory_staff' => [
@@ -178,6 +189,17 @@ class RoleSeeder extends Seeder
                 ['name' => 'stock_out.store', 'display_name' => 'Store Stock Out', 'description' => 'Menyimpan stock out baru'],
                 ['name' => 'stock_out.update', 'display_name' => 'Update Stock Out', 'description' => 'Mengupdate stock out'],
                 ['name' => 'stock_out.destroy', 'display_name' => 'Delete Stock Out', 'description' => 'Menghapus stock out'],
+                // Stock In Management Permissions
+                ['name' => 'stock_in.view', 'display_name' => 'Lihat Stock Masuk', 'description' => 'Melihat daftar stock masuk'],
+                ['name' => 'stock_in.create', 'display_name' => 'Buat Stock Masuk', 'description' => 'Membuat stock masuk baru'],
+                ['name' => 'stock_in.edit', 'display_name' => 'Edit Stock Masuk', 'description' => 'Mengedit stock masuk'],
+                ['name' => 'stock_in.update', 'display_name' => 'Update Stock Masuk', 'description' => 'Mengupdate stock masuk'],
+                ['name' => 'stock_in.delete', 'display_name' => 'Hapus Stock Masuk', 'description' => 'Menghapus stock masuk'],
+                ['name' => 'stock_in.submit', 'display_name' => 'Submit Stock Masuk', 'description' => 'Menyetujui stock masuk'],
+                ['name' => 'stock_in.index', 'display_name' => 'View Stock In List', 'description' => 'Melihat daftar stock in'],
+                ['name' => 'stock_in.show', 'display_name' => 'View Stock In Details', 'description' => 'Melihat detail stock in'],
+                ['name' => 'stock_in.store', 'display_name' => 'Store Stock In', 'description' => 'Menyimpan stock in baru'],
+                ['name' => 'stock_in.destroy', 'display_name' => 'Delete Stock In', 'description' => 'Menghapus stock in'],
                 ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global']
             ],
             'warehouse_supervisor' => [
@@ -215,6 +237,9 @@ class RoleSeeder extends Seeder
                 // Stock Out Management Permissions (View Only)
                 ['name' => 'stock_out.view', 'display_name' => 'View Stock Out', 'description' => 'Melihat daftar stock out'],
                 ['name' => 'stock_out.show', 'display_name' => 'View Stock Out Details', 'description' => 'Melihat detail stock out'],
+                // Stock In Management Permissions (View Only)
+                ['name' => 'stock_in.view', 'display_name' => 'Lihat Stock Masuk', 'description' => 'Melihat daftar stock masuk'],
+                ['name' => 'stock_in.show', 'display_name' => 'View Stock In Details', 'description' => 'Melihat detail stock in'],
                 ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global']
             ],
             'management' => [
@@ -232,6 +257,9 @@ class RoleSeeder extends Seeder
                 // Stock Out Management Permissions (View Only)
                 ['name' => 'stock_out.view', 'display_name' => 'View Stock Out', 'description' => 'Melihat daftar stock out'],
                 ['name' => 'stock_out.show', 'display_name' => 'View Stock Out Details', 'description' => 'Melihat detail stock out'],
+                // Stock In Management Permissions (View Only)
+                ['name' => 'stock_in.view', 'display_name' => 'Lihat Stock Masuk', 'description' => 'Melihat daftar stock masuk'],
+                ['name' => 'stock_in.show', 'display_name' => 'View Stock In Details', 'description' => 'Melihat detail stock in'],
                 ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global']
             ],
         };

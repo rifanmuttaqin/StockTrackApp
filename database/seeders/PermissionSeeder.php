@@ -85,6 +85,40 @@ class PermissionSeeder extends Seeder
                 ],
             ];
 
+            // Stock In Module Permissions
+            $stockInPermissions = [
+                [
+                    'name' => 'stock_in.view',
+                    'display_name' => 'Lihat Stock Masuk',
+                    'description' => 'Melihat daftar stock masuk',
+                ],
+                [
+                    'name' => 'stock_in.create',
+                    'display_name' => 'Buat Stock Masuk',
+                    'description' => 'Membuat input stock masuk',
+                ],
+                [
+                    'name' => 'stock_in.edit',
+                    'display_name' => 'Edit Stock Masuk',
+                    'description' => 'Mengedit draft stock masuk',
+                ],
+                [
+                    'name' => 'stock_in.update',
+                    'display_name' => 'Update Stock Masuk',
+                    'description' => 'Update draft stock masuk',
+                ],
+                [
+                    'name' => 'stock_in.delete',
+                    'display_name' => 'Hapus Stock Masuk',
+                    'description' => 'Menghapus draft stock masuk',
+                ],
+                [
+                    'name' => 'stock_in.submit',
+                    'display_name' => 'Submit Stock Masuk',
+                    'description' => 'Submit stock masuk',
+                ],
+            ];
+
             // Permission assignments by role (for reference):
             //
             // Template Module:
@@ -97,6 +131,11 @@ class PermissionSeeder extends Seeder
             // - Admin: stock_out.view, stock_out.create, stock_out.edit, stock_out.delete, stock_out.submit
             // - Operator: stock_out.view, stock_out.create, stock_out.edit, stock_out.delete, stock_out.submit
             // - Supervisor: stock_out.view only
+            //
+            // Stock In Module:
+            // - Admin: stock_in.view, stock_in.create, stock_in.edit, stock_in.update, stock_in.delete, stock_in.submit
+            // - Operator: stock_in.view, stock_in.create, stock_in.edit, stock_in.update, stock_in.delete, stock_in.submit
+            // - Supervisor: stock_in.view only
         });
     }
 }

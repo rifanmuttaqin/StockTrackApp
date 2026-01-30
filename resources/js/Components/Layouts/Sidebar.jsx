@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';0
 import { useAuth } from '../../Context/AuthContext';
 import {
     HomeIcon,
@@ -90,6 +90,23 @@ export default function Sidebar() {
             ],
         },
         {
+            name: 'Stock Masuk',
+            icon: DocumentTextIcon,
+            permission: 'stock_in.view',
+            subMenu: [
+                {
+                    name: 'Daftar Stock Masuk',
+                    href: '/stock-in',
+                    permission: 'stock_in.view',
+                },
+                {
+                    name: 'Input Stock Masuk',
+                    href: '/stock-in/create',
+                    permission: 'stock_in.create',
+                },
+            ],
+        },
+        {
             name: 'Template',
             icon: DocumentTextIcon,
             permission: 'templates.view',
@@ -103,6 +120,11 @@ export default function Sidebar() {
                 {
                     name: 'Pergerakan Stok',
                     href: '/reports/stock',
+                    permission: 'view_reports',
+                },
+                {
+                    name: 'Laporan Stock Masuk',
+                    href: '/reports/stock-in',
                     permission: 'view_reports',
                 },
             ],

@@ -35,6 +35,9 @@ Output akhir harus mengikuti format **PRD_Template.md**.
 3. Simpan file `.md` pada direktory PRD/feature dan berikan penamaan PRD_{nama_feature}
 
 # Topik Fitur yang akan di kerjakan
- Master Produk
-   - Produk memiliki banyak Varian (Produk Varian)
-   - Setiap Produk Varian memiliki stock current
+ Pencatatan stock masuk (Stock In)
+ Saat ini stock out telah berjalan dengan baik, namun untuk stock in belum ada pencatatan yang terstruktur. Buatlah fitur pencatatan stock in yang mencakup:
+ - Semua fitur yang mirip dengan stock out, seperti pencatatan tanggal, jumlah, dan sumber barang sesuai dengan template stock out yang aktif.
+  - Integrasi dengan sistem inventory untuk memperbarui jumlah stok barang secara otomatis saat ada pencatatan stock in, mirip dengan proses stock out.
+
+Saat ini fitur history stock atau riwayat stock untuk merekam pergerakan stock memang belum tersedia, namun kedepannya akan ada, maka pertimbangkan dalam penyusunan stock in. fitur riwayat stock akan dibuat setelah proses stock in dapat berjalan sesuai seperti stock out.
