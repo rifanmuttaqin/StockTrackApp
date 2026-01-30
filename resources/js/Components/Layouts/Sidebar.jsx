@@ -13,6 +13,7 @@ import {
     XMarkIcon,
     DocumentTextIcon,
     ArrowUturnLeftIcon,
+    ArrowUturnRightIcon
 } from '@heroicons/react/24/outline';
 
 export default function Sidebar() {
@@ -91,7 +92,7 @@ export default function Sidebar() {
         },
         {
             name: 'Stock Masuk',
-            icon: DocumentTextIcon,
+            icon: ArrowUturnRightIcon,
             permission: 'stock_in.view',
             subMenu: [
                 {
@@ -118,7 +119,7 @@ export default function Sidebar() {
             permission: 'view_reports',
             subMenu: [
                 {
-                    name: 'Pergerakan Stok',
+                    name: 'Laporan Stock keluar',
                     href: '/reports/stock',
                     permission: 'view_reports',
                 },
