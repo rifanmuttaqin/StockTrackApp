@@ -314,6 +314,7 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
                   Edit Draft
                 </Link>
                 <button
+                  type="button"
                   onClick={() => setShowSubmitModal(true)}
                   className="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 >
@@ -327,13 +328,13 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
       </div>
 
       {/* Submit Confirmation Modal */}
-      {showSubmitModal && (
-        <Modal
-          isOpen={showSubmitModal}
-          onClose={() => setShowSubmitModal(false)}
-          title="Konfirmasi Submit Stock In"
-          size="sm"
-        >
+      <Modal
+        show={showSubmitModal}
+        closeable={true}
+        onClose={() => setShowSubmitModal(false)}
+        maxWidth="sm"
+      >
+        <div className="p-6">
           <div className="flex items-center mb-4">
             <ExclamationTriangleIcon className="h-8 w-8 text-yellow-600 mr-3" />
             <div>
@@ -369,6 +370,7 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
 
           <div className="mt-6 flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
             <button
+              type="button"
               onClick={() => setShowSubmitModal(false)}
               className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
@@ -376,6 +378,7 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
               Batal
             </button>
             <button
+              type="button"
               onClick={handleSubmit}
               disabled={processing}
               className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -393,8 +396,8 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
               )}
             </button>
           </div>
-        </Modal>
-      )}
+        </div>
+      </Modal>
     </AppLayout>
   );
 };
