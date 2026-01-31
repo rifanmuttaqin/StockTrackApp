@@ -11,7 +11,8 @@ import {
   ChevronDown,
   UserPlus,
   FileText,
-  ArrowLeft
+  ArrowLeft,
+  ArrowRight
 } from 'lucide-react';
 import { Button } from '../UI/button';
 import { useAuth } from '../../Context/AuthContext';
@@ -54,6 +55,13 @@ const MobileMenu = ({ isOpen, onClose }) => {
       icon: ArrowLeft,
       active: url === '/stock-out' || url.startsWith('/stock-out'),
       permission: 'stock_out.view'
+    },
+    {
+      name: 'Stock In',
+      href: '/stock-in',
+      icon: ArrowRight,
+      active: url === '/stock-in' || url.startsWith('/stock-in'),
+      permission: 'stock_in.view'
     },
     {
       name: 'Pengguna',

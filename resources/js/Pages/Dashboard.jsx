@@ -90,7 +90,7 @@ export default function Dashboard() {
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm font-poppins font-medium text-purple-600">Aksi Cepat</p>
-                                <p className="text-2xl font-poppins font-bold text-gray-900 mt-1">2 Menu</p>
+                                <p className="text-2xl font-poppins font-bold text-gray-900 mt-1">4 Menu</p>
                             </div>
                         </div>
                     </div>
@@ -99,7 +99,7 @@ export default function Dashboard() {
                 {/* Quick Actions */}
                 <div className="bg-gray-50 rounded-lg p-6">
                     <h3 className="text-lg font-poppins font-medium text-gray-900 mb-4">Aksi Cepat</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <Link href={route('stock-out.create')} className="flex flex-col items-center justify-center p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
                             <svg className="h-8 w-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -111,6 +111,18 @@ export default function Dashboard() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                             </svg>
                             <span className="text-sm font-poppins font-medium text-gray-700">Daftar Stock Out</span>
+                        </Link>
+                        <Link href={route('stock-in.create')} className="flex flex-col items-center justify-center p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all">
+                            <svg className="h-8 w-8 text-indigo-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span className="text-sm font-poppins font-medium text-gray-700">Buat Stock In</span>
+                        </Link>
+                        <Link href={route('stock-in.index')} className="flex flex-col items-center justify-center p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-300 hover:shadow-md transition-all">
+                            <svg className="h-8 w-8 text-purple-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                            </svg>
+                            <span className="text-sm font-poppins font-medium text-gray-700">Daftar Stock In</span>
                         </Link>
                     </div>
                 </div>

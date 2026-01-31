@@ -57,7 +57,7 @@ const MobileDashboard = ({
     },
     {
       title: "Aksi Cepat",
-      value: "2 Menu",
+      value: "4 Menu",
       icon: (
         <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
           <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
@@ -80,6 +80,18 @@ const MobileDashboard = ({
       icon: 'list',
       variant: 'success',
       onClick: () => window.location.href = route('stock-out.index')
+    },
+    {
+      label: 'Buat Stock In',
+      icon: 'add',
+      variant: 'primary',
+      onClick: () => window.location.href = route('stock-in.create')
+    },
+    {
+      label: 'Daftar Stock In',
+      icon: 'list',
+      variant: 'success',
+      onClick: () => window.location.href = route('stock-in.index')
     }
   ], []);
 
