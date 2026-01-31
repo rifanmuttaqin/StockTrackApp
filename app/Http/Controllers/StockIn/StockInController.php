@@ -211,8 +211,12 @@ class StockInController extends Controller
                 'items_count' => count($validatedData['items']),
             ]);
 
-            return redirect()->route('stock-in.index')
-                ->with('success', 'Stock in berhasil dibuat sebagai draft.');
+            return Inertia::render('StockIn/Index', [
+                'stockInRecord' => $stockInRecord,
+                'flash' => [
+                    'success' => 'Stock in berhasil dibuat sebagai draft.'
+                ]
+            ]);
         } catch (\Exception $e) {
             Log::error('Failed to create stock in record', [
                 'error' => $e->getMessage(),
