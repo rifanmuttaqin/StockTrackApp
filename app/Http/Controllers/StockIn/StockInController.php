@@ -64,6 +64,8 @@ class StockInController extends Controller
             $statusFilter = $request->get('status');
             $startDate = $request->get('start_date');
             $endDate = $request->get('end_date');
+            $page = $request->get('page', 1);
+            $perPage = $request->get('per_page', 5);
 
             // Load stock in records with complete eager loading
             // items.productVariant: untuk mendapatkan data varian lengkap (variant_name, sku, stock_current)
@@ -80,20 +82,47 @@ class StockInController extends Controller
                 $query->whereBetween('date', [$startDate, $endDate]);
             }
 
-            $stockInRecords = $query->orderBy('date', 'desc')->get();
+            // Build separate queries for statistics
+            $totalDraftQuery = StockInRecord::query();
+            $totalSubmitQuery = StockInRecord::query();
+            $totalItemsQuery = StockInRecord::query();
 
-            // Calculate total items across all records
-            $totalItems = 0;
-            foreach ($stockInRecords as $record) {
-                $totalItems += $record->items->count();
+            // Apply same filters to statistics queries
+            if ($statusFilter && in_array($statusFilter, ['draft', 'submit'])) {
+                $totalDraftQuery->where('status', $statusFilter);
+                $totalSubmitQuery->where('status', $statusFilter);
+                $totalItemsQuery->where('status', $statusFilter);
             }
 
-            // Get stock in statistics for meta data
-            $meta = [
-                'total' => $stockInRecords->count(),
+            if ($startDate && $endDate) {
+                $totalDraftQuery->whereBetween('date', [$startDate, $endDate]);
+                $totalSubmitQuery->whereBetween('date', [$startDate, $endDate]);
+                $totalItemsQuery->whereBetween('date', [$startDate, $endDate]);
+            }
+
+            // Calculate statistics
+            $totalDraft = $totalDraftQuery->where('status', 'draft')->count();
+            $totalSubmit = $totalSubmitQuery->where('status', 'submit')->count();
+            $totalItems = $totalItemsQuery->withCount('items')->get()->sum('items_count');
+
+            $paginatedStockInRecords = $query->orderBy('date', 'desc')
+                ->paginate($perPage, ['*'], 'page', $page);
+
+            // Build pagination object
+            $pagination = [
+                'current_page' => $paginatedStockInRecords->currentPage(),
+                'last_page' => $paginatedStockInRecords->lastPage(),
+                'per_page' => $paginatedStockInRecords->perPage(),
+                'total' => $paginatedStockInRecords->total(),
+                'from' => $paginatedStockInRecords->firstItem(),
+                'to' => $paginatedStockInRecords->lastItem(),
+            ];
+
+            // Build statistics object
+            $statistics = [
+                'total_draft' => $totalDraft,
+                'total_submit' => $totalSubmit,
                 'total_items' => $totalItems,
-                'total_draft' => $stockInRecords->where('status', 'draft')->count(),
-                'total_submit' => $stockInRecords->where('status', 'submit')->count(),
             ];
 
             $this->logStockInAction('view_stock_in_list', 'all', [
@@ -103,13 +132,14 @@ class StockInController extends Controller
             ]);
 
             return Inertia::render('StockIn/Index', [
-                'stockInRecords' => $stockInRecords,
+                'stockInRecords' => $paginatedStockInRecords->items(),
+                'pagination' => $pagination,
+                'statistics' => $statistics,
                 'filters' => [
                     'status' => $statusFilter,
                     'start_date' => $startDate,
                     'end_date' => $endDate,
                 ],
-                'meta' => $meta,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to fetch stock in records', [
@@ -119,12 +149,24 @@ class StockInController extends Controller
 
             return Inertia::render('StockIn/Index', [
                 'stockInRecords' => [],
-                'filters' => [
-                    'status' => '',
-                    'start_date' => '',
-                    'end_date' => '',
+                'pagination' => [
+                    'current_page' => 1,
+                    'last_page' => 1,
+                    'per_page' => 5,
+                    'total' => 0,
+                    'from' => null,
+                    'to' => null,
                 ],
-                'meta' => [],
+                'statistics' => [
+                    'total_draft' => 0,
+                    'total_submit' => 0,
+                    'total_items' => 0,
+                ],
+                'filters' => [
+                    'status' => $statusFilter,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                ],
                 'error' => 'Gagal memuat data stock in. Silakan coba lagi.',
             ]);
         }

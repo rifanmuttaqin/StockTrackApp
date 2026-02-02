@@ -30,16 +30,17 @@ import Swal from 'sweetalert2';
  *
  * @param {Object} props - Props dari backend
  * @param {Array} props.stockInRecords - Array stock in records
+ * @param {Object} props.pagination - Pagination data
  * @param {Object} props.statistics - Statistik stock in
  * @param {Object} props.filters - Filter aktif
- * @param {Object} props.meta - Metadata pagination
  */
-const Index = ({ stockInRecords, statistics, filters, meta }) => {
+const Index = ({ stockInRecords, pagination, statistics, filters }) => {
   const { props } = usePage();
   const { can } = usePermission();
   const { isMobile } = useMobileDetection();
   const [loading, setLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState(filters?.status || 'all');
+  const [perPage, setPerPage] = useState(filters?.per_page || 5);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   
   // Note modal state
@@ -58,8 +59,28 @@ const Index = ({ stockInRecords, statistics, filters, meta }) => {
    */
   const handleStatusFilterChange = useCallback((status) => {
     setStatusFilter(status);
-    const newFilters = { ...filters, status: status === 'all' ? '' : status, page: 1 };
+    const newFilters = { ...filters, status: status === 'all' ? '' : status, page: 1, per_page: perPage };
 
+    router.get(
+      route('stock-in.index'),
+      newFilters,
+      {
+        preserveState: true,
+        preserveScroll: true,
+        onStart: () => setLoading(true),
+        onFinish: () => setLoading(false),
+      }
+    );
+  }, [filters, perPage]);
+
+  /**
+   * Handle perubahan per page
+   * @param {number} newPerPage - Jumlah item per halaman
+   */
+  const handlePerPageChange = useCallback((newPerPage) => {
+    setPerPage(newPerPage);
+    const newFilters = { ...filters, per_page: newPerPage, page: 1 };
+    
     router.get(
       route('stock-in.index'),
       newFilters,
@@ -588,52 +609,142 @@ const Index = ({ stockInRecords, statistics, filters, meta }) => {
             <div>
               {stockInRecords.map(renderStockInCard)}
 
-              {/* Pagination */}
-              {meta && meta.last_page > 1 && (
-                <div className="mt-6">
-                  {isMobile ? (
-                    <div className="flex justify-between items-center bg-white px-4 py-3 rounded-lg shadow">
-                      <button
-                        onClick={() => handlePageChange(Math.max(1, meta.current_page - 1))}
-                        disabled={meta.current_page <= 1}
-                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
-                      >
-                        Previous
-                      </button>
-                      <span className="text-sm text-gray-700">
-                        Halaman {meta.current_page} dari {meta.last_page}
-                      </span>
-                      <button
-                        onClick={() => handlePageChange(Math.min(meta.last_page, meta.current_page + 1))}
-                        disabled={meta.current_page >= meta.last_page}
-                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex justify-center">
-                      <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                        <button
-                          onClick={() => handlePageChange(Math.max(1, meta.current_page - 1))}
-                          disabled={meta.current_page <= 1}
-                          className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Previous
-                        </button>
-                        <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                          Halaman {meta.current_page} dari {meta.last_page}
-                        </span>
-                        <button
-                          onClick={() => handlePageChange(Math.min(meta.last_page, meta.current_page + 1))}
-                          disabled={meta.current_page >= meta.last_page}
-                          className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Next
-                        </button>
-                      </nav>
-                    </div>
-                  )}
+              {/* Pagination - Mobile */}
+              {isMobile && pagination && pagination.last_page > 1 && (
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-gradient-to-r from-indigo-50 to-blue-50 px-4 py-4 rounded-xl shadow-sm border border-indigo-100">
+                  <span className="text-sm font-medium text-gray-700">
+                    Showing {pagination.from || 0}-{pagination.to || 0} of {pagination.total || 0} records
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handlePageChange(Math.max(1, pagination.current_page - 1))}
+                      disabled={pagination.current_page === 1}
+                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                        pagination.current_page === 1
+                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : 'bg-white text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 shadow-sm border border-gray-200'
+                      }`}
+                    >
+                      Previous
+                    </button>
+                    <span className="inline-flex items-center px-4 py-2 text-sm font-semibold text-indigo-700 bg-indigo-100 rounded-lg">
+                      {pagination.current_page}
+                    </span>
+                    <button
+                      onClick={() => handlePageChange(Math.min(pagination.last_page, pagination.current_page + 1))}
+                      disabled={pagination.current_page === pagination.last_page}
+                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                        pagination.current_page === pagination.last_page
+                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : 'bg-white text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 shadow-sm border border-gray-200'
+                      }`}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Pagination - Desktop */}
+              {!isMobile && pagination && pagination.last_page > 1 && (
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white px-6 py-4 rounded-xl shadow-sm border border-gray-200">
+                  <div className="text-sm text-gray-600">
+                    <span className="font-medium text-gray-900">
+                      Showing {pagination.from || 0}-{pagination.to || 0}
+                    </span>
+                    {' '}of{' '}
+                    <span className="font-medium text-gray-900">{pagination.total || 0}</span>
+                    {' '}records
+                  </div>
+                  
+                  <nav className="flex items-center gap-1" aria-label="Pagination">
+                    {/* Previous Button */}
+                    <button
+                      onClick={() => handlePageChange(Math.max(1, pagination.current_page - 1))}
+                      disabled={pagination.current_page === 1}
+                      className={`relative inline-flex items-center px-3 py-2 text-sm font-medium rounded-l-lg border transition-all duration-200 ${
+                        pagination.current_page === 1
+                          ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed'
+                          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:text-indigo-600'
+                      }`}
+                    >
+                      Previous
+                    </button>
+                    
+                    {/* Page Numbers */}
+                    {(() => {
+                      const pages = [];
+                      const currentPage = pagination.current_page;
+                      const lastPage = pagination.last_page;
+                      const delta = 2;
+                      
+                      if (lastPage > 0) pages.push(1);
+                      if (currentPage - delta > 2) pages.push('...');
+                      for (let i = Math.max(2, currentPage - delta); i <= Math.min(lastPage - 1, currentPage + delta); i++) {
+                        pages.push(i);
+                      }
+                      if (currentPage + delta < lastPage - 1) pages.push('...');
+                      if (lastPage > 1) pages.push(lastPage);
+                      
+                      return pages.map((page, index) => {
+                        if (page === '...') {
+                          return (
+                            <span
+                              key={`ellipsis-${index}`}
+                              className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300"
+                            >
+                              ...
+                            </span>
+                          );
+                        }
+                        
+                        const isActive = page === currentPage;
+                        return (
+                          <button
+                            key={page}
+                            onClick={() => handlePageChange(page)}
+                            className={`relative inline-flex items-center px-4 py-2 text-sm font-medium border transition-all duration-200 ${
+                              isActive
+                                ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+                                : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-indigo-600'
+                            } ${page === 1 ? 'rounded-l-none' : ''} ${page === lastPage ? 'rounded-r-none' : ''}`}
+                          >
+                            {page}
+                          </button>
+                        );
+                      });
+                    })()}
+                    
+                    {/* Next Button */}
+                    <button
+                      onClick={() => handlePageChange(Math.min(pagination.last_page, pagination.current_page + 1))}
+                      disabled={pagination.current_page === pagination.last_page}
+                      className={`relative inline-flex items-center px-3 py-2 text-sm font-medium rounded-r-lg border transition-all duration-200 ${
+                        pagination.current_page === pagination.last_page
+                          ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed'
+                          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:text-indigo-600'
+                      }`}
+                    >
+                      Next
+                    </button>
+                  </nav>
+                  
+                  {/* Per Page Selector */}
+                  <div className="flex items-center gap-2">
+                    <label htmlFor="per-page" className="text-sm text-gray-600">Show:</label>
+                    <select
+                      id="per-page"
+                      value={perPage}
+                      onChange={(e) => handlePerPageChange(parseInt(e.target.value))}
+                      className="block w-20 rounded-md border-gray-300 py-1.5 pl-3 pr-8 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    >
+                      <option value={5}>5</option>
+                      <option value={10}>10</option>
+                      <option value={25}>25</option>
+                      <option value={50}>50</option>
+                    </select>
+                    <span className="text-sm text-gray-600">per page</span>
+                  </div>
                 </div>
               )}
             </div>
