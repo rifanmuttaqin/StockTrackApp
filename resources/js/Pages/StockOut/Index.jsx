@@ -34,7 +34,7 @@ import Swal from 'sweetalert2';
  * @param {Object} props.filters - Filter aktif
  * @param {Object} props.meta - Metadata pagination
  */
-const Index = ({ stockOutRecords, statistics, filters, meta }) => {
+const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
   const { props } = usePage();
   const { can } = usePermission();
   const { isMobile } = useMobileDetection();
@@ -589,47 +589,142 @@ const Index = ({ stockOutRecords, statistics, filters, meta }) => {
               {stockOutRecords.map(renderStockOutCard)}
 
               {/* Pagination */}
-              {meta && meta.last_page > 1 && (
-                <div className="mt-6">
+              {pagination && pagination.last_page > 1 && (
+                <div className="mt-8">
                   {isMobile ? (
-                    <div className="flex justify-between items-center bg-white px-4 py-3 rounded-lg shadow">
-                      <button
-                        onClick={() => handlePageChange(Math.max(1, meta.current_page - 1))}
-                        disabled={meta.current_page <= 1}
-                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
-                      >
-                        Previous
-                      </button>
-                      <span className="text-sm text-gray-700">
-                        Halaman {meta.current_page} dari {meta.last_page}
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-gradient-to-r from-indigo-50 to-blue-50 px-4 py-4 rounded-xl shadow-sm border border-indigo-100">
+                      <span className="text-sm font-medium text-gray-700">
+                        Showing {pagination.from || 0}-{pagination.to || 0} of {pagination.total || 0} records
                       </span>
-                      <button
-                        onClick={() => handlePageChange(Math.min(meta.last_page, meta.current_page + 1))}
-                        disabled={meta.current_page >= meta.last_page}
-                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex justify-center">
-                      <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                      <div className="flex items-center gap-2">
                         <button
-                          onClick={() => handlePageChange(Math.max(1, meta.current_page - 1))}
-                          disabled={meta.current_page <= 1}
-                          className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          onClick={() => handlePageChange(Math.max(1, pagination.current_page - 1))}
+                          disabled={pagination.current_page <= 1}
+                          className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 hover:shadow-lg transition-all duration-200 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed disabled:shadow-none"
+                          aria-label="Previous page"
                         >
+                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                          </svg>
                           Previous
                         </button>
-                        <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                          Halaman {meta.current_page} dari {meta.last_page}
+                        <span className="inline-flex items-center px-4 py-2 text-sm font-semibold text-indigo-700 bg-indigo-100 rounded-lg">
+                          {pagination.current_page}
                         </span>
                         <button
-                          onClick={() => handlePageChange(Math.min(meta.last_page, meta.current_page + 1))}
-                          disabled={meta.current_page >= meta.last_page}
-                          className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          onClick={() => handlePageChange(Math.min(pagination.last_page, pagination.current_page + 1))}
+                          disabled={pagination.current_page >= pagination.last_page}
+                          className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 hover:shadow-lg transition-all duration-200 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed disabled:shadow-none"
+                          aria-label="Next page"
                         >
                           Next
+                          <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                      {/* Page Info */}
+                      <div className="text-sm text-gray-600">
+                        <span className="font-medium text-gray-900">
+                          Showing {pagination.from || 0}-{pagination.to || 0}
+                        </span>
+                        {' '}of{' '}
+                        <span className="font-medium text-gray-900">{pagination.total || 0}</span>
+                        {' '}records
+                      </div>
+                      
+                      {/* Pagination Controls */}
+                      <nav className="flex items-center gap-1" aria-label="Pagination">
+                        {/* Previous Button */}
+                        <button
+                          onClick={() => handlePageChange(Math.max(1, pagination.current_page - 1))}
+                          disabled={pagination.current_page <= 1}
+                          className="relative inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-50 hover:border-indigo-300 hover:text-indigo-700 transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          aria-label="Previous page"
+                        >
+                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                          </svg>
+                          Previous
+                        </button>
+                        
+                        {/* Page Numbers */}
+                        {(() => {
+                          const pages = [];
+                          const currentPage = pagination.current_page;
+                          const lastPage = pagination.last_page;
+                          const delta = 2; // Number of pages to show on each side
+                          
+                          // Always show first page
+                          if (lastPage > 0) {
+                            pages.push(1);
+                          }
+                          
+                          // Show ellipsis after first page if needed
+                          if (currentPage - delta > 2) {
+                            pages.push('...');
+                          }
+                          
+                          // Show pages around current page
+                          for (let i = Math.max(2, currentPage - delta); i <= Math.min(lastPage - 1, currentPage + delta); i++) {
+                            pages.push(i);
+                          }
+                          
+                          // Show ellipsis before last page if needed
+                          if (currentPage + delta < lastPage - 1) {
+                            pages.push('...');
+                          }
+                          
+                          // Always show last page
+                          if (lastPage > 1) {
+                            pages.push(lastPage);
+                          }
+                          
+                          return pages.map((page, index) => {
+                            if (page === '...') {
+                              return (
+                                <span
+                                  key={`ellipsis-${index}`}
+                                  className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300"
+                                >
+                                  ...
+                                </span>
+                              );
+                            }
+                            
+                            const isActive = page === currentPage;
+                            return (
+                              <button
+                                key={page}
+                                onClick={() => handlePageChange(page)}
+                                className={`relative inline-flex items-center justify-center min-w-[40px] px-3 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                                  isActive
+                                    ? 'relative inline-flex items-center justify-center min-w-[40px] px-3 py-2 text-sm font-semibold text-white bg-indigo-600 border border-indigo-600 rounded-lg shadow-md hover:bg-indigo-700'
+                                    : 'relative inline-flex items-center justify-center min-w-[40px] px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-indigo-300 hover:text-indigo-700'
+                                }`}
+                                aria-label={`Go to page ${page}`}
+                                aria-current={isActive ? 'page' : undefined}
+                              >
+                                {page}
+                              </button>
+                            );
+                          });
+                        })()}
+                        
+                        {/* Next Button */}
+                        <button
+                          onClick={() => handlePageChange(Math.min(pagination.last_page, pagination.current_page + 1))}
+                          disabled={pagination.current_page >= pagination.last_page}
+                          className="relative inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-50 hover:border-indigo-300 hover:text-indigo-700 transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          aria-label="Next page"
+                        >
+                          Next
+                          <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
                         </button>
                       </nav>
                     </div>

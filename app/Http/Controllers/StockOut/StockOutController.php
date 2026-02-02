@@ -62,6 +62,8 @@ class StockOutController extends Controller
     {
         try {
             $statusFilter = $request->get('status');
+            $page = $request->get('page', 1);
+            $perPage = $request->get('per_page', 5);
 
             // Load stock out records with complete eager loading
             // items.productVariant: untuk mendapatkan data varian lengkap (variant_name, sku, stock_current)
@@ -73,32 +75,56 @@ class StockOutController extends Controller
                 $query->where('status', $statusFilter);
             }
 
-            $stockOutRecords = $query->orderBy('date', 'desc')->get();
+            // Paginate the results
+            $paginatedStockOutRecords = $query->orderBy('date', 'desc')->paginate($perPage, ['*'], 'page', $page);
 
-            // Calculate total items across all records
-            $totalItems = 0;
-            foreach ($stockOutRecords as $record) {
-                $totalItems += $record->items->count();
+            // Calculate statistics using separate queries
+            // Apply the same filter to ALL statistics if status filter is active
+            $totalDraftQuery = StockOutRecord::query();
+            $totalSubmitQuery = StockOutRecord::query();
+            $totalItemsQuery = StockOutRecord::query();
+            
+            // Apply the same filter to ALL statistics if status filter is active
+            if ($statusFilter && in_array($statusFilter, ['draft', 'submit'])) {
+                $totalDraftQuery->where('status', $statusFilter);
+                $totalSubmitQuery->where('status', $statusFilter);
+                $totalItemsQuery->where('status', $statusFilter);
             }
 
-            // Get stock out statistics for meta data
-            $meta = [
-                'total' => $stockOutRecords->count(),
+            $totalDraft = $totalDraftQuery->where('status', 'draft')->count();
+            $totalSubmit = $totalSubmitQuery->where('status', 'submit')->count();
+            $totalItems = $totalItemsQuery->withCount('items')->get()->sum('items_count');
+
+            // Build pagination object
+            $pagination = [
+                'current_page' => $paginatedStockOutRecords->currentPage(),
+                'last_page' => $paginatedStockOutRecords->lastPage(),
+                'per_page' => $paginatedStockOutRecords->perPage(),
+                'total' => $paginatedStockOutRecords->total(),
+                'from' => $paginatedStockOutRecords->firstItem(),
+                'to' => $paginatedStockOutRecords->lastItem(),
+            ];
+
+            // Build statistics object
+            $statistics = [
+                'total_draft' => $totalDraft,
+                'total_submit' => $totalSubmit,
                 'total_items' => $totalItems,
-                'draft_count' => $stockOutRecords->where('status', 'draft')->count(),
-                'submit_count' => $stockOutRecords->where('status', 'submit')->count(),
             ];
 
             $this->logStockOutAction('view_stock_out_list', 'all', [
                 'status_filter' => $statusFilter,
+                'page' => $page,
+                'per_page' => $perPage,
             ]);
 
             return Inertia::render('StockOut/Index', [
-                'stockOutRecords' => $stockOutRecords,
+                'stockOutRecords' => $paginatedStockOutRecords->items(),
+                'pagination' => $pagination,
+                'statistics' => $statistics,
                 'filters' => [
                     'status' => $statusFilter,
                 ],
-                'meta' => $meta,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to fetch stock out records', [
@@ -108,10 +134,22 @@ class StockOutController extends Controller
 
             return Inertia::render('StockOut/Index', [
                 'stockOutRecords' => [],
+                'pagination' => [
+                    'current_page' => 1,
+                    'last_page' => 1,
+                    'per_page' => 5,
+                    'total' => 0,
+                    'from' => null,
+                    'to' => null,
+                ],
+                'statistics' => [
+                    'total_draft' => 0,
+                    'total_submit' => 0,
+                    'total_items' => 0,
+                ],
                 'filters' => [
                     'status' => '',
                 ],
-                'meta' => [],
                 'error' => 'Gagal memuat data stock out. Silakan coba lagi.',
             ]);
         }
