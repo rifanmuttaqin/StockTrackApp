@@ -407,6 +407,10 @@ const Index = ({ products, stockInData, statistics, filters, error }) => {
                       Tanggal
                     </th>
                   )}
+                  {/* Total (Jumlah) Column */}
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px] bg-blue-50">
+                    Jumlah
+                  </th>
                   {/* Average Column */}
                   <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px] bg-green-50">
                     Rata-rata
@@ -431,6 +435,10 @@ const Index = ({ products, stockInData, statistics, filters, error }) => {
                             -
                           </td>
                         ))}
+                        {/* Empty cell for total column */}
+                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-center bg-gray-50">
+                          -
+                        </td>
                         {/* Empty cell for average column */}
                         <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-center bg-gray-50">
                           -
@@ -457,6 +465,10 @@ const Index = ({ products, stockInData, statistics, filters, error }) => {
                                 {getCellValue(variant.stock_in_by_date, date)}
                               </td>
                             ))}
+                            {/* Total (Jumlah) Column */}
+                            <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-blue-50 font-medium text-blue-700">
+                              {variant.total && variant.total > 0 ? variant.total : '-'}
+                            </td>
                             {/* Average Column */}
                             <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-green-50 font-medium text-green-700">
                               {variant.average && variant.average > 0 ? variant.average.toFixed(2) : '-'}
@@ -466,7 +478,7 @@ const Index = ({ products, stockInData, statistics, filters, error }) => {
                       ) : (
                         <tr>
                           <td
-                            colSpan={stockInData.dates.length + 2}
+                            colSpan={stockInData.dates.length + 3}
                             className="px-6 py-4 text-sm text-gray-500 text-center"
                           >
                             Tidak ada variasi produk
@@ -478,7 +490,7 @@ const Index = ({ products, stockInData, statistics, filters, error }) => {
                 ) : (
                   <tr>
                     <td
-                      colSpan={(stockInData?.dates?.length || 0) + 2}
+                      colSpan={(stockInData?.dates?.length || 0) + 3}
                       className="px-6 py-12 text-center"
                     >
                       <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />

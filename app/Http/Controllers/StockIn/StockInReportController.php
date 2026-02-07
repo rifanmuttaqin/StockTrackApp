@@ -142,6 +142,9 @@ class StockInReportController extends Controller
                         $average = round(array_sum($numericValues) / count($numericValues), 2);
                     }
 
+                    // Calculate total (jumlah) of all values in stock_in_by_date
+                    $total = array_sum($stockInByDate);
+
                     $productData['variants'][] = [
                         'id' => $variant->id,
                         'name' => $variant->variant_name,
@@ -149,6 +152,7 @@ class StockInReportController extends Controller
                         'stock' => $variant->stock_current,
                         'stock_in_by_date' => $stockInByDate,
                         'average' => $average,
+                        'total' => $total,
                     ];
                 }
 
