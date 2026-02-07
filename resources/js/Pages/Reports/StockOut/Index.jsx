@@ -346,13 +346,13 @@ const Index = ({ products, stockOutData, filters, error }) => {
                             -
                           </td>
                         ))}
-                        {/* Empty cell for total column */}
-                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-center bg-gray-50">
-                          -
+                        {/* Product Total Column */}
+                        <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-gray-50 font-bold text-green-700">
+                          {product.total && product.total > 0 ? product.total : '-'}
                         </td>
-                        {/* Empty cell for average column */}
-                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-center bg-gray-50">
-                          -
+                        {/* Product Average Column */}
+                        <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-gray-50 font-bold text-indigo-700">
+                          {product.average && product.average > 0 ? product.average.toFixed(2) : '-'}
                         </td>
                       </tr>
 

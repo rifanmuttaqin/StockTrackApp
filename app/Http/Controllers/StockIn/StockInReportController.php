@@ -156,6 +156,28 @@ class StockInReportController extends Controller
                     ];
                 }
 
+                // Calculate product-level totals
+                $productTotal = 0;
+                $productAverageSum = 0;
+                $variantCount = 0;
+
+                foreach ($productData['variants'] as $variant) {
+                    $productTotal += $variant['total'];
+                    if ($variant['average'] > 0) {
+                        $productAverageSum += $variant['average'];
+                        $variantCount++;
+                    }
+                }
+
+                // Calculate average of variant averages
+                $productAverage = 0;
+                if ($variantCount > 0) {
+                    $productAverage = round($productAverageSum / $variantCount, 2);
+                }
+
+                $productData['total'] = $productTotal;
+                $productData['average'] = $productAverage;
+
                 $stockInData['products'][] = $productData;
             }
 
