@@ -64,10 +64,11 @@ class ProductRepository implements ProductRepositoryInterface
                     'name' => $variant->variant_name, // Map variant_name to name
                     'sku' => $variant->sku,
                     'stock_current' => $variant->stock_current,
+                    'stock_threshold' => $variant->stock_threshold ?? 0,
                     'product_id' => $variant->product_id,
                 ];
             });
-            
+
             // Add variants_count and total_stock to product
             $product->variants_count = $variantsCount;
             $product->total_stock = $totalStock;
@@ -92,7 +93,7 @@ class ProductRepository implements ProductRepositoryInterface
         // Map 'variant_name' to 'name' for consistency with frontend
         $variantsCount = $product->variants->count();
         $totalStock = 0;
-        
+
         $product->variants->transform(function ($variant) use (&$totalStock) {
             $totalStock += $variant->stock_current;
             return [
@@ -100,6 +101,7 @@ class ProductRepository implements ProductRepositoryInterface
                 'name' => $variant->variant_name, // Map variant_name to name
                 'sku' => $variant->sku,
                 'stock_current' => $variant->stock_current,
+                'stock_threshold' => $variant->stock_threshold ?? 0,
                 'product_id' => $variant->product_id,
             ];
         });
@@ -133,6 +135,7 @@ class ProductRepository implements ProductRepositoryInterface
                         'variant_name' => $variantData['name'],
                         'sku' => $variantData['sku'],
                         'stock_current' => $variantData['stock_current'],
+                        'stock_threshold' => $variantData['stock_threshold'] ?? 0,
                     ]);
                 }
             }
@@ -145,7 +148,7 @@ class ProductRepository implements ProductRepositoryInterface
             // Transform variants to match frontend expectations
             $variantsCount = $product->variants->count();
             $totalStock = 0;
-            
+
             $product->variants->transform(function ($variant) use (&$totalStock) {
                 $totalStock += $variant->stock_current;
                 return [
@@ -153,6 +156,7 @@ class ProductRepository implements ProductRepositoryInterface
                     'name' => $variant->variant_name,
                     'sku' => $variant->sku,
                     'stock_current' => $variant->stock_current,
+                    'stock_threshold' => $variant->stock_threshold ?? 0,
                     'product_id' => $variant->product_id,
                 ];
             });
@@ -210,6 +214,7 @@ class ProductRepository implements ProductRepositoryInterface
                                 'variant_name' => $variantData['name'],
                                 'sku' => $variantData['sku'],
                                 'stock_current' => $variantData['stock_current'],
+                                'stock_threshold' => $variantData['stock_threshold'] ?? 0,
                             ]);
                         }
                     } else {
@@ -219,6 +224,7 @@ class ProductRepository implements ProductRepositoryInterface
                             'variant_name' => $variantData['name'],
                             'sku' => $variantData['sku'],
                             'stock_current' => $variantData['stock_current'],
+                            'stock_threshold' => $variantData['stock_threshold'] ?? 0,
                         ]);
                     }
                 }
@@ -393,6 +399,7 @@ class ProductRepository implements ProductRepositoryInterface
                     'name' => $variant->variant_name, // Map variant_name to name
                     'sku' => $variant->sku,
                     'stock_current' => $variant->stock_current,
+                    'stock_threshold' => $variant->stock_threshold ?? 0,
                     'product_id' => $variant->product_id,
                 ];
             });

@@ -34,6 +34,7 @@ class ProductCreateRequest extends FormRequest
             'variants.*.name' => 'required|string|max:100',
             'variants.*.sku' => 'required|string|max:50|unique:product_variants,sku',
             'variants.*.stock_current' => 'required|integer|min:0',
+            'variants.*.stock_threshold' => 'nullable|integer|min:0',
         ];
     }
 

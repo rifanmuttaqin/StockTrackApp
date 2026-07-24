@@ -2,6 +2,7 @@ import ApplicationLogo from '@/Components/Common/ApplicationLogo';
 import Dropdown from '@/Components/Common/Dropdown';
 import NavLink from '@/Components/UI/NavLink';
 import ResponsiveNavLink from '@/Components/Layouts/ResponsiveNavLink';
+import NotificationDropdown from '@/Components/Notification/NotificationDropdown';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { useMobileDetection } from '@/Hooks/useMobileDetection';
@@ -48,6 +49,9 @@ export default function AuthenticatedLayout({ header, children, breadcrumbs }) {
                         </div>
 
                         <div className="hidden sm:ms-6 sm:flex sm:items-center">
+                            {/* Notification Bell */}
+                            <NotificationDropdown />
+
                             <div className="relative ms-3">
                                 <Dropdown>
                                     <Dropdown.Trigger>

@@ -5,21 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class ProductVariant extends Model
+class StockNotification extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProductVariantFactory> */
-    use HasFactory, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\StockNotificationFactory> */
+    use HasFactory;
 
     protected $keyType = 'string';
 
     public $incrementing = false;
 
     /**
-     * Boot function for using with ProductVariant Events
+     * Boot function for using with StockNotification Events
      */
     protected static function boot()
     {
@@ -38,11 +36,13 @@ class ProductVariant extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'product_id',
+        'product_variant_id',
+        'product_name',
         'variant_name',
-        'sku',
         'stock_current',
         'stock_threshold',
+        'status',
+        'type',
     ];
 
     /**
@@ -54,41 +54,41 @@ class ProductVariant extends Model
     {
         return [
             'id' => 'string',
-            'product_id' => 'string',
+            'product_variant_id' => 'string',
             'stock_current' => 'integer',
             'stock_threshold' => 'integer',
         ];
     }
 
     /**
-     * Get the product that owns the variant.
+     * Get the product variant that owns the notification.
      */
-    public function product(): BelongsTo
+    public function productVariant(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 
     /**
-     * Get stock notifications for this variant.
+     * Scope: only unread notifications.
      */
-    public function notifications(): HasMany
+    public function scopeUnread($query)
     {
-        return $this->hasMany(StockNotification::class, 'product_variant_id');
+        return $query->where('status', 'unread');
     }
 
     /**
-     * Check if stock is below threshold.
+     * Scope: recent notifications (last 30 days).
      */
-    public function isBelowThreshold(): bool
+    public function scopeRecent($query)
     {
-        return $this->stock_threshold > 0 && $this->stock_current <= $this->stock_threshold;
+        return $query->where('created_at', '>=', now()->subDays(30));
     }
 
     /**
-     * Check if stock is out of stock.
+     * Mark notification as read.
      */
-    public function isOutOfStock(): bool
+    public function markAsRead(): bool
     {
-        return $this->stock_current <= 0;
+        return $this->update(['status' => 'read']);
     }
 }

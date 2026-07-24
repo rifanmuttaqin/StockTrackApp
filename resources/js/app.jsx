@@ -5,6 +5,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { AuthProvider } from './Context';
+import { NotificationProvider } from './Providers/NotificationProvider';
 import { router } from '@inertiajs/react';
 
 // Import performance optimizations
@@ -86,7 +87,9 @@ createInertiaApp({
 
         root.render(
             <AuthProvider pageProps={props.initialPage?.props || {}}>
-                <App {...props} />
+                <NotificationProvider>
+                    <App {...props} />
+                </NotificationProvider>
             </AuthProvider>
         );
     },

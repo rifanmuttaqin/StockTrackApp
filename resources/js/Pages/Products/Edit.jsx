@@ -17,6 +17,7 @@ const Edit = ({ product, errors, flash }) => {
     name: '',
     sku: '',
     stock_current: 0,
+    stock_threshold: 0,
   };
 
   // Form state
@@ -31,6 +32,7 @@ const Edit = ({ product, errors, flash }) => {
         name: variant.name,
         sku: variant.sku,
         stock_current: variant.stock_current,
+        stock_threshold: variant.stock_threshold || 0,
       }));
       setVariants(initialVariants);
     } else {
@@ -252,7 +254,7 @@ const Edit = ({ product, errors, flash }) => {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {/* Variant Name */}
                     <MobileFormField
                       label="Nama Varian"
@@ -299,6 +301,24 @@ const Edit = ({ product, errors, flash }) => {
                         placeholder="0"
                         className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       />
+                    </MobileFormField>
+
+                    {/* Stock Threshold */}
+                    <MobileFormField
+                      label="Stock Threshold"
+                      error={errors[`variants.${index}.stock_threshold`]}
+                    >
+                      <input
+                        type="number"
+                        min="0"
+                        value={variant.stock_threshold}
+                        onChange={(e) => handleVariantChange(index, 'stock_threshold', parseInt(e.target.value) || 0)}
+                        placeholder="0"
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">
+                        Notifikasi akan dikirim jika stok ≤ angka ini (0 = tidak aktif)
+                      </p>
                     </MobileFormField>
                   </div>
                 </div>
@@ -409,6 +429,7 @@ const Edit = ({ product, errors, flash }) => {
                   <li>Minimal 1 varian harus ada untuk setiap produk</li>
                   <li>Perubahan akan disimpan secara otomatis setelah tombol Update diklik</li>
                   <li>Varian baru akan ditambahkan sebagai varian baru</li>
+                  <li>Stock Threshold: Atur ambang batas stok untuk menerima notifikasi otomatis (0 = tidak aktif)</li>
                 </ul>
               </div>
             </div>

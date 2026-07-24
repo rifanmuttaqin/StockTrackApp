@@ -1,6 +1,7 @@
 services:
   # Service untuk aplikasi Laravel (PHP-FPM)
   app:
+    user: "1000:1000"
     build:
       context: .
       dockerfile: Dockerfile
@@ -20,7 +21,24 @@ services:
       # Untuk mempercepat koneksi ke host machine (untuk development)
       - "host.docker.internal:host-gateway"
 
-  # Service untuk Node.js (build frontend React)
+  # Service untuk Laravel Scheduler (menjalankan cron job)
+  scheduler:
+    user: "1000:1000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stocktrack_scheduler
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: ["php", "artisan", "schedule:work"]
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - laravel
+    env_file:
+      - .env
+    depends_on:
+      - app
 
   # Service untuk web server (Nginx)
   nginx:
@@ -56,4 +74,4 @@ networks:
   laravel:
     # driver: bridge
     external: true
-    name: hotelmanagement_laravel
+    name: postgres-global_global-net
