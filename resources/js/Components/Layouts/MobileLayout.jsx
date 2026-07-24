@@ -3,8 +3,10 @@ import { Head } from '@inertiajs/react';
 import { useMobileDetection } from '../../Hooks/useMobileDetection';
 import BottomNavigation from '../Navigation/BottomNavigation';
 import MobileMenu from '../Navigation/MobileMenu';
+import NotificationDropdown from '../Notification/NotificationDropdown';
 import { Menu } from 'lucide-react';
 import { Button } from '../UI/button';
+
 
 const MobileLayout = ({ title, children, header }) => {
   const { isMobile, isSmallMobile } = useMobileDetection();
@@ -16,7 +18,7 @@ const MobileLayout = ({ title, children, header }) => {
   }
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+    <div className="h-screen bg-gray-50 flex flex-col overflow-x-hidden">
       <Head title={title} />
 
       {/* Mobile Header */}
@@ -40,8 +42,12 @@ const MobileLayout = ({ title, children, header }) => {
             </h1>
           </div>
 
-          {/* Spacer untuk balance */}
-          <div style={{ width: '44px' }}></div>
+          <div className="flex items-center gap-2">
+            <NotificationDropdown />
+
+            {/* Spacer untuk balance */}
+            <div style={{ width: '0px' }}></div>
+          </div>
         </div>
 
         {/* Optional Header Content */}

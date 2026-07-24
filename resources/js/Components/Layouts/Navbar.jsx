@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { useAuth } from '../../Context/AuthContext';
-import { Badge } from '../UI';
 import {
     Bars3Icon,
-    BellIcon,
     UserCircleIcon,
     ArrowRightOnRectangleIcon,
     UserGroupIcon,
     ChevronDownIcon,
 } from '@heroicons/react/24/outline';
+import NotificationDropdown from '../Notification/NotificationDropdown';
+import { BellIcon } from '@heroicons/react/24/outline';
+
 
 export default function Navbar() {
     const { url, props } = usePage();
@@ -168,49 +169,9 @@ export default function Navbar() {
                     </div>
 
                     <div className="flex items-center space-x-4">
-                        {/* Notifications */}
-                        <div className="relative" ref={notificationMenuRef}>
-                            <button
-                                type="button"
-                                className="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                onClick={() => setShowNotifications(!showNotifications)}
-                                onKeyDown={handleNotificationKeyDown}
-                                aria-label="Notifications"
-                                aria-expanded={showNotifications}
-                            >
-                                <BellIcon className="h-6 w-6" />
-                                {/* Show notification badge if there are pending users */}
-                                {userStats.pendingUsers > 0 && (
-                                    <span
-                                        className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white"
-                                        aria-label={`${userStats.pendingUsers} notifications`}
-                                        aria-hidden="true"
-                                    ></span>
-                                )}
-                            </button>
+                        <NotificationDropdown />
 
-                            {showNotifications && (
-                                <div
-                                    className="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50 overflow-hidden"
-                                    role="menu"
-                                    aria-orientation="vertical"
-                                    aria-labelledby="notification-menu"
-                                >
-                                    <div className="py-1">
-                                        <div className="px-4 py-2 text-sm text-gray-700">
-                                            <div className="font-medium">Notifikasi</div>
-                                            {userStats.pendingUsers > 0 ? (
-                                                <div className="text-orange-600">
-                                                    {userStats.pendingUsers} pengguna menunggu persetujuan
-                                                </div>
-                                            ) : (
-                                                <div className="text-gray-500">Tidak ada notifikasi baru</div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                        {/* Legacy notifications removed; stock notifications now use the shared dropdown */}
 
                         {/* Profile dropdown */}
                         <div className="relative" ref={profileMenuRef}>
