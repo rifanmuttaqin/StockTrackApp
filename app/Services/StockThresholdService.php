@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\ProductVariant;
 use App\Models\StockNotification;
 use App\Models\User;
+use App\Models\WhatsAppSetting;
 use App\Notifications\StockLowNotification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
@@ -131,6 +132,48 @@ class StockThresholdService
 
                 $user->notify($notification);
             }
+        }
+
+        // Send WhatsApp notification if enabled
+        $this->sendWhatsAppAlert($variant, $type);
+    }
+
+    /**
+     * Send WhatsApp alert if enabled and configured.
+     */
+    private function sendWhatsAppAlert(ProductVariant $variant, string $type): void
+    {
+        try {
+            $whatsAppSetting = WhatsAppSetting::first();
+
+            if (!$whatsAppSetting || !$whatsAppSetting->isActiveAndConfigured()) {
+                return;
+            }
+
+            // Check if this alert type is enabled
+            if ($type === 'low_stock' && !$whatsAppSetting->notify_low_stock) {
+                return;
+            }
+
+            if ($type === 'out_of_stock' && !$whatsAppSetting->notify_out_of_stock) {
+                return;
+            }
+
+            $whatsAppService = app(\App\Services\WhatsAppService::class);
+            $whatsAppService->sendBatchAlerts($variant, $type);
+
+            Log::info('WhatsApp alert sent', [
+                'variant_id' => $variant->id,
+                'variant_name' => $variant->variant_name,
+                'type' => $type,
+            ]);
+        } catch (\Exception $e) {
+            // Fire-and-forget: log error but don't interrupt the flow
+            Log::error('WhatsApp alert failed', [
+                'variant_id' => $variant->id,
+                'type' => $type,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 

@@ -63,6 +63,7 @@ export const API_ENDPOINTS = {
         GENERAL: '/settings',
         COMPANY: '/settings/company',
         SYSTEM: '/settings/system',
+        WHATSAPP: '/settings/whatsapp',
     },
 };
 
@@ -119,6 +120,11 @@ export const PERMISSIONS = {
     // Settings
     SETTINGS_VIEW: 'settings.view',
     SETTINGS_EDIT: 'settings.edit',
+    MANAGE_SETTINGS: 'manage_settings',
+
+    // WhatsApp
+    WHATSAPP_SEND: 'whatsapp.send',
+    WHATSAPP_VIEW_LOG: 'whatsapp.view_log',
 };
 
 // Role Names

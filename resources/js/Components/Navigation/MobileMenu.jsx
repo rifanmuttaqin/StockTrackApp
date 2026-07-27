@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../UI/button';
 import { useAuth } from '../../Context/AuthContext';
+import { PERMISSIONS } from '../../Utils/constants';
 
 const MobileMenu = ({ isOpen, onClose }) => {
   const { url, props } = usePage();
@@ -86,10 +87,10 @@ const MobileMenu = ({ isOpen, onClose }) => {
     },
     {
       name: 'Pengaturan',
-      href: '/settings',
+      href: '/settings/whatsapp',
       icon: Settings,
       active: url === '/settings' || url.startsWith('/settings'),
-      permission: null
+      permission: PERMISSIONS.MANAGE_SETTINGS
     }
   ];
 

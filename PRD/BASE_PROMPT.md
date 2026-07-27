@@ -35,9 +35,19 @@ Output akhir harus mengikuti format **PRD_Template.md**.
 3. Simpan file `.md` pada direktory PRD/feature dan berikan penamaan PRD_{nama_feature}
 
 # Topik Fitur yang akan di kerjakan
- Pencatatan stock masuk (Stock In)
- Saat ini stock out telah berjalan dengan baik, namun untuk stock in belum ada pencatatan yang terstruktur. Buatlah fitur pencatatan stock in yang mencakup:
- - Semua fitur yang mirip dengan stock out, seperti pencatatan tanggal, jumlah, dan sumber barang sesuai dengan template stock out yang aktif.
-  - Integrasi dengan sistem inventory untuk memperbarui jumlah stok barang secara otomatis saat ada pencatatan stock in, mirip dengan proses stock out.
 
-Saat ini fitur history stock atau riwayat stock untuk merekam pergerakan stock memang belum tersedia, namun kedepannya akan ada, maka pertimbangkan dalam penyusunan stock in. fitur riwayat stock akan dibuat setelah proses stock in dapat berjalan sesuai seperti stock out.
+Notifikasi stock yang mencapai threshold sudah tersedia, notifikasi ini masih di tampilkan di web, kamu perlu melakukan hal berikut =
+- Buat sebuah modul untuk melakukan input apikey wa, number phone admin, dan url  
+- Setelah modul setting wa dibuat, sistem nantinya akan membaca apakah triger notifikasi wa diaktifkan, apabila di aktifkan akan mengirim notifikasi stock yang mencapai threshold ke number phone admin melalui wa dengan contoh full body seperti berikuit 
+
+POST https://{url_dari_database}/message/sendText/instance_name
+Accept: application/json
+Content-Type: application/json
+apikey: {dari_api_key_database}
+
+{
+  "number": "{nomor_admin_dari_database}",
+  "text": ""
+}
+
+- Modul setting WA bersifat global, nantinya itu akan sebagai acuan untuk mengirim kebutuhan wa lainnya, akan dibuat secara bertahap

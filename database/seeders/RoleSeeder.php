@@ -162,7 +162,11 @@ class RoleSeeder extends Seeder
                 ['name' => 'stock_in.show', 'display_name' => 'View Stock In Details', 'description' => 'Melihat detail stock in'],
                 ['name' => 'stock_in.store', 'display_name' => 'Store Stock In', 'description' => 'Menyimpan stock in baru'],
                 ['name' => 'stock_in.destroy', 'display_name' => 'Delete Stock In', 'description' => 'Menghapus stock in'],
-                ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global']
+                ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global'],
+                // WhatsApp Management Permissions
+                ['name' => 'manage_settings', 'display_name' => 'Manage Settings', 'description' => 'Mengelola pengaturan sistem'],
+                ['name' => 'whatsapp.send', 'display_name' => 'Send WhatsApp', 'description' => 'Mengirim notifikasi WhatsApp'],
+                ['name' => 'whatsapp.view_log', 'display_name' => 'View WhatsApp Logs', 'description' => 'Melihat log pengiriman WhatsApp'],
             ],
             'inventory_staff' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -240,7 +244,10 @@ class RoleSeeder extends Seeder
                 // Stock In Management Permissions (View Only)
                 ['name' => 'stock_in.view', 'display_name' => 'Lihat Stock Masuk', 'description' => 'Melihat daftar stock masuk'],
                 ['name' => 'stock_in.show', 'display_name' => 'View Stock In Details', 'description' => 'Melihat detail stock in'],
-                ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global']
+                ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global'],
+                // WhatsApp Management Permissions (View Only)
+                ['name' => 'manage_settings', 'display_name' => 'Manage Settings', 'description' => 'Mengelola pengaturan sistem'],
+                ['name' => 'whatsapp.view_log', 'display_name' => 'View WhatsApp Logs', 'description' => 'Melihat log pengiriman WhatsApp'],
             ],
             'management' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],

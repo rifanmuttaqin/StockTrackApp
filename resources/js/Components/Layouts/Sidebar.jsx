@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, usePage } from '@inertiajs/react';0
+import { Link, usePage } from '@inertiajs/react';
 import { useAuth } from '../../Context/AuthContext';
+import { PERMISSIONS } from '../../Utils/constants';
 import {
     HomeIcon,
     UserGroupIcon,
@@ -39,6 +40,7 @@ export default function Sidebar() {
     };
 
     const isActive = (path) => {
+        if (!path) return false;
         return url.startsWith(path);
     };
 
@@ -136,6 +138,18 @@ export default function Sidebar() {
         //     permission: 'manage_users',
         //     href: '/settings',
         // },
+        {
+            name: 'Pengaturan',
+            icon: CogIcon,
+            permission: PERMISSIONS.MANAGE_SETTINGS,
+            subMenu: [
+                {
+                    name: 'WhatsApp',
+                    href: '/settings/whatsapp',
+                    permission: PERMISSIONS.MANAGE_SETTINGS,
+                },
+            ],
+        },
     ];
 
     // Only filter menu items when AuthContext is fully initialized
