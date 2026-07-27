@@ -207,27 +207,45 @@ export default function WhatsAppSettingsIndex({
             </div>
             <div className="p-6 space-y-5">
                 {/* Toggle Active */}
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div>
-                        <h4 className="text-sm font-medium text-gray-900">Notifikasi WhatsApp</h4>
-                        <p className="text-xs text-gray-500 mt-0.5">Aktifkan/nonaktifkan pengiriman notifikasi via WhatsApp</p>
-                    </div>
-                    <button
-                        type="button"
-                        onClick={() => setData('is_active', !data.is_active)}
-                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                            data.is_active ? 'bg-blue-600' : 'bg-gray-300'
-                        }`}
-                        role="switch"
-                        aria-checked={data.is_active}
-                    >
-                        <span
-                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                data.is_active ? 'translate-x-5' : 'translate-x-0'
-                            }`}
-                        />
-                    </button>
-                </div>
+                {(() => {
+                    const selectedWithPhone = (data.recipients || []).filter((id) => {
+                        const user = users.find((u) => u.id === id);
+                        return user && user.phone;
+                    });
+                    const canActivate = selectedWithPhone.length > 0
+                        && data.api_url
+                        && data.phone_number_id
+                        && (data.api_key || hasExistingKey);
+
+                    return (
+                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <h4 className="text-sm font-medium text-gray-900">Notifikasi WhatsApp</h4>
+                                <p className="text-xs text-gray-500 mt-0.5">Aktifkan/nonaktifkan pengiriman notifikasi via WhatsApp</p>
+                                {!canActivate && data.recipients?.length > 0 && selectedWithPhone.length === 0 && (
+                                    <p className="text-xs text-orange-600 mt-1">⚠ Pilih penerima yang memiliki nomor telepon terlebih dahulu</p>
+                                )}
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => canActivate && setData('is_active', !data.is_active)}
+                                disabled={!canActivate && !data.is_active}
+                                className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                    data.is_active ? 'bg-blue-600' : canActivate ? 'bg-gray-300 cursor-pointer' : 'bg-gray-200 cursor-not-allowed'
+                                }`}
+                                role="switch"
+                                aria-checked={data.is_active}
+                                title={!canActivate ? 'Lengkapi API Key, API URL, Instance ID, dan pilih penerima dengan nomor telepon' : ''}
+                            >
+                                <span
+                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                        data.is_active ? 'translate-x-5' : 'translate-x-0'
+                                    }`}
+                                />
+                            </button>
+                        </div>
+                    );
+                })()}
 
                 {/* API Key */}
                 <div>
@@ -415,7 +433,13 @@ export default function WhatsAppSettingsIndex({
     );
 
     // =========== TAB 3: RECIPIENTS ===========
-    const renderRecipientsTab = () => (
+    const renderRecipientsTab = () => {
+        const selectedUsersWithoutPhone = (data.recipients || []).filter((id) => {
+            const user = users.find((u) => u.id === id);
+            return user && !user.phone;
+        });
+
+        return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
             <div className="px-6 py-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
@@ -449,35 +473,57 @@ export default function WhatsAppSettingsIndex({
                 {errors.recipients && (
                     <p className="mb-4 text-sm text-red-600">{errors.recipients}</p>
                 )}
+
+                {selectedUsersWithoutPhone.length > 0 && (
+                    <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p className="text-sm text-yellow-800">
+                            <span className="font-medium">Peringatan:</span> {selectedUsersWithoutPhone.length} penerima belum memiliki nomor telepon dan tidak akan menerima notifikasi WhatsApp. Minta mereka mengisi nomor telepon di menu Profile.
+                        </p>
+                    </div>
+                )}
+
                 <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                    {users.map((user) => (
-                        <label
-                            key={user.id}
-                            className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${
-                                data.recipients?.includes(user.id)
-                                    ? 'bg-blue-50 border-blue-300'
-                                    : 'bg-white border-gray-200 hover:bg-gray-50'
-                            }`}
-                        >
-                            <input
-                                type="checkbox"
-                                checked={data.recipients?.includes(user.id) || false}
-                                onChange={() => handleRecipientToggle(user.id)}
-                                className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                            />
-                            <div className="ml-3 flex-1">
-                                <span className="text-sm font-medium text-gray-900">{user.name}</span>
-                                <span className="text-sm text-gray-500 ml-2">{user.email}</span>
-                            </div>
-                        </label>
-                    ))}
+                    {users.map((user) => {
+                        const hasPhone = !!user.phone;
+                        const isSelected = data.recipients?.includes(user.id);
+                        return (
+                            <label
+                                key={user.id}
+                                className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${
+                                    isSelected
+                                        ? hasPhone
+                                            ? 'bg-blue-50 border-blue-300'
+                                            : 'bg-orange-50 border-orange-300'
+                                        : 'bg-white border-gray-200 hover:bg-gray-50'
+                                }`}
+                            >
+                                <input
+                                    type="checkbox"
+                                    checked={isSelected || false}
+                                    onChange={() => handleRecipientToggle(user.id)}
+                                    className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                                />
+                                <div className="ml-3 flex-1">
+                                    <span className="text-sm font-medium text-gray-900">{user.name}</span>
+                                    <span className="text-sm text-gray-500 ml-2">{user.email}</span>
+                                    {!hasPhone && (
+                                        <span className="ml-2 text-xs text-orange-600 font-medium">⚠ Tanpa No. HP</span>
+                                    )}
+                                    {hasPhone && (
+                                        <span className="ml-2 text-xs text-gray-400">📞 {user.phone}</span>
+                                    )}
+                                </div>
+                            </label>
+                        );
+                    })}
                 </div>
                 {users.length === 0 && (
                     <p className="text-center text-gray-500 text-sm py-8">Tidak ada pengguna tersedia.</p>
                 )}
             </div>
         </div>
-    );
+        );
+    };
 
     // =========== TAB 4: PREFERENCES ===========
     const renderPreferencesTab = () => (

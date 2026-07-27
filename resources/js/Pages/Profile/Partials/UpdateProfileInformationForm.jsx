@@ -16,6 +16,7 @@ export default function UpdateProfileInformation({
         useForm({
             name: user.name,
             email: user.email,
+            phone: user.phone || '',
         });
 
     const submit = (e) => {
@@ -67,6 +68,27 @@ export default function UpdateProfileInformation({
                     />
 
                     <InputError className="mt-2" message={errors.email} />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="phone" value="Nomor Telepon" />
+
+                    <TextInput
+                        id="phone"
+                        type="tel"
+                        className="mt-1 block w-full"
+                        value={data.phone}
+                        onChange={(e) => setData('phone', e.target.value)}
+                        placeholder="Contoh: 08123456789 atau +628123456789"
+                        autoComplete="tel"
+                    />
+
+                    <InputError className="mt-2" message={errors.phone} />
+
+                    <p className="mt-1 text-xs text-gray-500">
+                        Format: 08xxx (10-14 digit) atau +62xxx (diawali kode negara).
+                        Nomor ini digunakan untuk mengirim notifikasi WhatsApp.
+                    </p>
                 </div>
 
                 {mustVerifyEmail && user.email_verified_at === null && (

@@ -60,7 +60,7 @@ class WhatsAppSettingUpdateRequest extends FormRequest
     }
 
     /**
-     * Conditional validation: api_key and phone_number_id required when is_active = true
+     * Conditional validation: api_key, phone_number_id, and valid recipients required when is_active = true
      */
     private function validateConditionalRequired(Validator $validator): void
     {
@@ -86,6 +86,22 @@ class WhatsAppSettingUpdateRequest extends FormRequest
 
             if (empty($this->input('recipients')) || empty(array_filter($this->input('recipients')))) {
                 $validator->errors()->add('recipients', 'Minimal 1 penerima wajib dipilih ketika notifikasi WhatsApp diaktifkan');
+            } else {
+                // Validate that selected recipients have phone numbers
+                $recipientIds = array_filter($this->input('recipients'));
+                $usersWithoutPhone = \App\Models\User::whereIn('id', $recipientIds)
+                    ->where(function ($query) {
+                        $query->whereNull('phone')->orWhere('phone', '');
+                    })
+                    ->pluck('name')
+                    ->toArray();
+
+                if (!empty($usersWithoutPhone)) {
+                    $validator->errors()->add(
+                        'recipients',
+                        'Penerima berikut belum memiliki nomor telepon: ' . implode(', ', $usersWithoutPhone) . '. Lengkapi nomor telepon di menu Profile.'
+                    );
+                }
             }
         }
     }

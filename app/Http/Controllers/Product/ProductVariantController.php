@@ -8,6 +8,7 @@ use App\Http\Requests\Product\ProductVariantUpdateRequest;
 use App\Http\Requests\Product\ProductVariantStockUpdateRequest;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\StockThresholdService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -381,6 +382,9 @@ class ProductVariantController extends Controller
             $variant->update([
                 'stock_current' => $validatedData['stock_current'],
             ]);
+
+            // Check stock threshold after update
+            app(StockThresholdService::class)->checkVariant($variant);
 
             $this->logVariantAction('update_variant_stock', $id, [
                 'variant_name' => $variant->variant_name,

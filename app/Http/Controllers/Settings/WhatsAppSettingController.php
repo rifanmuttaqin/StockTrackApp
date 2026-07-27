@@ -27,7 +27,7 @@ class WhatsAppSettingController extends Controller
     {
         $settings = WhatsAppSetting::getInstance();
 
-        $users = \App\Models\User::select('id', 'name', 'email')
+        $users = \App\Models\User::select('id', 'name', 'email', 'phone')
             ->where('is_active', true)
             ->orderBy('name')
             ->get();

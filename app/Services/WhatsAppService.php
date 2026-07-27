@@ -23,6 +23,9 @@ class WhatsAppService
      */
     public function sendMessage(string $phone, string $message): array
     {
+        // Normalize phone to international format (e.g., 08xx → 628xx)
+        $phone = $this->normalizePhone($phone);
+
         // Check if send is paused via send_status toggle
         if (!$this->settings->send_status) {
             Log::info('WhatsApp send paused - send_status is disabled', [
@@ -127,7 +130,7 @@ class WhatsAppService
 
         // Send to each recipient
         foreach ($recipients as $user) {
-            $phone = $user->phone ?? $user->email;
+            $phone = $user->phone;
 
             if (empty($phone)) {
                 Log::warning('WhatsApp recipient has no phone', [
@@ -135,7 +138,7 @@ class WhatsAppService
                     'user_name' => $user->name,
                 ]);
                 $result['failed']++;
-                $result['errors'][] = "User {$user->name} tidak memiliki nomor telepon";
+                $result['errors'][] = "User {$user->name} tidak memiliki nomor telepon. Lengkapi di menu Profile.";
                 continue;
             }
 
@@ -166,6 +169,9 @@ class WhatsAppService
      */
     public function testConnection(string $phone): array
     {
+        // Normalize phone to international format (e.g., 08xx → 628xx)
+        $phone = $this->normalizePhone($phone);
+
         if (!$this->settings->isActiveAndConfigured()) {
             return [
                 'success' => false,
@@ -348,5 +354,34 @@ class WhatsAppService
             return str_repeat('*', $len);
         }
         return str_repeat('*', $len - 4) . substr($phone, -4);
+    }
+
+    /**
+     * Normalize phone number to WhatsApp international format.
+     * - Remove non-digit characters
+     * - Convert Indonesian local format (08xx) to international (628xx)
+     * - Handle +62 prefix
+     */
+    private function normalizePhone(string $phone): string
+    {
+        // Remove all non-digit characters
+        $digits = preg_replace('/\D/', '', $phone);
+
+        // Already international with country code without +
+        if (str_starts_with($digits, '62')) {
+            return $digits;
+        }
+
+        // Indonesian local format: starts with 0 → replace with 62
+        if (str_starts_with($digits, '0')) {
+            return '62' . substr($digits, 1);
+        }
+
+        // No country code — assume Indonesian mobile (starts with 8)
+        if (str_starts_with($digits, '8') && strlen($digits) >= 10) {
+            return '62' . $digits;
+        }
+
+        return $digits;
     }
 }

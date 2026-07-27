@@ -151,29 +151,58 @@ class StockThresholdService
     private function sendWhatsAppAlert(ProductVariant $variant, string $type): void
     {
         try {
-            $whatsAppSetting = WhatsAppSetting::first();
+            $whatsAppSetting = WhatsAppSetting::getInstance();
 
-            if (!$whatsAppSetting || !$whatsAppSetting->isActiveAndConfigured()) {
+            if (!$whatsAppSetting->isActiveAndConfigured()) {
+                Log::info('WhatsApp alert skipped - service not active or not configured', [
+                    'variant_id' => $variant->id,
+                    'type' => $type,
+                ]);
+                return;
+            }
+
+            if (!$whatsAppSetting->send_status) {
+                Log::info('WhatsApp alert skipped - send_status is disabled', [
+                    'variant_id' => $variant->id,
+                    'type' => $type,
+                ]);
                 return;
             }
 
             // Check if this alert type is enabled
             if ($type === 'low_stock' && !$whatsAppSetting->notify_low_stock) {
+                Log::info('WhatsApp alert skipped - low_stock notifications disabled', [
+                    'variant_id' => $variant->id,
+                ]);
                 return;
             }
 
             if ($type === 'out_of_stock' && !$whatsAppSetting->notify_out_of_stock) {
+                Log::info('WhatsApp alert skipped - out_of_stock notifications disabled', [
+                    'variant_id' => $variant->id,
+                ]);
                 return;
             }
 
             $whatsAppService = app(\App\Services\WhatsAppService::class);
-            $whatsAppService->sendBatchAlerts($variant, $type);
+            $result = $whatsAppService->sendBatchAlerts($variant, $type);
 
-            Log::info('WhatsApp alert sent', [
-                'variant_id' => $variant->id,
-                'variant_name' => $variant->variant_name,
-                'type' => $type,
-            ]);
+            if ($result['sent'] > 0) {
+                Log::info('WhatsApp alert sent', [
+                    'variant_id' => $variant->id,
+                    'variant_name' => $variant->variant_name,
+                    'type' => $type,
+                    'sent' => $result['sent'],
+                    'failed' => $result['failed'],
+                ]);
+            } else {
+                Log::warning('WhatsApp alert not sent - no messages delivered', [
+                    'variant_id' => $variant->id,
+                    'variant_name' => $variant->variant_name,
+                    'type' => $type,
+                    'errors' => $result['errors'],
+                ]);
+            }
         } catch (\Exception $e) {
             // Fire-and-forget: log error but don't interrupt the flow
             Log::error('WhatsApp alert failed', [

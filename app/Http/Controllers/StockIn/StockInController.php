@@ -9,6 +9,7 @@ use App\Http\Requests\StockIn\StockInUpdateRequest;
 use App\Models\ProductVariant;
 use App\Models\StockInRecord;
 use App\Models\Template;
+use App\Services\StockThresholdService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -494,6 +495,10 @@ class StockInController extends Controller
                     
                     // Increment stock current for each variant using NEW quantities
                     $variant->increment('stock_current', $item->quantity);
+
+                    // Refresh variant to get updated stock_current for threshold check
+                    $variant->refresh();
+                    app(StockThresholdService::class)->checkVariant($variant);
                 }
 
                 // Update status to 'submit'
