@@ -58,8 +58,13 @@ class StockThresholdService
         // Determine notification type
         $type = $variant->isOutOfStock() ? 'out_of_stock' : 'low_stock';
 
-        // Only create notification if stock is at or below threshold
+        // Check if stock is above threshold - mark any old notifications as read
         if (!$variant->isBelowThreshold()) {
+            // Mark all unread notifications for this variant as read when stock is above threshold
+            StockNotification::where('product_variant_id', $variant->id)
+                ->where('status', 'unread')
+                ->update(['status' => 'read']);
+
             return false;
         }
 
@@ -75,7 +80,8 @@ class StockThresholdService
             return false;
         }
 
-        // Mark any old unread notifications for this variant as read
+        // Mark any old unread notifications for this variant as read (different stock level)
+        // This handles cases where stock level has changed
         StockNotification::where('product_variant_id', $variant->id)
             ->where('status', 'unread')
             ->update(['status' => 'read']);
@@ -117,17 +123,18 @@ class StockThresholdService
         $notification = new StockLowNotification($variant, $type);
 
         foreach ($users as $user) {
-            // Check if user already has an unread notification for this variant
-            // with the same stock level
+            // Check if user already has an unread notification for this specific variant
+            // with the same stock level (using AND condition for both product_variant_id AND stock_current)
             $hasDuplicate = $user->unreadNotifications()
                 ->where('data->product_variant_id', $variant->id)
                 ->where('data->stock_current', $variant->stock_current)
                 ->exists();
 
             if (!$hasDuplicate) {
-                // Mark old unread notifications for this variant as read
+                // Mark old unread notifications for this specific variant and stock level as read
                 $user->unreadNotifications()
                     ->where('data->product_variant_id', $variant->id)
+                    ->where('data->stock_current', $variant->stock_current)
                     ->update(['read_at' => now()]);
 
                 $user->notify($notification);
