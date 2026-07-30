@@ -36,18 +36,8 @@ Output akhir harus mengikuti format **PRD_Template.md**.
 
 # Topik Fitur yang akan di kerjakan
 
-Notifikasi stock yang mencapai threshold sudah tersedia, notifikasi ini masih di tampilkan di web, kamu perlu melakukan hal berikut =
-- Buat sebuah modul untuk melakukan input apikey wa, number phone admin, dan url  
-- Setelah modul setting wa dibuat, sistem nantinya akan membaca apakah triger notifikasi wa diaktifkan, apabila di aktifkan akan mengirim notifikasi stock yang mencapai threshold ke number phone admin melalui wa dengan contoh full body seperti berikuit 
+Saya ingin sebuah modul untuk melakukan stock opname.
 
-POST https://{url_dari_database}/message/sendText/instance_name
-Accept: application/json
-Content-Type: application/json
-apikey: {dari_api_key_database}
-
-{
-  "number": "{nomor_admin_dari_database}",
-  "text": ""
-}
-
-- Modul setting WA bersifat global, nantinya itu akan sebagai acuan untuk mengirim kebutuhan wa lainnya, akan dibuat secara bertahap
+- Stock opname menggunakan tempelate produk aktif
+- stock opname tercatat secara history
+- konfirmasi sebelum submit
