@@ -23,7 +23,7 @@ export default function Sidebar() {
     const { hasPermission, hasRole, permissions, user, isAuthenticated, isLoading, isInitialized } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [openMenus, setOpenMenus] = useState({});
-    
+
     console.log('[Sidebar] Render - permissions:', permissions);
     console.log('[Sidebar] Render - user:', user);
     console.log('[Sidebar] Render - isAuthenticated:', isAuthenticated);
@@ -179,10 +179,10 @@ export default function Sidebar() {
     let filteredMenuItems = [];
     if (isInitialized) {
         console.log('[Sidebar] AuthContext is initialized - performing menu filtering');
-        
+
         filteredMenuItems = menuItems.filter(item => {
             console.log('[Sidebar] Filtering item:', item.name, 'permission:', item.permission);
-            
+
             // Dashboard always shows for authenticated users
             if (item.name === 'Dashboard' && isAuthenticated) {
                 console.log('[Sidebar] Dashboard allowed (isAuthenticated):', isAuthenticated);
@@ -198,7 +198,7 @@ export default function Sidebar() {
             console.log('[Sidebar] hasPermission for', item.permission, ':', hasPerm);
             return hasPerm;
         });
-        
+
         console.log('[Sidebar] filteredMenuItems count:', filteredMenuItems.length);
         console.log('[Sidebar] filteredMenuItems:', filteredMenuItems.map(item => item.name));
     } else {
@@ -234,13 +234,16 @@ export default function Sidebar() {
         return (
             <aside
                 ref={sidebarRef}
-                className="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-indigo-950 to-indigo-900 shadow-2xl md:static md:inset-auto flex flex-col h-full"
+                className="fixed inset-y-0 left-0 z-50 w-64 bg-indigo-950 shadow-2xl md:static md:inset-auto flex flex-col h-full"
                 role="navigation"
                 aria-label="Main navigation"
             >
                 {/* Header */}
                 <div className="flex items-center justify-between h-16 px-4 border-b border-indigo-800/50 backdrop-blur-sm flex-shrink-0">
-                    <h1 className="text-xl font-bold text-white tracking-wide">StockTrackApp</h1>
+                    <div className="flex items-center gap-3 shrink-0">
+                        <img src="/logo/logo.svg" alt="StockTrackApp" className="h-9 w-9" />
+                        <h1 className="text-xl font-bold text-white tracking-wide whitespace-nowrap">StockTrackApp</h1>
+                    </div>
                 </div>
 
                 {/* Loading indicator with spinner */}
@@ -272,7 +275,7 @@ export default function Sidebar() {
             <aside
                 ref={sidebarRef}
                 className={`
-                    fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-indigo-950 to-indigo-900 shadow-2xl transform transition-transform duration-300 ease-in-out md:static md:inset-auto md:transform-none
+                    fixed inset-y-0 left-0 z-50 w-64 bg-indigo-950 shadow-2xl transform transition-transform duration-300 ease-in-out md:static md:inset-auto md:transform-none
                     flex flex-col h-full
                     ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
                 `}
@@ -281,7 +284,10 @@ export default function Sidebar() {
             >
                 {/* Header */}
                 <div className="flex items-center justify-between h-16 px-4 border-b border-indigo-800/50 backdrop-blur-sm flex-shrink-0">
-                    <h1 className="text-xl font-bold text-white tracking-wide">StockTrackApp</h1>
+                    <div className="flex items-center gap-3 shrink-0">
+                        <img src="/logo/logo.svg" alt="StockTrackApp" className="h-9 w-9" />
+                        <h1 className="text-xl font-bold text-white tracking-wide whitespace-nowrap">StockTrackApp</h1>
+                    </div>
                     <button
                         type="button"
                         className="md:hidden p-2 rounded-md text-indigo-300 hover:text-white hover:bg-indigo-800/50 transition-all duration-200"

@@ -43,11 +43,7 @@ export default function MobileLogin({ status, canResetPassword }) {
 
             {/* Logo and App Name */}
             <div className="flex flex-col items-center mb-8">
-                <div className="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-                    <svg className="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
+                <img src="/logo/logo.svg" alt="StockTrackApp" className="w-20 h-20 mb-4 shadow-lg rounded-2xl" />
                 <h1 className="text-2xl font-poppins font-bold text-gray-900">StockTrackApp</h1>
                 <p className="text-sm font-poppins text-gray-600 mt-1">Aplikasi Manajemen Stok</p>
             </div>
