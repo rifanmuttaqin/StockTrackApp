@@ -136,6 +136,12 @@ class PermissionSeeder extends Seeder
             // - Admin: stock_in.view, stock_in.create, stock_in.edit, stock_in.update, stock_in.delete, stock_in.submit
             // - Operator: stock_in.view, stock_in.create, stock_in.edit, stock_in.update, stock_in.delete, stock_in.submit
             // - Supervisor: stock_in.view only
+            //
+            // Stock Opname Module:
+            // - Admin: All stock_opname permissions including bypass_ownership
+            // - Inventory Staff: stock_opname.view, create, edit, update, delete, submit
+            // - Warehouse Supervisor: stock_opname.view, bypass_ownership
+            // - Management: stock_opname.view only
         });
     }
 }

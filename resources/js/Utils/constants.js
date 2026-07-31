@@ -57,6 +57,7 @@ export const API_ENDPOINTS = {
     REPORTS: {
         SALES: '/reports/sales',
         STOCK: '/reports/stock',
+        STOCK_OPNAME: '/reports/stock-opname',
         FINANCIAL: '/reports/financial',
     },
     SETTINGS: {
@@ -125,6 +126,15 @@ export const PERMISSIONS = {
     // WhatsApp
     WHATSAPP_SEND: 'whatsapp.send',
     WHATSAPP_VIEW_LOG: 'whatsapp.view_log',
+
+    // Stock Opname
+    STOCK_OPNAME_VIEW: 'stock_opname.view',
+    STOCK_OPNAME_CREATE: 'stock_opname.create',
+    STOCK_OPNAME_EDIT: 'stock_opname.edit',
+    STOCK_OPNAME_UPDATE: 'stock_opname.update',
+    STOCK_OPNAME_DELETE: 'stock_opname.delete',
+    STOCK_OPNAME_SUBMIT: 'stock_opname.submit',
+    STOCK_OPNAME_BYPASS_OWNERSHIP: 'stock_opname.bypass_ownership',
 };
 
 // Role Names

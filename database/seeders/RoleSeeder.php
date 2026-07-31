@@ -167,6 +167,14 @@ class RoleSeeder extends Seeder
                 ['name' => 'manage_settings', 'display_name' => 'Manage Settings', 'description' => 'Mengelola pengaturan sistem'],
                 ['name' => 'whatsapp.send', 'display_name' => 'Send WhatsApp', 'description' => 'Mengirim notifikasi WhatsApp'],
                 ['name' => 'whatsapp.view_log', 'display_name' => 'View WhatsApp Logs', 'description' => 'Melihat log pengiriman WhatsApp'],
+                // Stock Opname Management Permissions
+                ['name' => 'stock_opname.view', 'display_name' => 'View Stock Opname', 'description' => 'Melihat daftar stock opname'],
+                ['name' => 'stock_opname.create', 'display_name' => 'Create Stock Opname', 'description' => 'Membuat stock opname baru'],
+                ['name' => 'stock_opname.edit', 'display_name' => 'Edit Stock Opname', 'description' => 'Mengedit draft stock opname'],
+                ['name' => 'stock_opname.update', 'display_name' => 'Update Stock Opname', 'description' => 'Mengupdate draft stock opname'],
+                ['name' => 'stock_opname.delete', 'display_name' => 'Delete Stock Opname', 'description' => 'Menghapus draft stock opname'],
+                ['name' => 'stock_opname.submit', 'display_name' => 'Submit Stock Opname', 'description' => 'Submit stock opname'],
+                ['name' => 'stock_opname.bypass_ownership', 'display_name' => 'Bypass Stock Opname Ownership', 'description' => 'Mengabaikan hak kepemilikan draft stock opname'],
             ],
             'inventory_staff' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -204,7 +212,14 @@ class RoleSeeder extends Seeder
                 ['name' => 'stock_in.show', 'display_name' => 'View Stock In Details', 'description' => 'Melihat detail stock in'],
                 ['name' => 'stock_in.store', 'display_name' => 'Store Stock In', 'description' => 'Menyimpan stock in baru'],
                 ['name' => 'stock_in.destroy', 'display_name' => 'Delete Stock In', 'description' => 'Menghapus stock in'],
-                ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global']
+                ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global'],
+                // Stock Opname Management Permissions
+                ['name' => 'stock_opname.view', 'display_name' => 'View Stock Opname', 'description' => 'Melihat daftar stock opname'],
+                ['name' => 'stock_opname.create', 'display_name' => 'Create Stock Opname', 'description' => 'Membuat stock opname baru'],
+                ['name' => 'stock_opname.edit', 'display_name' => 'Edit Stock Opname', 'description' => 'Mengedit draft stock opname'],
+                ['name' => 'stock_opname.update', 'display_name' => 'Update Stock Opname', 'description' => 'Mengupdate draft stock opname'],
+                ['name' => 'stock_opname.delete', 'display_name' => 'Delete Stock Opname', 'description' => 'Menghapus draft stock opname'],
+                ['name' => 'stock_opname.submit', 'display_name' => 'Submit Stock Opname', 'description' => 'Submit stock opname'],
             ],
             'warehouse_supervisor' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -245,6 +260,10 @@ class RoleSeeder extends Seeder
                 ['name' => 'stock_in.view', 'display_name' => 'Lihat Stock Masuk', 'description' => 'Melihat daftar stock masuk'],
                 ['name' => 'stock_in.show', 'display_name' => 'View Stock In Details', 'description' => 'Melihat detail stock in'],
                 ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global'],
+                // Stock Opname Management Permissions (View Only)
+                ['name' => 'stock_opname.view', 'display_name' => 'View Stock Opname', 'description' => 'Melihat daftar stock opname'],
+                ['name' => 'stock_opname.show', 'display_name' => 'View Stock Opname Details', 'description' => 'Melihat detail stock opname'],
+                ['name' => 'stock_opname.bypass_ownership', 'display_name' => 'Bypass Stock Opname Ownership', 'description' => 'Mengabaikan hak kepemilikan draft stock opname'],
                 // WhatsApp Management Permissions (View Only)
                 ['name' => 'manage_settings', 'display_name' => 'Manage Settings', 'description' => 'Mengelola pengaturan sistem'],
                 ['name' => 'whatsapp.view_log', 'display_name' => 'View WhatsApp Logs', 'description' => 'Melihat log pengiriman WhatsApp'],
@@ -267,7 +286,10 @@ class RoleSeeder extends Seeder
                 // Stock In Management Permissions (View Only)
                 ['name' => 'stock_in.view', 'display_name' => 'Lihat Stock Masuk', 'description' => 'Melihat daftar stock masuk'],
                 ['name' => 'stock_in.show', 'display_name' => 'View Stock In Details', 'description' => 'Melihat detail stock in'],
-                ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global']
+                ['name' => 'view_stock', 'display_name' => 'View Stock', 'description' => 'Melihat stock secara global'],
+                // Stock Opname Management Permissions (View Only)
+                ['name' => 'stock_opname.view', 'display_name' => 'View Stock Opname', 'description' => 'Melihat daftar stock opname'],
+                ['name' => 'stock_opname.show', 'display_name' => 'View Stock Opname Details', 'description' => 'Melihat detail stock opname'],
             ],
         };
     }

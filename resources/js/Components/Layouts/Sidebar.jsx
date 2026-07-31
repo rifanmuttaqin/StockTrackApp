@@ -110,6 +110,23 @@ export default function Sidebar() {
             ],
         },
         {
+            name: 'Stock Opname',
+            icon: DocumentTextIcon,
+            permission: 'stock_opname.view',
+            subMenu: [
+                {
+                    name: 'Daftar Stock Opname',
+                    href: '/stock-opname',
+                    permission: 'stock_opname.view',
+                },
+                {
+                    name: 'Buat Stock Opname',
+                    href: '/stock-opname/create',
+                    permission: 'stock_opname.create',
+                },
+            ],
+        },
+        {
             name: 'Template',
             icon: DocumentTextIcon,
             permission: 'templates.view',
@@ -128,6 +145,11 @@ export default function Sidebar() {
                 {
                     name: 'Laporan Stock Masuk',
                     href: '/reports/stock-in',
+                    permission: 'view_reports',
+                },
+                {
+                    name: 'Laporan Stock Opname',
+                    href: '/reports/stock-opname',
                     permission: 'view_reports',
                 },
             ],
