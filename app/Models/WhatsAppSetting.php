@@ -50,6 +50,7 @@ class WhatsAppSetting extends Model
         'recipients',
         'notify_low_stock',
         'notify_out_of_stock',
+        'notify_stock_opname',
         'batch_size',
         'batch_delay',
         'last_sent_at',
@@ -72,6 +73,7 @@ class WhatsAppSetting extends Model
             'recipients' => 'array',
             'notify_low_stock' => 'boolean',
             'notify_out_of_stock' => 'boolean',
+            'notify_stock_opname' => 'boolean',
             'batch_size' => 'integer',
             'batch_delay' => 'integer',
             'last_sent_at' => 'datetime',
@@ -90,6 +92,7 @@ class WhatsAppSetting extends Model
                 'is_active' => false,
                 'notify_low_stock' => true,
                 'notify_out_of_stock' => true,
+                'notify_stock_opname' => true,
                 'batch_size' => 10,
                 'batch_delay' => 1,
                 'send_status' => false,
@@ -158,6 +161,12 @@ class WhatsAppSetting extends Model
             'test' => [
                 'subject' => '✅ Test Notifikasi - StockTrackApp',
                 'body' => "Koneksi WhatsApp berhasil!\nPesan ini dikirim dari sistem StockTrackApp.\n\nWaktu: {timestamp}",
+            ],
+            'stock_opname' => [
+                'subject' => '📋 Stock Opname Disubmit - StockTrackApp',
+                'opening' => 'Halo, berikut adalah hasil stock opname yang telah disubmit:',
+                'closing' => 'Terima kasih.',
+                'body' => "{opening}\n\n📋 *Detail Stock Opname*\nKode: {transaction_code}\nTanggal: {date}\nDisubmit oleh: {submitted_by}\n\n📦 *Item Opname:*\n{items_detail}\nTotal Item: {total_items}\nTotal Selisih: {total_difference}\n\n{closing}\n\n---\nWaktu: {timestamp}",
             ],
         ];
     }

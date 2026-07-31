@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ProductVariant;
+use App\Models\StockOpnameRecord;
 use App\Models\WhatsAppSetting;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -163,6 +164,68 @@ class WhatsAppService
     }
 
     /**
+     * Send stock opname notification to all configured recipients.
+     *
+     * @return array{sent: int, failed: int, errors: array}
+     */
+    public function sendStockOpnameNotification(StockOpnameRecord $record): array
+    {
+        $result = ['sent' => 0, 'failed' => 0, 'errors' => []];
+
+        if (!$this->settings->is_active) {
+            Log::info('WhatsApp stock opname notification skipped - notifications disabled');
+            return $result;
+        }
+
+        if (!$this->settings->notify_stock_opname) {
+            Log::info('WhatsApp stock opname notifications disabled');
+            return $result;
+        }
+
+        $recipients = $this->settings->getRecipientUsers();
+
+        if ($recipients->isEmpty()) {
+            Log::info('WhatsApp no recipients configured for stock opname');
+            return $result;
+        }
+
+        $template = $this->getTemplateForType('stock_opname');
+        $message = $this->buildOpnameMessage($template, $record);
+
+        foreach ($recipients as $user) {
+            $phone = $user->phone;
+
+            if (empty($phone)) {
+                Log::warning('WhatsApp recipient has no phone', [
+                    'user_id' => $user->id,
+                    'user_name' => $user->name,
+                ]);
+                $result['failed']++;
+                $result['errors'][] = "User {$user->name} tidak memiliki nomor telepon. Lengkapi di menu Profile.";
+                continue;
+            }
+
+            $sendResult = $this->sendMessage($phone, $message);
+
+            if ($sendResult['success']) {
+                $result['sent']++;
+            } else {
+                $result['failed']++;
+                $result['errors'][] = "Gagal mengirim ke {$user->name}: {$sendResult['error']}";
+            }
+        }
+
+        Log::info('WhatsApp stock opname notification completed', [
+            'record_id' => $record->id,
+            'transaction_code' => $record->transaction_code,
+            'sent' => $result['sent'],
+            'failed' => $result['failed'],
+        ]);
+
+        return $result;
+    }
+
+    /**
      * Test connection by sending a test message.
      *
      * @return array{success: bool, message: string}
@@ -247,6 +310,49 @@ class WhatsAppService
             '{stock_current}' => (string) $variant->stock_current,
             '{stock_threshold}' => (string) $variant->stock_threshold,
             '{type}' => $type === 'out_of_stock' ? 'Habis' : 'Rendah',
+            '{timestamp}' => now()->format('d M Y H:i:s'),
+        ];
+
+        $body = $template['body'] ?? '';
+        return str_replace(array_keys($replacements), array_values($replacements), $body);
+    }
+
+    /**
+     * Build stock opname message from template with placeholder replacement.
+     */
+    private function buildOpnameMessage(array $template, StockOpnameRecord $record): string
+    {
+        $record->load(['items.productVariant.product', 'submitter']);
+
+        $itemsDetail = '';
+        $totalDifference = 0;
+
+        foreach ($record->items as $item) {
+            $variant = $item->productVariant;
+            $productName = $variant->product->name ?? 'Unknown';
+            $variantName = $variant->variant_name ?? '-';
+            $physical = $item->physical_stock ?? '-';
+            $system = $item->system_stock_submit ?? '-';
+            $diff = $item->difference;
+            $diffSign = $diff > 0 ? '+' : '';
+
+            $itemsDetail .= "• {$productName} ({$variantName})\n";
+            $itemsDetail .= "  Fisik: {$physical} | Sistem: {$system} | Selisih: {$diffSign}{$diff}\n";
+
+            $totalDifference += $diff;
+        }
+
+        $totalDiffSign = $totalDifference > 0 ? '+' : '';
+
+        $replacements = [
+            '{opening}' => $template['opening'] ?? '',
+            '{closing}' => $template['closing'] ?? '',
+            '{transaction_code}' => $record->transaction_code,
+            '{date}' => $record->date->format('d M Y'),
+            '{submitted_by}' => $record->submitter->name ?? '-',
+            '{items_detail}' => trim($itemsDetail),
+            '{total_items}' => (string) $record->items->count(),
+            '{total_difference}' => "{$totalDiffSign}{$totalDifference}",
             '{timestamp}' => now()->format('d M Y H:i:s'),
         ];
 

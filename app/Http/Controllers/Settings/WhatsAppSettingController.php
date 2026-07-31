@@ -51,6 +51,7 @@ class WhatsAppSettingController extends Controller
                 'recipients' => $settings->recipients ?? [],
                 'notify_low_stock' => (bool) $settings->notify_low_stock,
                 'notify_out_of_stock' => (bool) $settings->notify_out_of_stock,
+                'notify_stock_opname' => (bool) $settings->notify_stock_opname,
                 'batch_size' => $settings->batch_size,
                 'batch_delay' => $settings->batch_delay,
                 'last_sent_at' => $settings->last_sent_at?->toISOString(),

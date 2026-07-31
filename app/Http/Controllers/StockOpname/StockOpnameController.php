@@ -12,6 +12,7 @@ use App\Models\StockOpnameAuditLog;
 use App\Models\StockOpnameItem;
 use App\Models\StockOpnameRecord;
 use App\Models\Template;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -269,6 +270,18 @@ class StockOpnameController extends Controller
                     'items_count' => count($validatedData['items']),
                 ]
             );
+
+            // Send WhatsApp notification for submitted stock opname
+            if ($isSubmit) {
+                try {
+                    app(WhatsAppService::class)->sendStockOpnameNotification($record);
+                } catch (\Exception $e) {
+                    Log::warning('Failed to send WhatsApp stock opname notification', [
+                        'record_id' => $record->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            }
 
             return redirect()->route('stock-opname.index')
                 ->with('success', $isSubmit
@@ -528,6 +541,16 @@ class StockOpnameController extends Controller
             });
 
             $this->logStockOpnameAction('submit_stock_opname', $id);
+
+            // Send WhatsApp notification
+            try {
+                app(WhatsAppService::class)->sendStockOpnameNotification($result);
+            } catch (\Exception $e) {
+                Log::warning('Failed to send WhatsApp stock opname notification', [
+                    'record_id' => $id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             return redirect()->route('stock-opname.index')
                 ->with('success', 'Stock opname berhasil disubmit. Kuantitas stok produk diperbarui.');

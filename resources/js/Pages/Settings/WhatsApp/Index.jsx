@@ -30,6 +30,7 @@ export default function WhatsAppSettingsIndex({
         recipients: initialSettings.recipients || [],
         notify_low_stock: initialSettings.notify_low_stock ?? true,
         notify_out_of_stock: initialSettings.notify_out_of_stock ?? true,
+        notify_stock_opname: initialSettings.notify_stock_opname ?? true,
         batch_size: initialSettings.batch_size || 10,
         batch_delay: initialSettings.batch_delay || 1,
         send_status: initialSettings.send_status ?? false,
@@ -408,6 +409,54 @@ export default function WhatsAppSettingsIndex({
                 </div>
             </div>
 
+            {/* Stock Opname Template */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div className="px-6 py-4 border-b border-gray-200">
+                    <h3 className="text-base font-semibold text-gray-900">Template Stock Opname</h3>
+                    <p className="mt-1 text-sm text-gray-500">Pesan yang dikirim ketika stock opname disubmit.</p>
+                </div>
+                <div className="p-6 space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Subjek</label>
+                        <input
+                            type="text"
+                            value={data.message_template?.stock_opname?.subject || ''}
+                            onChange={(e) => handleTemplateChange('stock_opname', 'subject', e.target.value)}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px]"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Pengantar / Pembuka</label>
+                        <textarea
+                            value={data.message_template?.stock_opname?.opening || ''}
+                            onChange={(e) => handleTemplateChange('stock_opname', 'opening', e.target.value)}
+                            rows={2}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Teks pembuka sebelum detail opname..."
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Isi Pesan (Body)</label>
+                        <textarea
+                            value={data.message_template?.stock_opname?.body || ''}
+                            onChange={(e) => handleTemplateChange('stock_opname', 'body', e.target.value)}
+                            rows={8}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Penutup / Akhir</label>
+                        <textarea
+                            value={data.message_template?.stock_opname?.closing || ''}
+                            onChange={(e) => handleTemplateChange('stock_opname', 'closing', e.target.value)}
+                            rows={2}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Teks penutup setelah detail opname..."
+                        />
+                    </div>
+                </div>
+            </div>
+
             {/* Placeholder Guide */}
             <div className="bg-blue-50 rounded-lg border border-blue-200 p-4">
                 <h4 className="text-sm font-semibold text-blue-900 mb-2">Placeholder yang Tersedia</h4>
@@ -419,6 +468,12 @@ export default function WhatsAppSettingsIndex({
                         ['{stock_threshold}', 'Threshold Stok'],
                         ['{type}', 'Tipe Alert'],
                         ['{timestamp}', 'Waktu Notifikasi'],
+                        ['{transaction_code}', 'Kode Transaksi Opname'],
+                        ['{date}', 'Tanggal Opname'],
+                        ['{submitted_by}', 'Nama Penginput'],
+                        ['{items_detail}', 'Detail Item Opname'],
+                        ['{total_items}', 'Total Jumlah Item'],
+                        ['{total_difference}', 'Total Selisih'],
                     ].map(([placeholder, label]) => (
                         <div key={placeholder} className="flex items-center gap-2 text-sm">
                             <code className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded text-xs font-mono">
@@ -576,6 +631,29 @@ export default function WhatsAppSettingsIndex({
                             <span
                                 className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
                                     data.notify_out_of_stock ? 'translate-x-5' : 'translate-x-0'
+                                }`}
+                            />
+                        </button>
+                    </div>
+
+                    {/* Stock Opname Toggle */}
+                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h4 className="text-sm font-medium text-gray-900">Notifikasi Stock Opname</h4>
+                            <p className="text-xs text-gray-500 mt-0.5">Kirim notifikasi ketika stock opname disubmit</p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setData('notify_stock_opname', !data.notify_stock_opname)}
+                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                data.notify_stock_opname ? 'bg-blue-600' : 'bg-gray-300'
+                            }`}
+                            role="switch"
+                            aria-checked={data.notify_stock_opname}
+                        >
+                            <span
+                                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                    data.notify_stock_opname ? 'translate-x-5' : 'translate-x-0'
                                 }`}
                             />
                         </button>
