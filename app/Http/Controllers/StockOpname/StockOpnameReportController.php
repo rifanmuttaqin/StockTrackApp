@@ -34,7 +34,29 @@ class StockOpnameReportController extends Controller
                 $query->where('date', '<=', $dateTo);
             }
 
-            $records = $query->orderBy('date', 'desc')->get();
+            $records = $query->orderBy('date', 'desc')->get()
+                ->map(function ($record) {
+                    return [
+                        'id' => $record->id,
+                        'code' => $record->transaction_code,
+                        'date' => $record->date->format('Y-m-d'),
+                        'status' => $record->status,
+                        'creator_name' => $record->creator?->name ?? '-',
+                        'submitter_name' => $record->submitter?->name ?? '-',
+                        'submitted_at' => $record->submitted_at?->format('Y-m-d H:i:s') ?? '-',
+                        'items' => $record->items->map(function ($item) {
+                            return [
+                                'id' => $item->id,
+                                'product_name' => $item->productVariant?->product?->name ?? '-',
+                                'variant_name' => $item->productVariant?->variant_name ?? '-',
+                                'system_stock_draft' => $item->system_stock_draft,
+                                'system_stock_submit' => $item->system_stock_submit,
+                                'physical_stock' => $item->physical_stock,
+                                'difference' => $item->difference,
+                            ];
+                        }),
+                    ];
+                });
 
             // Aggregate statistics
             $allItems = StockOpnameItem::whereHas('record', function ($q) use ($dateFrom, $dateTo) {
@@ -67,7 +89,7 @@ class StockOpnameReportController extends Controller
             ]);
 
             return Inertia::render('Reports/StockOpname/Index', [
-                'records' => [],
+                'records' => collect([]),
                 'statistics' => [
                     'total_shortage' => 0,
                     'total_surplus' => 0,

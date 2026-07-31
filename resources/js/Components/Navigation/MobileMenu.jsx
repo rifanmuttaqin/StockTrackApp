@@ -12,7 +12,8 @@ import {
   UserPlus,
   FileText,
   ArrowLeft,
-  ArrowRight
+  ArrowRight,
+  ClipboardCheck
 } from 'lucide-react';
 import { Button } from '../UI/button';
 import { useAuth } from '../../Context/AuthContext';
@@ -63,6 +64,13 @@ const MobileMenu = ({ isOpen, onClose }) => {
       icon: ArrowRight,
       active: url === '/stock-in' || url.startsWith('/stock-in'),
       permission: 'stock_in.view'
+    },
+    {
+      name: 'Stock Opname',
+      href: '/stock-opname',
+      icon: ClipboardCheck,
+      active: url === '/stock-opname' || url.startsWith('/stock-opname'),
+      permission: 'stock_opname.view'
     },
     {
       name: 'Pengguna',

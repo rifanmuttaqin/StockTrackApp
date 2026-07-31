@@ -55,7 +55,7 @@ class StockOpnameController extends Controller
                 $query->where('status', $statusFilter);
             }
 
-            $paginatedRecords = $query->orderBy('date', 'desc')->paginate($perPage, ['*'], 'page', $page);
+            $paginatedRecords = $query->orderBy('created_at', 'desc')->paginate($perPage, ['*'], 'page', $page);
 
             // Calculate statistics
             $baseQuery = clone $query;

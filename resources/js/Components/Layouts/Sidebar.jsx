@@ -14,7 +14,8 @@ import {
     XMarkIcon,
     DocumentTextIcon,
     ArrowUturnLeftIcon,
-    ArrowUturnRightIcon
+    ArrowUturnRightIcon,
+    ClipboardDocumentCheckIcon
 } from '@heroicons/react/24/outline';
 
 export default function Sidebar() {
@@ -111,7 +112,7 @@ export default function Sidebar() {
         },
         {
             name: 'Stock Opname',
-            icon: DocumentTextIcon,
+            icon: ClipboardDocumentCheckIcon,
             permission: 'stock_opname.view',
             subMenu: [
                 {
