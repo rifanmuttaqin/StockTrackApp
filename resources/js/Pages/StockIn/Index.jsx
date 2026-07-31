@@ -42,7 +42,7 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
   const [statusFilter, setStatusFilter] = useState(filters?.status || 'all');
   const [perPage, setPerPage] = useState(filters?.per_page || 5);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
-  
+
   // Note modal state
   const [noteModal, setNoteModal] = useState({
     isOpen: false,
@@ -80,7 +80,7 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
   const handlePerPageChange = useCallback((newPerPage) => {
     setPerPage(newPerPage);
     const newFilters = { ...filters, per_page: newPerPage, page: 1 };
-    
+
     router.get(
       route('stock-in.index'),
       newFilters,
@@ -203,8 +203,8 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message ||
-                          error.response?.data?.errors?.note?.[0] ||
-                          'Gagal menyimpan catatan. Silakan coba lagi.';
+        error.response?.data?.errors?.note?.[0] ||
+        'Gagal menyimpan catatan. Silakan coba lagi.';
       setNoteMessage({ type: 'error', text: errorMessage });
     } finally {
       setNoteLoading(false);
@@ -236,8 +236,8 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message ||
-                          error.response?.data?.errors?.note?.[0] ||
-                          'Gagal menghapus catatan. Silakan coba lagi.';
+        error.response?.data?.errors?.note?.[0] ||
+        'Gagal menghapus catatan. Silakan coba lagi.';
       Swal.fire('Error', errorMessage, 'error');
     } finally {
       setNoteLoading(false);
@@ -384,40 +384,40 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
             </div>
             {/* Action Buttons */}
             <div className="flex gap-2 w-full">
-            <Link
-              href={route('stock-in.show', record.id)}
-              className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <EyeIcon className="w-4 h-4 mr-1" />
-              View Details
-            </Link>
-            {can('stock-in.edit') && (
-              <button
-                onClick={() => handleEdit(record.id)}
+              <Link
+                href={route('stock-in.show', record.id)}
                 className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                <PencilIcon className="w-4 h-4 mr-1" />
-                {isDraft ? 'Continue Draft' : 'Edit'}
-              </button>
-            )}
-            {isDraft && can('stock-in.submit') && (
-              <button
-                onClick={() => handleSubmit(record.id)}
-                className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              >
-                <CheckCircleIcon className="w-4 h-4 mr-1" />
-                Submit
-              </button>
-            )}
-            {isDraft && can('stock-in.delete') && (
-              <button
-                onClick={() => handleDelete(record)}
-                className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              >
-                <TrashIcon className="w-4 h-4 mr-1" />
-                Hapus
-              </button>
-            )}
+                <EyeIcon className="w-4 h-4 mr-1" />
+                View Details
+              </Link>
+              {can('stock-in.edit') && (
+                <button
+                  onClick={() => handleEdit(record.id)}
+                  className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  <PencilIcon className="w-4 h-4 mr-1" />
+                  {isDraft ? 'Continue Draft' : 'Edit'}
+                </button>
+              )}
+              {isDraft && can('stock-in.submit') && (
+                <button
+                  onClick={() => handleSubmit(record.id)}
+                  className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                >
+                  <CheckCircleIcon className="w-4 h-4 mr-1" />
+                  Submit
+                </button>
+              )}
+              {isDraft && can('stock-in.delete') && (
+                <button
+                  onClick={() => handleDelete(record)}
+                  className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  <TrashIcon className="w-4 h-4 mr-1" />
+                  Hapus
+                </button>
+              )}
             </div>
           </div>
         </MobileCardFooter>
@@ -438,7 +438,7 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
           ? 'Belum ada stock in yang dibuat. Mulai dengan membuat stock in baru.'
           : `Tidak ada stock in dengan status ${statusFilter}.`}
       </p>
-      {can('stock-in.create') && statusFilter === 'all' && (
+      {can('stock_in.create') && statusFilter === 'all' && (
         <div className="mt-6">
           <button
             onClick={handleCreate}
@@ -472,7 +472,7 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
             </p>
           </div>
           <div className="mt-4 flex md:mt-0 md:ml-4 space-x-3">
-            {can('stock-in.create') && (
+            {can('stock_in.create') && (
               <button
                 onClick={handleCreate}
                 className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -571,31 +571,28 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
             <nav className="-mb-px flex space-x-8" aria-label="Tabs">
               <button
                 onClick={() => handleStatusFilterChange('all')}
-                className={`${
-                  statusFilter === 'all'
+                className={`${statusFilter === 'all'
                     ? 'border-indigo-500 text-indigo-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                  } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
               >
                 Semua
               </button>
               <button
                 onClick={() => handleStatusFilterChange('draft')}
-                className={`${
-                  statusFilter === 'draft'
+                className={`${statusFilter === 'draft'
                     ? 'border-indigo-500 text-indigo-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                  } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
               >
                 Draft
               </button>
               <button
                 onClick={() => handleStatusFilterChange('submit')}
-                className={`${
-                  statusFilter === 'submit'
+                className={`${statusFilter === 'submit'
                     ? 'border-indigo-500 text-indigo-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                  } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
               >
                 Submit
               </button>
@@ -619,11 +616,10 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
                     <button
                       onClick={() => handlePageChange(Math.max(1, pagination.current_page - 1))}
                       disabled={pagination.current_page === 1}
-                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                        pagination.current_page === 1
+                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${pagination.current_page === 1
                           ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                           : 'bg-white text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 shadow-sm border border-gray-200'
-                      }`}
+                        }`}
                     >
                       Previous
                     </button>
@@ -633,11 +629,10 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
                     <button
                       onClick={() => handlePageChange(Math.min(pagination.last_page, pagination.current_page + 1))}
                       disabled={pagination.current_page === pagination.last_page}
-                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                        pagination.current_page === pagination.last_page
+                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${pagination.current_page === pagination.last_page
                           ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                           : 'bg-white text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 shadow-sm border border-gray-200'
-                      }`}
+                        }`}
                     >
                       Next
                     </button>
@@ -656,28 +651,27 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
                     <span className="font-medium text-gray-900">{pagination.total || 0}</span>
                     {' '}records
                   </div>
-                  
+
                   <nav className="flex items-center gap-1" aria-label="Pagination">
                     {/* Previous Button */}
                     <button
                       onClick={() => handlePageChange(Math.max(1, pagination.current_page - 1))}
                       disabled={pagination.current_page === 1}
-                      className={`relative inline-flex items-center px-3 py-2 text-sm font-medium rounded-l-lg border transition-all duration-200 ${
-                        pagination.current_page === 1
+                      className={`relative inline-flex items-center px-3 py-2 text-sm font-medium rounded-l-lg border transition-all duration-200 ${pagination.current_page === 1
                           ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed'
                           : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:text-indigo-600'
-                      }`}
+                        }`}
                     >
                       Previous
                     </button>
-                    
+
                     {/* Page Numbers */}
                     {(() => {
                       const pages = [];
                       const currentPage = pagination.current_page;
                       const lastPage = pagination.last_page;
                       const delta = 2;
-                      
+
                       if (lastPage > 0) pages.push(1);
                       if (currentPage - delta > 2) pages.push('...');
                       for (let i = Math.max(2, currentPage - delta); i <= Math.min(lastPage - 1, currentPage + delta); i++) {
@@ -685,7 +679,7 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
                       }
                       if (currentPage + delta < lastPage - 1) pages.push('...');
                       if (lastPage > 1) pages.push(lastPage);
-                      
+
                       return pages.map((page, index) => {
                         if (page === '...') {
                           return (
@@ -697,38 +691,36 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
                             </span>
                           );
                         }
-                        
+
                         const isActive = page === currentPage;
                         return (
                           <button
                             key={page}
                             onClick={() => handlePageChange(page)}
-                            className={`relative inline-flex items-center px-4 py-2 text-sm font-medium border transition-all duration-200 ${
-                              isActive
+                            className={`relative inline-flex items-center px-4 py-2 text-sm font-medium border transition-all duration-200 ${isActive
                                 ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
                                 : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-indigo-600'
-                            } ${page === 1 ? 'rounded-l-none' : ''} ${page === lastPage ? 'rounded-r-none' : ''}`}
+                              } ${page === 1 ? 'rounded-l-none' : ''} ${page === lastPage ? 'rounded-r-none' : ''}`}
                           >
                             {page}
                           </button>
                         );
                       });
                     })()}
-                    
+
                     {/* Next Button */}
                     <button
                       onClick={() => handlePageChange(Math.min(pagination.last_page, pagination.current_page + 1))}
                       disabled={pagination.current_page === pagination.last_page}
-                      className={`relative inline-flex items-center px-3 py-2 text-sm font-medium rounded-r-lg border transition-all duration-200 ${
-                        pagination.current_page === pagination.last_page
+                      className={`relative inline-flex items-center px-3 py-2 text-sm font-medium rounded-r-lg border transition-all duration-200 ${pagination.current_page === pagination.last_page
                           ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed'
                           : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:text-indigo-600'
-                      }`}
+                        }`}
                     >
                       Next
                     </button>
                   </nav>
-                  
+
                   {/* Per Page Selector */}
                   <div className="flex items-center gap-2">
                     <label htmlFor="per-page" className="text-sm text-gray-600">Show:</label>
@@ -855,11 +847,10 @@ const Index = ({ stockInRecords, pagination, statistics, filters }) => {
 
                 {/* Note Message */}
                 {noteMessage.text && (
-                  <div className={`mt-3 p-2 rounded-md text-sm ${
-                    noteMessage.type === 'success'
+                  <div className={`mt-3 p-2 rounded-md text-sm ${noteMessage.type === 'success'
                       ? 'bg-green-50 text-green-800'
                       : 'bg-red-50 text-red-800'
-                  }`}>
+                    }`}>
                     {noteMessage.text}
                   </div>
                 )}
