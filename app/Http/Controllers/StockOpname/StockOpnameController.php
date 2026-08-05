@@ -446,8 +446,8 @@ class StockOpnameController extends Controller
             $record = StockOpnameRecord::findOrFail($id);
 
             // Ownership check
-            if (!$this->user()->hasRole('admin') &&
-                !$this->user()->hasPermissionTo('stock_opname.bypass_ownership') &&
+            if (!Auth::user()->hasRole('admin') &&
+                !Auth::user()->hasPermissionTo('stock_opname.bypass_ownership') &&
                 $record->created_by !== Auth::id()) {
                 abort(403, 'Anda tidak memiliki akses untuk menghapus draft ini.');
             }
