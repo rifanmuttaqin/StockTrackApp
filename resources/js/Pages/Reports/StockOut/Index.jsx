@@ -11,7 +11,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CalendarIcon,
-  CubeIcon
+  CubeIcon,
+  ArrowDownTrayIcon
 } from '@heroicons/react/24/outline';
 
 /**
@@ -85,6 +86,18 @@ const Index = ({ products, stockOutData, filters, error }) => {
         onFinish: () => setLoading(false),
       }
     );
+  };
+
+  /**
+   * Handle JSON export for AI analysis
+   */
+  const handleExport = () => {
+    const params = new URLSearchParams();
+    if (localFilters.product_id) params.append('product_id', localFilters.product_id);
+    if (localFilters.start_date) params.append('start_date', localFilters.start_date);
+    if (localFilters.end_date) params.append('end_date', localFilters.end_date);
+    const query = params.toString();
+    window.open(`/reports/stock/export${query ? '?' + query : ''}`, '_blank');
   };
 
   /**
@@ -173,6 +186,17 @@ const Index = ({ products, stockOutData, filters, error }) => {
               Lihat dan analisis data stock out berdasarkan produk dan tanggal
             </p>
           </div>
+          {can('export_reports') && (
+            <div className="mt-4 md:mt-0 md:ml-4">
+              <button
+                onClick={handleExport}
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                <ArrowDownTrayIcon className="mr-2 h-4 w-4" />
+                Export JSON
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Flash Messages */}

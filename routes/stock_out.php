@@ -64,4 +64,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/reports/stock', [StockOutReportController::class, 'index'])
         ->name('stock-out-report.index')
         ->middleware('permission:view_reports');
+
+    // Stock out report JSON export (for AI analysis)
+    Route::get('/reports/stock/export', [StockOutReportController::class, 'exportJson'])
+        ->name('stock-out-report.export')
+        ->middleware('permission:export_reports');
 });
