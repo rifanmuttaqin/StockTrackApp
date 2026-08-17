@@ -27,11 +27,18 @@ class ProductRepository implements ProductRepositoryInterface
         }
 
         // Apply search filter if provided
-        if (isset($filters['search']) && !empty($filters['search'])) {
-            $search = $filters['search'];
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('sku', 'like', "%{$search}%");
+        if (!empty($filters['search'])) {
+            $search = trim($filters['search']);
+
+            $keywords = preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY);
+
+            $query->where(function ($q) use ($keywords) {
+                foreach ($keywords as $keyword) {
+                    $q->where(function ($q) use ($keyword) {
+                        $q->where('name', 'ILIKE', "%{$keyword}%")
+                            ->orWhere('sku', 'ILIKE', "%{$keyword}%");
+                    });
+                }
             });
         }
 
@@ -56,7 +63,7 @@ class ProductRepository implements ProductRepositoryInterface
         $products->getCollection()->transform(function ($product) {
             $variantsCount = $product->variants->count();
             $totalStock = 0;
-            
+
             $product->variants->transform(function ($variant) use (&$totalStock) {
                 $totalStock += $variant->stock_current;
                 return [
@@ -197,7 +204,9 @@ class ProductRepository implements ProductRepositoryInterface
             // Get submitted variant IDs (excluding null IDs for new variants)
             $submittedVariantIds = array_filter(
                 array_column($data['variants'], 'id'),
-                function ($id) { return $id !== null; }
+                function ($id) {
+                    return $id !== null;
+                }
             );
 
             // Update or create variants
@@ -367,7 +376,7 @@ class ProductRepository implements ProductRepositoryInterface
         // Apply search filter
         $searchQuery->where(function ($q) use ($query) {
             $q->where('name', 'like', "%{$query}%")
-              ->orWhere('sku', 'like', "%{$query}%");
+                ->orWhere('sku', 'like', "%{$query}%");
         });
 
         // Apply sorting
@@ -391,7 +400,7 @@ class ProductRepository implements ProductRepositoryInterface
         $products->getCollection()->transform(function ($product) {
             $variantsCount = $product->variants->count();
             $totalStock = 0;
-            
+
             $product->variants->transform(function ($variant) use (&$totalStock) {
                 $totalStock += $variant->stock_current;
                 return [
