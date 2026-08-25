@@ -121,7 +121,7 @@ Akibatnya:
 
 ### 4.2 Sub-Flow / Edge Case
 
-- **Jika satuan dasar belum diatur pada varian:** Tampilkan stok seperti saat ini (tanpa satuan atau dengan "unit" sebagai fallback)
+- **Jika satuan dasar belum diatur pada varian:** Tampilkan stok seperti saat ini (tanpa satuan atau dengan "unit" sebagai fallback). Setelah backfill, skenario ini sangat jarang — hanya terjadi pada varian baru yang dibuat sebelum admin memilih satuan
 - **Jika satuan dasar varian tidak memiliki satuan konversi:** Tampilkan hanya satuan dasar, dropdown konversi pada laporan tidak menampilkan opsi konversi
 - **Jika satuan dasar yang akan dihapus masih digunakan oleh varian:** Sistem menolak penghapusan dan menampilkan pesan error beserta jumlah varian yang menggunakannya
 - **Jika satuan dasar yang akan dihapus masih dirujuk oleh satuan konversi:** Sistem menolak penghapusan dan menampilkan pesan error beserta daftar satuan konversi yang merujuk
@@ -707,8 +707,9 @@ public function down(): void
 | 13 | Laporan stok menampilkan opsi satuan | Dropdown filter satuan tersedia pada laporan stock in/out/opname |
 | 14 | Konversi satuan pada laporan akurat | Angka laporan berubah sesuai satuan yang dipilih |
 | 15 | Laporan menampilkan catatan rate konversi | Catatan "Konversi menggunakan rate yang berlaku saat ini" tampil di bawah laporan |
-| 16 | Data existing tetap berfungsi | Produk varian tanpa satuan tetap tampil dengan "unit" sebagai fallback |
-| 17 | Export CSV/JSON menyertakan info satuan | File export memiliki kolom/field satuan |
+| 16 | Data existing tetap berfungsi | Semua varian existing otomatis memiliki unit_id "Pcs" setelah migrasi. Varian tanpa unit_id (edge case) tetap tampil dengan "unit" sebagai fallback |
+| 17 | Backfill migrasi idempotent | Menjalankan migrasi backfill 2 kali tidak menghasilkan duplikasi unit "Pcs" atau perubahan ganda pada unit_id varian |
+| 18 | Export CSV/JSON menyertakan info satuan | File export memiliki kolom/field satuan |
 | 18 | Audit log tercatat untuk perubahan multiplier | Log berisi info siapa, kapan, nilai lama → nilai baru |
 | 19 | Cache reference data units berfungsi | Query units tidak mengulang ke database di setiap request (Redis/file cache) |
 | 20 | Seeder idempotent | Menjalankan `db:seed` dua kali tidak menghasilkan duplikasi data |
@@ -732,7 +733,7 @@ public function down(): void
 
 | Risiko | Dampak | Solusi |
 |--------|--------|--------|
-| Data existing tidak memiliki satuan | Tampilan inkonsisten | Field `unit_id` nullable, fallback ke "unit" jika null. Bulk-assign tool untuk migrasi bertahap |
+| Data existing tidak memiliki satuan | Tampilan inkonsisten | Backfill otomatis saat migrasi: semua varian existing di-assign ke "Pcs". Fallback "unit" hanya untuk skenario sangat jarang (varian baru yang belum di-assign) |
 | Performa query dengan eager loading relasi baru | Query lebih lambat | Eager loading spesifik: `with(['variants.baseUnit', 'variants.baseUnit.conversions'])`. Cache reference data units 24 jam. Index pada semua FK |
 | User salah input multiplier | Laporan stok tidak akurat | Validasi minimal 0.01, tampilkan preview konversi ("1 Karton = 10 Pcs") sebelum simpan, audit log untuk tracking perubahan |
 | Satuan dasar yang dirujuk oleh konversi dihapus | Data orphan | Soft delete (bukan hard delete). `ON DELETE RESTRICT` pada FK `base_unit_id` sebagai safety net |
@@ -746,7 +747,7 @@ public function down(): void
 
 ## 13. Metrics / Success Criteria
 
-- 100% produk varian memiliki satuan dasar setelah migrasi (target: 2 minggu setelah rilis, dibantu bulk-assign tool)
+- 100% produk varian aktif memiliki satuan dasar setelah deploy (backfill otomatis saat migrasi, tanpa perlu aksi manual admin)
 - Laporan stok dapat ditampilkan dalam minimal 2 satuan (dasar + 1 konversi)
 - Tidak ada regresi pada fitur stok existing (stock in, stock out, stock opname)
 - Response time halaman produk tidak bertambah lebih dari 200ms (dengan cache)
@@ -759,9 +760,9 @@ public function down(): void
 
 | Tahap | Tugas | Estimasi |
 |--------|-------|-----------|
-| 1 | Migrasi database (create units dengan soft delete + indexes, add unit_id ke product_variants) | 0.5 hari |
+| 1 | Migrasi database (create units + add unit_id + backfill "Pcs" ke semua varian existing) | 0.5 hari |
 | 2 | Model Unit (dengan self-referencing, SoftDeletes, scopes, accessors) + update ProductVariant model | 0.5 hari |
-| 3 | UnitSeeder (idempotent, updateOrCreate) | 0.1 hari |
+| 3 | UnitSeeder (idempotent, updateOrCreate — seed satuan konversi saja karena "Pcs" sudah dibuat di migrasi backfill) | 0.1 hari |
 | 4 | Repository & Service layer untuk Unit (CRUD + caching + audit log + optimistic locking) | 1 hari |
 | 5 | Controller & Form Request untuk Unit (conditional validation, soft delete/restore, impact check) | 0.5 hari |
 | 6 | Bulk-assign endpoint (controller + request + service) | 0.25 hari |
@@ -820,6 +821,8 @@ public function down(): void
 | GET /products menyertakan data unit dan conversions | Response variants memiliki field unit dan conversions |
 | GET /products dengan varian tanpa unit_id | Field unit null, fallback "unit" di frontend |
 | Seeder idempotent: jalankan 2 kali tidak duplikat | Jumlah record units tetap sama setelah seed ulang |
+| Backfill: migrasi membuat unit "Pcs" dan meng-assign semua varian | Semua varian aktif memiliki unit_id yang merujuk ke "Pcs" |
+| Backfill: migrasi tidak menimpa unit_id yang sudah terisi | Varian yang sudah punya unit_id sebelum backfill不变 |
 
 ### 15.3 Integration Tests
 
@@ -841,9 +844,10 @@ public function down(): void
 ## 16. Catatan Tambahan
 
 - **Satuan default yang di-seed (idempotent):**
-  - Satuan Dasar: Pcs, Kg, Liter, Meter
-  - Satuan Konversi: Karton (1 = 10 Pcs, primary), Box (1 = 24 Pcs), Lusin (1 = 12 Pcs), Dus (1 = 100 Pcs)
+  - Satuan Dasar "Pcs" dibuat oleh migrasi backfill (Migration 3), bukan seeder. Ini karena "Pcs" harus ada sebelum backfill varian bisa berjalan
+  - Seeder (`UnitSeeder`) bertanggung jawab membuat satuan dasar tambahan (Kg, Liter, Meter) dan semua satuan konversi (Karton, Box, Lusin, Dus)
   - Seeder menggunakan `updateOrCreate` berdasarkan `name` agar aman dijalankan ulang
+  - Urutan eksekusi: Migration 1 (create units) → Migration 2 (add unit_id) → Migration 3 (backfill "Pcs") → Seeder (satuan tambahan + konversi)
 - **Konversi bersifat global**, bukan per varian. Semua varian yang memilih satuan dasar "Pcs" akan otomatis memiliki konversi yang sama
 - **Keuntungan pendekatan global:** Tidak perlu mengatur konversi berulang untuk setiap varian, konsistensi data terjaga, administrasi lebih mudah
 - **Fitur ini adalah fondasi** untuk adaptasi konversi satuan pada input stock masuk/keluar di masa depan
@@ -851,7 +855,7 @@ public function down(): void
 - **Konversi hanya untuk display/report** — tidak mengubah data stok yang tersimpan
 - **Tabel `unit_conversions` tidak diperlukan** — konversi disimpan langsung di tabel `units` melalui field `base_unit_id` dan `multiplier`
 - **Batasan MVP:** Konversi dihitung on-the-fly, bukan snapshot. Perubahan multiplier akan mempengaruhi tampilan laporan historis. Ini didokumentasikan dan diatasi dengan audit log. Rencana post-MVP: snapshot konversi per transaksi
-- **Rollback plan migrasi:** Jika migrasi gagal di production, jalankan `php artisan migrate:rollback` untuk menghapus kolom `unit_id` dari `product_variants` dan drop tabel `units`. Data produk tidak terpengaruh karena `unit_id` bersifat nullable
+- **Rollback plan migrasi:** Jika migrasi gagal di production, jalankan `php artisan migrate:rollback` untuk: (1) mengosongkan `unit_id` dari semua varian yang di-backfill, (2) menghapus kolom `unit_id` dari `product_variants`, (3) drop tabel `units`. Data produk tidak terpengaruh karena proses backfill hanya mengisi kolom baru, tidak mengubah data existing
 
 ---
 
@@ -859,6 +863,8 @@ public function down(): void
 
 - [ ] Migrasi database berhasil dijalankan tanpa error
 - [ ] Rollback migrasi berhasil dijalankan tanpa error
+- [ ] Backfill "Pcs" berhasil: semua varian existing memiliki unit_id
+- [ ] Backfill idempotent: jalankan ulang tidak duplikasi data
 - [ ] Seeder data satuan default berhasil (idempotent)
 - [ ] CRUD Master Satuan berfungsi (create, read, update, soft delete, restore)
 - [ ] Form tambah satuan menampilkan pilihan tipe (Dasar / Konversi)
@@ -879,7 +885,7 @@ public function down(): void
 - [ ] Catatan rate konversi tampil di bawah laporan
 - [ ] Export CSV/JSON menyertakan info satuan
 - [ ] Dashboard tooltip menampilkan satuan dinamis
-- [ ] Data existing (tanpa satuan) tetap tampil dengan fallback "unit"
+- [ ] Data existing (tanpa satuan) tetap tampil dengan fallback "unit" (skenario sangat jarang setelah backfill)
 - [ ] Cache units berfungsi (query tidak mengulang ke DB, invalidation dengan Cache::forget)
 - [ ] Audit log tercatat untuk perubahan multiplier
 - [ ] Tidak ada N+1 query pada halaman produk dan laporan

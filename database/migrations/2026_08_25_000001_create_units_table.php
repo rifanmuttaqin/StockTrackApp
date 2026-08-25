@@ -24,15 +24,18 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            // Foreign key (self-referencing)
+            // Indexes
+            $table->index('base_unit_id');
+            $table->index('deleted_at');
+        });
+
+        // Self-referencing FK must be added after table creation (PostgreSQL requires
+        // the referenced table's PK to exist before adding a FK constraint)
+        Schema::table('units', function (Blueprint $table) {
             $table->foreign('base_unit_id')
                   ->references('id')
                   ->on('units')
                   ->onDelete('restrict');
-
-            // Indexes
-            $table->index('base_unit_id');
-            $table->index('deleted_at');
         });
 
         // Partial unique index: LOWER(name) WHERE deleted_at IS NULL

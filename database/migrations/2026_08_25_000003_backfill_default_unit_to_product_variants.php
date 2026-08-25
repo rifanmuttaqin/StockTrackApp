@@ -13,8 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         $pcsUnit = DB::table('units')
-            ->where('name', 'Pcs')
-            ->whereNull('deleted_at')
+            ->whereRaw('LOWER(name) = ?', ['pcs'])
+            ->where('type', 'base')
             ->first();
 
         if (!$pcsUnit) {
@@ -22,7 +22,7 @@ return new class extends Migration
             DB::table('units')->insert([
                 'id'            => $id,
                 'name'          => 'Pcs',
-                'abbreviation'  => 'Pcs',
+                'abbreviation'  => 'pcs',
                 'type'          => 'base',
                 'base_unit_id'  => null,
                 'multiplier'    => null,
@@ -48,7 +48,8 @@ return new class extends Migration
     public function down(): void
     {
         $pcsUnit = DB::table('units')
-            ->where('name', 'Pcs')
+            ->whereRaw('LOWER(name) = ?', ['pcs'])
+            ->where('type', 'base')
             ->first();
 
         if ($pcsUnit) {

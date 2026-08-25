@@ -62,14 +62,14 @@ const Index = ({ products, stockInData, statistics, filters, error }) => {
 
   const getConvertedValue = (variant, value) => {
     if (!selectedConversion || !value || value <= 0) return value;
-    const conv = variant.conversions?.find(c => c.id === parseInt(selectedConversion));
+    const conv = variant.conversions?.find(c => c.id === selectedConversion);
     if (!conv) return value;
     return value / conv.multiplier;
   };
 
   const getDisplayUnit = (variant) => {
     if (selectedConversion) {
-      const conv = variant.conversions?.find(c => c.id === parseInt(selectedConversion));
+      const conv = variant.conversions?.find(c => c.id === selectedConversion);
       return conv?.abbreviation || variant.unit?.abbreviation || '';
     }
     return variant.unit?.abbreviation || '';

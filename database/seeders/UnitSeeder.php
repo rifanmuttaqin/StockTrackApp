@@ -3,7 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Unit;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UnitSeeder extends Seeder
 {
@@ -12,82 +13,83 @@ class UnitSeeder extends Seeder
      */
     public function run(): void
     {
-        // Base units
-        $pcs = Unit::updateOrCreate(
-            ['name' => 'Pcs'],
-            [
-                'abbreviation' => 'pcs',
-                'type' => 'base',
-            ]
-        );
-
-        Unit::updateOrCreate(
-            ['name' => 'Kg'],
-            [
-                'abbreviation' => 'kg',
-                'type' => 'base',
-            ]
-        );
-
-        Unit::updateOrCreate(
-            ['name' => 'Liter'],
-            [
-                'abbreviation' => 'ltr',
-                'type' => 'base',
-            ]
-        );
-
-        Unit::updateOrCreate(
-            ['name' => 'Meter'],
-            [
-                'abbreviation' => 'm',
-                'type' => 'base',
-            ]
-        );
+        // Base units — use DB query builder for idempotent seeding
+        // (Eloquent updateOrCreate can bypass boot() UUID generation in some cases)
+        $pcsId = $this->upsertBaseUnit('Pcs', 'pcs', 'Satuan dasar (pieces)');
+        $this->upsertBaseUnit('Kg', 'kg', 'Kilogram');
+        $this->upsertBaseUnit('Liter', 'ltr', 'Liter');
+        $this->upsertBaseUnit('Meter', 'm', 'Meter');
 
         // Conversion units (all base_unit_id → Pcs)
-        Unit::updateOrCreate(
-            ['name' => 'Karton'],
-            [
-                'abbreviation' => 'ktg',
-                'type' => 'conversion',
-                'base_unit_id' => $pcs->id,
-                'multiplier' => 10,
-                'is_primary' => true,
-            ]
-        );
+        $this->upsertConversionUnit('Karton', 'ktg', $pcsId, 10, true, '1 Karton = 10 Pcs');
+        $this->upsertConversionUnit('Box', 'box', $pcsId, 24, false, '1 Box = 24 Pcs');
+        $this->upsertConversionUnit('Lusin', 'lsn', $pcsId, 12, false, '1 Lusin = 12 Pcs');
+        $this->upsertConversionUnit('Dus', 'dus', $pcsId, 100, false, '1 Dus = 100 Pcs');
+    }
 
-        Unit::updateOrCreate(
-            ['name' => 'Box'],
-            [
-                'abbreviation' => 'box',
-                'type' => 'conversion',
-                'base_unit_id' => $pcs->id,
-                'multiplier' => 24,
-                'is_primary' => false,
-            ]
-        );
+    private function upsertBaseUnit(string $name, string $abbreviation, ?string $description = null): string
+    {
+        $existing = DB::table('units')
+            ->whereRaw('LOWER(name) = ?', [strtolower($name)])
+            ->where('type', 'base')
+            ->first();
 
-        Unit::updateOrCreate(
-            ['name' => 'Lusin'],
-            [
-                'abbreviation' => 'lsn',
-                'type' => 'conversion',
-                'base_unit_id' => $pcs->id,
-                'multiplier' => 12,
-                'is_primary' => false,
-            ]
-        );
+        if ($existing) {
+            return $existing->id;
+        }
 
-        Unit::updateOrCreate(
-            ['name' => 'Dus'],
-            [
-                'abbreviation' => 'dus',
-                'type' => 'conversion',
-                'base_unit_id' => $pcs->id,
-                'multiplier' => 100,
-                'is_primary' => false,
-            ]
-        );
+        $id = (string) Str::uuid();
+        DB::table('units')->insert([
+            'id' => $id,
+            'name' => $name,
+            'abbreviation' => $abbreviation,
+            'type' => 'base',
+            'description' => $description,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return $id;
+    }
+
+    private function upsertConversionUnit(
+        string $name,
+        string $abbreviation,
+        string $baseUnitId,
+        float $multiplier,
+        bool $isPrimary,
+        ?string $description = null
+    ): void {
+        $existing = DB::table('units')
+            ->whereRaw('LOWER(name) = ?', [strtolower($name)])
+            ->where('type', 'conversion')
+            ->first();
+
+        if ($existing) {
+            DB::table('units')
+                ->where('id', $existing->id)
+                ->update([
+                    'abbreviation' => $abbreviation,
+                    'base_unit_id' => $baseUnitId,
+                    'multiplier' => $multiplier,
+                    'is_primary' => $isPrimary,
+                    'description' => $description,
+                    'updated_at' => now(),
+                ]);
+            return;
+        }
+
+        DB::table('units')->insert([
+            'id' => (string) Str::uuid(),
+            'name' => $name,
+            'abbreviation' => $abbreviation,
+            'type' => 'conversion',
+            'base_unit_id' => $baseUnitId,
+            'multiplier' => $multiplier,
+            'is_primary' => $isPrimary,
+            'description' => $description,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }
