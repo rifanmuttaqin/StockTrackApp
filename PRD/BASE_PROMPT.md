@@ -36,8 +36,3 @@ Output akhir harus mengikuti format **PRD_Template.md**.
 
 # Topik Fitur yang akan di kerjakan
 
-Saya ingin sebuah modul untuk melakukan stock opname.
-
-- Stock opname menggunakan tempelate produk aktif
-- stock opname tercatat secara history
-- konfirmasi sebelum submit

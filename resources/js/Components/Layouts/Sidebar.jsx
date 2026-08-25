@@ -242,7 +242,7 @@ export default function Sidebar() {
                 <div className="flex items-center justify-between h-16 px-4 border-b border-indigo-800/50 backdrop-blur-sm flex-shrink-0">
                     <div className="flex items-center gap-3 shrink-0">
                         <img src="/logo/logo.svg" alt="StockTrackApp" className="h-9 w-9" />
-                        <h1 className="text-xl font-bold text-white tracking-wide whitespace-nowrap">StockTrackApp</h1>
+                        <h1 className="text-lg font-bold text-white tracking-wide whitespace-nowrap">StockTrackApp</h1>
                     </div>
                 </div>
 
@@ -286,7 +286,7 @@ export default function Sidebar() {
                 <div className="flex items-center justify-between h-16 px-4 border-b border-indigo-800/50 backdrop-blur-sm flex-shrink-0">
                     <div className="flex items-center gap-3 shrink-0">
                         <img src="/logo/logo.svg" alt="StockTrackApp" className="h-9 w-9" />
-                        <h1 className="text-xl font-bold text-white tracking-wide whitespace-nowrap">StockTrackApp</h1>
+                        <h1 className="text-lg font-bold text-white tracking-wide whitespace-nowrap">StockTrackApp</h1>
                     </div>
                     <button
                         type="button"
