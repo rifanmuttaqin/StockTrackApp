@@ -287,7 +287,7 @@ export default function Dashboard() {
                                                 fontSize: '13px',
                                             }}
                                             formatter={(value, name, props) => [
-                                                `${value} unit`,
+                                                `${value} ${props.payload.unit_abbreviation || 'unit'}`,
                                                 props.payload.product_name,
                                             ]}
                                         />

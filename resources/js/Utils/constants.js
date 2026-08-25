@@ -127,6 +127,12 @@ export const PERMISSIONS = {
     WHATSAPP_SEND: 'whatsapp.send',
     WHATSAPP_VIEW_LOG: 'whatsapp.view_log',
 
+    // Unit Management
+    UNITS_VIEW: 'units.view',
+    UNITS_CREATE: 'units.create',
+    UNITS_EDIT: 'units.update',
+    UNITS_DELETE: 'units.delete',
+
     // Stock Opname
     STOCK_OPNAME_VIEW: 'stock_opname.view',
     STOCK_OPNAME_CREATE: 'stock_opname.create',

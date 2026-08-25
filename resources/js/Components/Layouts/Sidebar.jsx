@@ -73,7 +73,12 @@ export default function Sidebar() {
                     name: 'Daftar Produk',
                     href: '/products',
                     permission: 'create_stock_entries',
-                }
+                },
+                {
+                    name: 'Satuan',
+                    href: '/units',
+                    permission: 'units.view',
+                },
             ],
         },
         {
