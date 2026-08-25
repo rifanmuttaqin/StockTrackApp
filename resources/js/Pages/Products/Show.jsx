@@ -249,8 +249,25 @@ const Show = ({ product, errors, flash }) => {
                             ? 'bg-yellow-100 text-yellow-800'
                             : 'bg-red-100 text-red-800'
                         }`}>
-                          {variant.stock_current} unit
+                          {variant.stock_current} {variant.unit?.abbreviation || 'unit'}
                         </span>
+                        {variant.unit && (
+                          <div className="mt-2">
+                            <span className="text-sm text-gray-500">Satuan: </span>
+                            <span className="text-sm font-medium">{variant.unit.name} ({variant.unit.abbreviation})</span>
+                          </div>
+                        )}
+                        {variant.conversions?.length > 0 && (
+                          <div className="mt-1">
+                            <span className="text-sm text-gray-500">Konversi: </span>
+                            {variant.conversions.map((c) => (
+                              <span key={c.id} className="inline-flex items-center mr-2 px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800">
+                                {c.converted_stock} {c.abbreviation}
+                                {c.is_primary && <span className="ml-1 text-blue-600">*</span>}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end space-x-2">
@@ -346,7 +363,7 @@ const Show = ({ product, errors, flash }) => {
                   <dl>
                     <dt className="text-sm font-medium text-gray-500 truncate">Total Stock</dt>
                     <dd className="text-lg font-medium text-gray-900">
-                      {product?.variants?.reduce((sum, v) => sum + v.stock_current, 0) || 0} unit
+                      {product?.variants?.reduce((sum, v) => sum + v.stock_current, 0) || 0} {product?.variants?.[0]?.unit?.abbreviation || 'unit'}
                     </dd>
                   </dl>
                 </div>

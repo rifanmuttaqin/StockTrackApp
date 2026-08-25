@@ -7,7 +7,7 @@ import { usePermission } from '../../Hooks/usePermission';
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline';
 import Swal from 'sweetalert2';
 
-const Edit = ({ product, errors, flash }) => {
+const Edit = ({ product, errors, flash, baseUnits }) => {
   const { props } = usePage();
   const { can } = usePermission();
 
@@ -18,6 +18,7 @@ const Edit = ({ product, errors, flash }) => {
     sku: '',
     stock_current: 0,
     stock_threshold: 0,
+    unit_id: null,
   };
 
   // Form state
@@ -33,6 +34,7 @@ const Edit = ({ product, errors, flash }) => {
         sku: variant.sku,
         stock_current: variant.stock_current,
         stock_threshold: variant.stock_threshold || 0,
+        unit_id: variant.unit_id || null,
       }));
       setVariants(initialVariants);
     } else {
@@ -319,6 +321,25 @@ const Edit = ({ product, errors, flash }) => {
                       <p className="mt-1 text-xs text-gray-500">
                         Notifikasi akan dikirim jika stok ≤ angka ini (0 = tidak aktif)
                       </p>
+                    </MobileFormField>
+
+                    {/* Base Unit */}
+                    <MobileFormField
+                      label="Satuan Dasar"
+                      error={errors[`variants.${index}.unit_id`]}
+                    >
+                      <select
+                        value={variant.unit_id || ''}
+                        onChange={(e) => handleVariantChange(index, 'unit_id', e.target.value || null)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      >
+                        <option value="">Pilih satuan...</option>
+                        {baseUnits?.map((unit) => (
+                          <option key={unit.id} value={unit.id}>
+                            {unit.name} ({unit.abbreviation})
+                          </option>
+                        ))}
+                      </select>
                     </MobileFormField>
                   </div>
                 </div>
