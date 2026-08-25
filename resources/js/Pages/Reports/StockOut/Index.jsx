@@ -55,6 +55,14 @@ const Index = ({ products, stockOutData, filters, error }) => {
     return Array.from(map.values());
   }, [stockOutData]);
 
+  const formatStockValue = (value) => {
+    if (!value && value !== 0) return '-';
+    const num = Number(value);
+    if (Number.isNaN(num)) return '-';
+    const rounded = Math.round(num * 100) / 100;
+    return rounded % 1 === 0 ? rounded : parseFloat(rounded.toFixed(2));
+  };
+
   const getConvertedValue = (variant, value) => {
     if (!selectedConversion || !value || value <= 0) return value;
     const conv = variant.conversions?.find(c => c.id === selectedConversion);
@@ -68,6 +76,30 @@ const Index = ({ products, stockOutData, filters, error }) => {
       return conv?.abbreviation || variant.unit?.abbreviation || '';
     }
     return variant.unit?.abbreviation || '';
+  };
+
+  const getProductConversion = (product) => {
+    if (!selectedConversion) return null;
+    for (const variant of product.variants || []) {
+      const conv = variant.conversions?.find(c => c.id === selectedConversion);
+      if (conv) return conv;
+    }
+    return null;
+  };
+
+  const convertProductValue = (product, value) => {
+    if (!selectedConversion || !value || value <= 0) return value;
+    const conv = getProductConversion(product);
+    if (!conv) return value;
+    return value / conv.multiplier;
+  };
+
+  const getProductDisplayUnit = (product) => {
+    if (selectedConversion) {
+      const conv = getProductConversion(product);
+      if (conv) return conv.abbreviation;
+    }
+    return product.variants?.[0]?.unit?.abbreviation || '';
   };
 
   /**
@@ -167,7 +199,7 @@ const Index = ({ products, stockOutData, filters, error }) => {
     const unit = getDisplayUnit(variant);
     return (
       <span>
-        {converted % 1 === 0 ? converted : converted.toFixed(2)}
+        {formatStockValue(converted)}
         {unit && <span className="text-xs text-gray-400 ml-1">{unit}</span>}
       </span>
     );
@@ -430,11 +462,21 @@ const Index = ({ products, stockOutData, filters, error }) => {
                         ))}
                         {/* Product Total Column */}
                         <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-gray-50 font-bold text-green-700">
-                          {product.total && product.total > 0 ? product.total : '-'}
+                          {product.total && product.total > 0 ? (
+                            <span>
+                              {formatStockValue(convertProductValue(product, product.total))}
+                              {getProductDisplayUnit(product) && <span className="text-xs text-gray-400 ml-1">{getProductDisplayUnit(product)}</span>}
+                            </span>
+                          ) : '-'}
                         </td>
                         {/* Product Average Column */}
                         <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-gray-50 font-bold text-indigo-700">
-                          {product.average && product.average > 0 ? product.average.toFixed(2) : '-'}
+                          {product.average && product.average > 0 ? (
+                            <span>
+                              {formatStockValue(convertProductValue(product, product.average))}
+                              {getProductDisplayUnit(product) && <span className="text-xs text-gray-400 ml-1">{getProductDisplayUnit(product)}</span>}
+                            </span>
+                          ) : '-'}
                         </td>
                       </tr>
 
@@ -446,7 +488,7 @@ const Index = ({ products, stockOutData, filters, error }) => {
                               <div className="flex items-center space-x-2">
                                 <span>{variant.name}</span>
                                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800">
-                                  Stok: {getConvertedValue(variant, variant.stock)}{getDisplayUnit(variant) ? ` ${getDisplayUnit(variant)}` : ''}
+                                  Stok: {formatStockValue(getConvertedValue(variant, variant.stock))}{getDisplayUnit(variant) ? ` ${getDisplayUnit(variant)}` : ''}
                                 </span>
                               </div>
                             </td>
@@ -462,7 +504,7 @@ const Index = ({ products, stockOutData, filters, error }) => {
                             <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-green-50 font-medium text-green-700">
                               {variant.total && variant.total > 0 ? (
                                 <span>
-                                  {(() => { const v = getConvertedValue(variant, variant.total); return v % 1 === 0 ? v : v.toFixed(2); })()}
+                                  {formatStockValue(getConvertedValue(variant, variant.total))}
                                   {getDisplayUnit(variant) && <span className="text-xs text-gray-400 ml-1">{getDisplayUnit(variant)}</span>}
                                 </span>
                               ) : '-'}
@@ -471,7 +513,7 @@ const Index = ({ products, stockOutData, filters, error }) => {
                             <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-indigo-50 font-medium text-indigo-700">
                               {variant.average && variant.average > 0 ? (
                                 <span>
-                                  {getConvertedValue(variant, variant.average).toFixed(2)}
+                                  {formatStockValue(getConvertedValue(variant, variant.average))}
                                   {getDisplayUnit(variant) && <span className="text-xs text-gray-400 ml-1">{getDisplayUnit(variant)}</span>}
                                 </span>
                               ) : '-'}
