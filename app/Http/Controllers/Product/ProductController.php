@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ProductCreateRequest;
 use App\Http\Requests\Product\ProductUpdateRequest;
 use App\Services\Contracts\ProductServiceInterface;
+use App\Services\Contracts\UnitServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -16,10 +17,12 @@ use Inertia\Response;
 class ProductController extends Controller
 {
     protected ProductServiceInterface $productService;
+    protected UnitServiceInterface $unitService;
 
-    public function __construct(ProductServiceInterface $productService)
+    public function __construct(ProductServiceInterface $productService, UnitServiceInterface $unitService)
     {
         $this->productService = $productService;
+        $this->unitService = $unitService;
 
         // Permission middleware
         $this->middleware('permission:products.view')->only(['index', 'show']);
@@ -126,7 +129,11 @@ class ProductController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Products/Create');
+        $baseUnits = $this->unitService->getBaseUnits();
+
+        return Inertia::render('Products/Create', [
+            'baseUnits' => $baseUnits,
+        ]);
     }
 
     /**
@@ -199,10 +206,13 @@ class ProductController extends Controller
                 abort(404, 'Produk tidak ditemukan.');
             }
 
+            $baseUnits = $this->unitService->getBaseUnits();
+
             $this->logProductAction('view_product_edit_form', $id);
 
             return Inertia::render('Products/Edit', [
                 'product' => $product,
+                'baseUnits' => $baseUnits,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to fetch product for edit', [
