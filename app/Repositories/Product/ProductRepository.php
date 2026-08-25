@@ -20,10 +20,12 @@ class ProductRepository implements ProductRepositoryInterface
         $withTrashed = $filters['with_trashed'] ?? false;
 
         // Build query based on with_trashed parameter
+        $eagerLoad = ['variants.baseUnit', 'variants.baseUnit.conversions'];
+
         if ($withTrashed) {
-            $query = Product::withTrashed()->with('variants');
+            $query = Product::withTrashed()->with($eagerLoad);
         } else {
-            $query = Product::with('variants');
+            $query = Product::with($eagerLoad);
         }
 
         // Apply search filter if provided
@@ -59,20 +61,51 @@ class ProductRepository implements ProductRepositoryInterface
         $products = $query->paginate($perPage);
 
         // Transform variants to match frontend expectations
-        // Map 'variant_name' to 'name' for consistency with frontend
         $products->getCollection()->transform(function ($product) {
             $variantsCount = $product->variants->count();
             $totalStock = 0;
 
             $product->variants->transform(function ($variant) use (&$totalStock) {
                 $totalStock += $variant->stock_current;
+
+                $unitData = null;
+                $conversionsData = [];
+
+                if ($variant->baseUnit) {
+                    $unitData = [
+                        'id' => $variant->baseUnit->id,
+                        'name' => $variant->baseUnit->name,
+                        'abbreviation' => $variant->baseUnit->abbreviation,
+                        'type' => $variant->baseUnit->type,
+                    ];
+
+                    if ($variant->baseUnit->conversions) {
+                        foreach ($variant->baseUnit->conversions as $conversion) {
+                            $convertedStock = $conversion->multiplier > 0
+                                ? round($variant->stock_current / $conversion->multiplier, 2)
+                                : 0;
+
+                            $conversionsData[] = [
+                                'id' => $conversion->id,
+                                'name' => $conversion->name,
+                                'abbreviation' => $conversion->abbreviation,
+                                'multiplier' => (float) $conversion->multiplier,
+                                'is_primary' => $conversion->is_primary,
+                                'converted_stock' => $convertedStock,
+                            ];
+                        }
+                    }
+                }
+
                 return [
                     'id' => $variant->id,
-                    'name' => $variant->variant_name, // Map variant_name to name
+                    'name' => $variant->variant_name,
                     'sku' => $variant->sku,
                     'stock_current' => $variant->stock_current,
                     'stock_threshold' => $variant->stock_threshold ?? 0,
                     'product_id' => $variant->product_id,
+                    'unit' => $unitData,
+                    'conversions' => $conversionsData,
                 ];
             });
 
@@ -90,26 +123,56 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function findProductById(string $id): ?Product
     {
-        $product = Product::with('variants')->find($id);
+        $product = Product::with(['variants.baseUnit', 'variants.baseUnit.conversions'])->find($id);
 
         if (!$product) {
             return null;
         }
 
-        // Transform variants to match frontend expectations
-        // Map 'variant_name' to 'name' for consistency with frontend
         $variantsCount = $product->variants->count();
         $totalStock = 0;
 
         $product->variants->transform(function ($variant) use (&$totalStock) {
             $totalStock += $variant->stock_current;
+
+            $unitData = null;
+            $conversionsData = [];
+
+            if ($variant->baseUnit) {
+                $unitData = [
+                    'id' => $variant->baseUnit->id,
+                    'name' => $variant->baseUnit->name,
+                    'abbreviation' => $variant->baseUnit->abbreviation,
+                    'type' => $variant->baseUnit->type,
+                ];
+
+                if ($variant->baseUnit->conversions) {
+                    foreach ($variant->baseUnit->conversions as $conversion) {
+                        $convertedStock = $conversion->multiplier > 0
+                            ? round($variant->stock_current / $conversion->multiplier, 2)
+                            : 0;
+
+                        $conversionsData[] = [
+                            'id' => $conversion->id,
+                            'name' => $conversion->name,
+                            'abbreviation' => $conversion->abbreviation,
+                            'multiplier' => (float) $conversion->multiplier,
+                            'is_primary' => $conversion->is_primary,
+                            'converted_stock' => $convertedStock,
+                        ];
+                    }
+                }
+            }
+
             return [
                 'id' => $variant->id,
-                'name' => $variant->variant_name, // Map variant_name to name
+                'name' => $variant->variant_name,
                 'sku' => $variant->sku,
                 'stock_current' => $variant->stock_current,
                 'stock_threshold' => $variant->stock_threshold ?? 0,
                 'product_id' => $variant->product_id,
+                'unit' => $unitData,
+                'conversions' => $conversionsData,
             ];
         });
         // Add variants_count and total_stock to product
@@ -143,6 +206,7 @@ class ProductRepository implements ProductRepositoryInterface
                         'sku' => $variantData['sku'],
                         'stock_current' => $variantData['stock_current'],
                         'stock_threshold' => $variantData['stock_threshold'] ?? 0,
+                        'unit_id' => $variantData['unit_id'] ?? null,
                     ]);
                 }
             }
@@ -150,7 +214,7 @@ class ProductRepository implements ProductRepositoryInterface
             DB::commit();
 
             // Load variants for the created product
-            $product->load('variants');
+            $product->load('variants.baseUnit', 'variants.baseUnit.conversions');
 
             // Transform variants to match frontend expectations
             $variantsCount = $product->variants->count();
@@ -158,6 +222,36 @@ class ProductRepository implements ProductRepositoryInterface
 
             $product->variants->transform(function ($variant) use (&$totalStock) {
                 $totalStock += $variant->stock_current;
+
+                $unitData = null;
+                $conversionsData = [];
+
+                if ($variant->baseUnit) {
+                    $unitData = [
+                        'id' => $variant->baseUnit->id,
+                        'name' => $variant->baseUnit->name,
+                        'abbreviation' => $variant->baseUnit->abbreviation,
+                        'type' => $variant->baseUnit->type,
+                    ];
+
+                    if ($variant->baseUnit->conversions) {
+                        foreach ($variant->baseUnit->conversions as $conversion) {
+                            $convertedStock = $conversion->multiplier > 0
+                                ? round($variant->stock_current / $conversion->multiplier, 2)
+                                : 0;
+
+                            $conversionsData[] = [
+                                'id' => $conversion->id,
+                                'name' => $conversion->name,
+                                'abbreviation' => $conversion->abbreviation,
+                                'multiplier' => (float) $conversion->multiplier,
+                                'is_primary' => $conversion->is_primary,
+                                'converted_stock' => $convertedStock,
+                            ];
+                        }
+                    }
+                }
+
                 return [
                     'id' => $variant->id,
                     'name' => $variant->variant_name,
@@ -165,6 +259,8 @@ class ProductRepository implements ProductRepositoryInterface
                     'stock_current' => $variant->stock_current,
                     'stock_threshold' => $variant->stock_threshold ?? 0,
                     'product_id' => $variant->product_id,
+                    'unit' => $unitData,
+                    'conversions' => $conversionsData,
                 ];
             });
             $product->variants_count = $variantsCount;
@@ -189,7 +285,7 @@ class ProductRepository implements ProductRepositoryInterface
         DB::beginTransaction();
 
         try {
-            $product = Product::with('variants')->findOrFail($id);
+            $product = Product::with(['variants.baseUnit', 'variants.baseUnit.conversions'])->findOrFail($id);
 
             // Update product data
             $product->update([
@@ -224,6 +320,7 @@ class ProductRepository implements ProductRepositoryInterface
                                 'sku' => $variantData['sku'],
                                 'stock_current' => $variantData['stock_current'],
                                 'stock_threshold' => $variantData['stock_threshold'] ?? 0,
+                                'unit_id' => $variantData['unit_id'] ?? null,
                             ]);
                         }
                     } else {
@@ -234,6 +331,7 @@ class ProductRepository implements ProductRepositoryInterface
                             'sku' => $variantData['sku'],
                             'stock_current' => $variantData['stock_current'],
                             'stock_threshold' => $variantData['stock_threshold'] ?? 0,
+                            'unit_id' => $variantData['unit_id'] ?? null,
                         ]);
                     }
                 }
@@ -367,10 +465,12 @@ class ProductRepository implements ProductRepositoryInterface
         $withTrashed = $filters['with_trashed'] ?? false;
 
         // Build query based on with_trashed parameter
+        $eagerLoad = ['variants.baseUnit', 'variants.baseUnit.conversions'];
+
         if ($withTrashed) {
-            $searchQuery = Product::withTrashed()->with('variants');
+            $searchQuery = Product::withTrashed()->with($eagerLoad);
         } else {
-            $searchQuery = Product::with('variants');
+            $searchQuery = Product::with($eagerLoad);
         }
 
         // Apply search filter
@@ -396,20 +496,51 @@ class ProductRepository implements ProductRepositoryInterface
         $products = $searchQuery->paginate($perPage);
 
         // Transform variants to match frontend expectations
-        // Map 'variant_name' to 'name' for consistency with frontend
         $products->getCollection()->transform(function ($product) {
             $variantsCount = $product->variants->count();
             $totalStock = 0;
 
             $product->variants->transform(function ($variant) use (&$totalStock) {
                 $totalStock += $variant->stock_current;
+
+                $unitData = null;
+                $conversionsData = [];
+
+                if ($variant->baseUnit) {
+                    $unitData = [
+                        'id' => $variant->baseUnit->id,
+                        'name' => $variant->baseUnit->name,
+                        'abbreviation' => $variant->baseUnit->abbreviation,
+                        'type' => $variant->baseUnit->type,
+                    ];
+
+                    if ($variant->baseUnit->conversions) {
+                        foreach ($variant->baseUnit->conversions as $conversion) {
+                            $convertedStock = $conversion->multiplier > 0
+                                ? round($variant->stock_current / $conversion->multiplier, 2)
+                                : 0;
+
+                            $conversionsData[] = [
+                                'id' => $conversion->id,
+                                'name' => $conversion->name,
+                                'abbreviation' => $conversion->abbreviation,
+                                'multiplier' => (float) $conversion->multiplier,
+                                'is_primary' => $conversion->is_primary,
+                                'converted_stock' => $convertedStock,
+                            ];
+                        }
+                    }
+                }
+
                 return [
                     'id' => $variant->id,
-                    'name' => $variant->variant_name, // Map variant_name to name
+                    'name' => $variant->variant_name,
                     'sku' => $variant->sku,
                     'stock_current' => $variant->stock_current,
                     'stock_threshold' => $variant->stock_threshold ?? 0,
                     'product_id' => $variant->product_id,
+                    'unit' => $unitData,
+                    'conversions' => $conversionsData,
                 ];
             });
             // Add variants_count and total_stock to product

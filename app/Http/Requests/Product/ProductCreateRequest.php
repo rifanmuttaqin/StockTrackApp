@@ -35,6 +35,7 @@ class ProductCreateRequest extends FormRequest
             'variants.*.sku' => 'required|string|max:50|unique:product_variants,sku',
             'variants.*.stock_current' => 'required|integer|min:0',
             'variants.*.stock_threshold' => 'nullable|integer|min:0',
+            'variants.*.unit_id' => 'nullable|exists:units,id',
         ];
     }
 
@@ -105,6 +106,7 @@ class ProductCreateRequest extends FormRequest
             'variants.*.stock_current.required' => 'Stok varian harus diisi',
             'variants.*.stock_current.integer' => 'Stok varian harus berupa angka',
             'variants.*.stock_current.min' => 'Stok varian minimal 0',
+            'variants.*.unit_id.exists' => 'Satuan dasar tidak valid',
         ];
     }
 
