@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\TemplateRepositoryInterface;
+use App\Repositories\Contracts\UnitRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Product\ProductRepository;
 use App\Repositories\Template\TemplateRepository;
+use App\Repositories\Unit\UnitRepository;
 use App\Repositories\User\UserRepository;
 use App\Services\Contracts\ProductServiceInterface;
 use App\Services\Contracts\TemplateServiceInterface;
@@ -27,6 +29,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(TemplateRepositoryInterface::class, TemplateRepository::class);
+        $this->app->bind(UnitRepositoryInterface::class, UnitRepository::class);
 
         // Bind Service Interfaces
         $this->app->bind(UserServiceInterface::class, UserService::class);
