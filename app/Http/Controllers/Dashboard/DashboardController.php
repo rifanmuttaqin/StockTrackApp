@@ -157,13 +157,15 @@ class DashboardController extends Controller
     {
         return DB::table('product_variants')
             ->join('products', 'product_variants.product_id', '=', 'products.id')
+            ->leftJoin('units', 'product_variants.unit_id', '=', 'units.id')
             ->where('product_variants.stock_current', '<=', $threshold)
             ->orderBy('product_variants.stock_current', 'asc')
             ->limit(10)
             ->select(
                 'products.name as product_name',
                 'product_variants.variant_name',
-                'product_variants.stock_current'
+                'product_variants.stock_current',
+                'units.abbreviation as unit_abbreviation'
             )
             ->get()
             ->toArray();
