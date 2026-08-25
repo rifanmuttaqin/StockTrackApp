@@ -35,4 +35,9 @@ Output akhir harus mengikuti format **PRD_Template.md**.
 3. Simpan file `.md` pada direktory PRD/feature dan berikan penamaan PRD_{nama_feature}
 
 # Topik Fitur yang akan di kerjakan
+Saat ini master produk tidak memiliki satuan dan konversi satuan. 
+Akibatnya adalah saat pengguna mengakses report, pengguna hanya bisa melihat satuan dasar produk, yang padahal kami sangat membutuhkan pelaporan stock berdasarkan satuan konversi (misal: 1 karton = 10 pcs).
 
+Kedepannya juga untuk stock masuk juga akan mengadaptasi sistem konversi satuan.
+
+Namun kebutuhan MVP saat ini hanya pada sebatas fitur satuan - konversi satuan dan dapat langsung diimplementasikan pada laporan stock dan curent stock pada tabel produk
