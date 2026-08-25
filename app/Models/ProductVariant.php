@@ -43,6 +43,7 @@ class ProductVariant extends Model
         'sku',
         'stock_current',
         'stock_threshold',
+        'unit_id',
     ];
 
     /**
@@ -55,6 +56,7 @@ class ProductVariant extends Model
         return [
             'id' => 'string',
             'product_id' => 'string',
+            'unit_id' => 'string',
             'stock_current' => 'integer',
             'stock_threshold' => 'integer',
         ];
@@ -66,6 +68,14 @@ class ProductVariant extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    /**
+     * Get the unit for this variant.
+     */
+    public function baseUnit(): BelongsTo
+    {
+        return $this->belongsTo(Unit::class, 'unit_id');
     }
 
     /**
