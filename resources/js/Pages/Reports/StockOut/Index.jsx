@@ -25,6 +25,7 @@ const Index = ({ products, stockOutData, filters, error }) => {
   const { can } = usePermission();
   const { isMobile } = useMobileDetection();
   const [loading, setLoading] = useState(false);
+  const [selectedConversion, setSelectedConversion] = useState('');
   const [localFilters, setLocalFilters] = useState({
     product_id: filters?.product_id || '',
     start_date: filters?.start_date || '',
@@ -39,6 +40,35 @@ const Index = ({ products, stockOutData, filters, error }) => {
       end_date: filters?.end_date || '',
     });
   }, [filters]);
+
+  const allConversions = React.useMemo(() => {
+    const map = new Map();
+    stockOutData?.products?.forEach(product => {
+      product.variants?.forEach(variant => {
+        variant.conversions?.forEach(conv => {
+          if (!map.has(conv.id)) {
+            map.set(conv.id, conv);
+          }
+        });
+      });
+    });
+    return Array.from(map.values());
+  }, [stockOutData]);
+
+  const getConvertedValue = (variant, value) => {
+    if (!selectedConversion || !value || value <= 0) return value;
+    const conv = variant.conversions?.find(c => c.id === parseInt(selectedConversion));
+    if (!conv) return value;
+    return value / conv.multiplier;
+  };
+
+  const getDisplayUnit = (variant) => {
+    if (selectedConversion) {
+      const conv = variant.conversions?.find(c => c.id === parseInt(selectedConversion));
+      return conv?.abbreviation || variant.unit?.abbreviation || '';
+    }
+    return variant.unit?.abbreviation || '';
+  };
 
   /**
    * Handle filter change
@@ -130,9 +160,17 @@ const Index = ({ products, stockOutData, filters, error }) => {
   /**
    * Get cell value for stock out quantity
    */
-  const getCellValue = (stockOutByDate, date) => {
+  const getCellValue = (stockOutByDate, date, variant) => {
     const quantity = stockOutByDate?.[date];
-    return quantity && quantity > 0 ? quantity : '-';
+    if (!quantity || quantity <= 0) return '-';
+    const converted = getConvertedValue(variant, quantity);
+    const unit = getDisplayUnit(variant);
+    return (
+      <span>
+        {converted % 1 === 0 ? converted : converted.toFixed(2)}
+        {unit && <span className="text-xs text-gray-400 ml-1">{unit}</span>}
+      </span>
+    );
   };
 
   /**
@@ -224,7 +262,7 @@ const Index = ({ products, stockOutData, filters, error }) => {
             <h3 className="text-lg font-medium text-gray-900">Filter Laporan</h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Product Filter */}
             <div>
               <label htmlFor="product_id" className="block text-sm font-medium text-gray-700 mb-1">
@@ -295,6 +333,26 @@ const Index = ({ products, stockOutData, filters, error }) => {
                 )}
                 <CalendarIcon className="absolute inset-y-0 right-0 flex items-center pr-3 h-5 w-5 text-gray-400 pointer-events-none" />
               </div>
+            </div>
+
+            {/* Unit Conversion Filter */}
+            <div>
+              <label htmlFor="unit_conversion" className="block text-sm font-medium text-gray-700 mb-1">
+                Konversi Satuan
+              </label>
+              <select
+                id="unit_conversion"
+                value={selectedConversion}
+                onChange={(e) => setSelectedConversion(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              >
+                <option value="">Satuan Dasar</option>
+                {allConversions.map((conv) => (
+                  <option key={conv.id} value={conv.id}>
+                    {conv.name} ({conv.abbreviation})
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -388,7 +446,7 @@ const Index = ({ products, stockOutData, filters, error }) => {
                               <div className="flex items-center space-x-2">
                                 <span>{variant.name}</span>
                                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800">
-                                  Stok: {variant.stock}
+                                  Stok: {getConvertedValue(variant, variant.stock)}{getDisplayUnit(variant) ? ` ${getDisplayUnit(variant)}` : ''}
                                 </span>
                               </div>
                             </td>
@@ -397,16 +455,26 @@ const Index = ({ products, stockOutData, filters, error }) => {
                                 key={date}
                                 className="px-6 py-3 whitespace-nowrap text-sm text-center"
                               >
-                                {getCellValue(variant.stock_out_by_date, date)}
+                                {getCellValue(variant.stock_out_by_date, date, variant)}
                               </td>
                             ))}
                             {/* Total (Jumlah) Column */}
                             <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-green-50 font-medium text-green-700">
-                              {variant.total && variant.total > 0 ? variant.total : '-'}
+                              {variant.total && variant.total > 0 ? (
+                                <span>
+                                  {(() => { const v = getConvertedValue(variant, variant.total); return v % 1 === 0 ? v : v.toFixed(2); })()}
+                                  {getDisplayUnit(variant) && <span className="text-xs text-gray-400 ml-1">{getDisplayUnit(variant)}</span>}
+                                </span>
+                              ) : '-'}
                             </td>
                             {/* Average Column */}
                             <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-indigo-50 font-medium text-indigo-700">
-                              {variant.average && variant.average > 0 ? variant.average.toFixed(2) : '-'}
+                              {variant.average && variant.average > 0 ? (
+                                <span>
+                                  {getConvertedValue(variant, variant.average).toFixed(2)}
+                                  {getDisplayUnit(variant) && <span className="text-xs text-gray-400 ml-1">{getDisplayUnit(variant)}</span>}
+                                </span>
+                              ) : '-'}
                             </td>
                           </tr>
                         ))
@@ -464,6 +532,10 @@ const Index = ({ products, stockOutData, filters, error }) => {
               </div>
             </div>
           )}
+        </div>
+
+        <div className="mt-4 text-xs text-gray-500 italic">
+          * Konversi menggunakan rate yang berlaku saat ini. Rate dapat berubah jika admin memperbarui multiplier.
         </div>
       </div>
     </AppLayout>

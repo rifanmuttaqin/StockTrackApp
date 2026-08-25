@@ -105,6 +105,7 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
       physical_stock: item.physical_stock,
       difference: item.difference,
       status: item.status,
+      unit: item.unit || null,
     }))
   );
 
@@ -377,17 +378,21 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-center text-gray-700">
                           {item.system_stock_draft ?? '-'}
+                          {item.unit?.abbreviation && <span className="text-xs text-gray-400 ml-1">{item.unit.abbreviation}</span>}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-center text-gray-700">
                           {item.system_stock_submit ?? '-'}
+                          {item.unit?.abbreviation && <span className="text-xs text-gray-400 ml-1">{item.unit.abbreviation}</span>}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-center font-medium text-gray-900">
                           {item.physical_stock ?? '-'}
+                          {item.unit?.abbreviation && <span className="text-xs text-gray-400 ml-1">{item.unit.abbreviation}</span>}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-center font-semibold">
                           <span className={item.difference > 0 ? 'text-green-600' : item.difference < 0 ? 'text-red-600' : 'text-gray-600'}>
                             {item.difference > 0 ? '+' : ''}{item.difference ?? '-'}
                           </span>
+                          {item.unit?.abbreviation && <span className="text-xs text-gray-400 ml-1">{item.unit.abbreviation}</span>}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-center">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${keterangan.color}`}>
@@ -427,6 +432,10 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
               </div>
             </div>
           )}
+        </div>
+
+        <div className="mt-4 text-xs text-gray-500 italic">
+          * Konversi menggunakan rate yang berlaku saat ini. Rate dapat berubah jika admin memperbarui multiplier.
         </div>
       </div>
     </AppLayout>
