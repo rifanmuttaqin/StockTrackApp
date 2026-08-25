@@ -24,7 +24,7 @@ class StockOpnameReportController extends Controller
             $dateTo = $request->get('date_to');
             $status = $request->get('status', 'submit');
 
-            $query = StockOpnameRecord::with(['items.productVariant', 'items.productVariant.product', 'creator', 'submitter'])
+            $query = StockOpnameRecord::with(['items.productVariant.baseUnit', 'items.productVariant.baseUnit.conversions', 'items.productVariant.product', 'creator', 'submitter'])
                 ->where('status', 'submit');
 
             if ($dateFrom) {
@@ -49,6 +49,11 @@ class StockOpnameReportController extends Controller
                                 'id' => $item->id,
                                 'product_name' => $item->productVariant?->product?->name ?? '-',
                                 'variant_name' => $item->productVariant?->variant_name ?? '-',
+                                'unit' => $item->productVariant?->baseUnit ? [
+                                    'id' => $item->productVariant->baseUnit->id,
+                                    'name' => $item->productVariant->baseUnit->name,
+                                    'abbreviation' => $item->productVariant->baseUnit->abbreviation,
+                                ] : null,
                                 'system_stock_draft' => $item->system_stock_draft,
                                 'system_stock_submit' => $item->system_stock_submit,
                                 'physical_stock' => $item->physical_stock,
@@ -114,7 +119,7 @@ class StockOpnameReportController extends Controller
             $dateFrom = $request->get('date_from');
             $dateTo = $request->get('date_to');
 
-            $query = StockOpnameRecord::with(['items.productVariant', 'items.productVariant.product', 'creator'])
+            $query = StockOpnameRecord::with(['items.productVariant.baseUnit', 'items.productVariant.baseUnit.conversions', 'items.productVariant.product', 'creator'])
                 ->where('status', 'submit');
 
             if ($dateFrom) {
@@ -146,6 +151,7 @@ class StockOpnameReportController extends Controller
                     'Tanggal Submit',
                     'Nama Produk',
                     'Nama Varian',
+                    'Satuan',
                     'Stok Sistem (Draft)',
                     'Stok Sistem (Submit)',
                     'Stok Fisik',
@@ -175,6 +181,7 @@ class StockOpnameReportController extends Controller
                             $record->submitted_at?->format('Y-m-d H:i:s') ?? '-',
                             $item->productVariant?->product?->name ?? '-',
                             $item->productVariant?->variant_name ?? '-',
+                            $item->productVariant?->baseUnit?->abbreviation ?? '-',
                             $item->system_stock_draft,
                             $item->system_stock_submit,
                             $item->physical_stock ?? '-',

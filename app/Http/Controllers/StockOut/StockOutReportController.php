@@ -54,7 +54,7 @@ class StockOutReportController extends Controller
             ]);
 
             // Query stock out records
-            $query = StockOutRecord::with(['items.productVariant', 'items.productVariant.product'])
+            $query = StockOutRecord::with(['items.productVariant.baseUnit', 'items.productVariant.baseUnit.conversions', 'items.productVariant.product'])
                 ->where('status', 'submit')
                 ->whereBetween('date', [$startDate, $endDate]);
 
@@ -67,7 +67,7 @@ class StockOutReportController extends Controller
             $stockOutRecords = $query->orderBy('date')->get();
 
             // Get products with variants
-            $productsQuery = Product::with('variants');
+            $productsQuery = Product::with(['variants.baseUnit', 'variants.baseUnit.conversions']);
             if ($productId) {
                 $productsQuery->where('id', $productId);
             }
@@ -143,6 +143,20 @@ class StockOutReportController extends Controller
                         'stock_threshold' => $variant->stock_threshold ?? 0,
                         'is_below_threshold' => $isBelowThreshold,
                         'is_out_of_stock' => $isOutOfStock,
+                        'unit' => $variant->baseUnit ? [
+                            'id' => $variant->baseUnit->id,
+                            'name' => $variant->baseUnit->name,
+                            'abbreviation' => $variant->baseUnit->abbreviation,
+                        ] : null,
+                        'conversions' => $variant->baseUnit && $variant->baseUnit->conversions
+                            ? $variant->baseUnit->conversions->map(fn($c) => [
+                                'id' => $c->id,
+                                'name' => $c->name,
+                                'abbreviation' => $c->abbreviation,
+                                'multiplier' => (float) $c->multiplier,
+                                'is_primary' => $c->is_primary,
+                            ])->toArray()
+                            : [],
                         'consumption' => [
                             'total_out' => $totalOut,
                             'daily_average' => $dailyAverage,
@@ -236,7 +250,7 @@ class StockOutReportController extends Controller
             ]);
 
             // Query stock out records with eager loading
-            $query = StockOutRecord::with(['items.productVariant', 'items.productVariant.product'])
+            $query = StockOutRecord::with(['items.productVariant.baseUnit', 'items.productVariant.baseUnit.conversions', 'items.productVariant.product'])
                 ->where('status', 'submit')
                 ->whereBetween('date', [$startDate, $endDate]);
 
@@ -274,7 +288,7 @@ class StockOutReportController extends Controller
             $allProducts = Product::orderBy('name')->get();
             
             // Get products with their variants for the report data (filtered by product_id if provided)
-            $productsQuery = Product::with('variants');
+            $productsQuery = Product::with(['variants.baseUnit', 'variants.baseUnit.conversions']);
             if ($productId) {
                 $productsQuery->where('id', $productId);
             }
@@ -336,6 +350,20 @@ class StockOutReportController extends Controller
                         'stock_out_by_date' => $stockOutByDate,
                         'average' => $average,
                         'total' => $total,
+                        'unit' => $variant->baseUnit ? [
+                            'id' => $variant->baseUnit->id,
+                            'name' => $variant->baseUnit->name,
+                            'abbreviation' => $variant->baseUnit->abbreviation,
+                        ] : null,
+                        'conversions' => $variant->baseUnit && $variant->baseUnit->conversions
+                            ? $variant->baseUnit->conversions->map(fn($c) => [
+                                'id' => $c->id,
+                                'name' => $c->name,
+                                'abbreviation' => $c->abbreviation,
+                                'multiplier' => (float) $c->multiplier,
+                                'is_primary' => $c->is_primary,
+                            ])->toArray()
+                            : [],
                     ];
                 }
 

@@ -53,7 +53,7 @@ class StockInReportController extends Controller
             ]);
 
             // Query stock in records with eager loading
-            $query = StockInRecord::with(['items.productVariant', 'items.productVariant.product'])
+            $query = StockInRecord::with(['items.productVariant.baseUnit', 'items.productVariant.baseUnit.conversions', 'items.productVariant.product'])
                 ->where('status', 'submit')
                 ->whereBetween('date', [$startDate, $endDate]);
 
@@ -91,7 +91,7 @@ class StockInReportController extends Controller
             $allProducts = Product::orderBy('name')->get();
             
             // Get products with their variants for the report data (filtered by product_id if provided)
-            $productsQuery = Product::with('variants');
+            $productsQuery = Product::with(['variants.baseUnit', 'variants.baseUnit.conversions']);
             if ($productId) {
                 $productsQuery->where('id', $productId);
             }
@@ -153,6 +153,20 @@ class StockInReportController extends Controller
                         'stock_in_by_date' => $stockInByDate,
                         'average' => $average,
                         'total' => $total,
+                        'unit' => $variant->baseUnit ? [
+                            'id' => $variant->baseUnit->id,
+                            'name' => $variant->baseUnit->name,
+                            'abbreviation' => $variant->baseUnit->abbreviation,
+                        ] : null,
+                        'conversions' => $variant->baseUnit && $variant->baseUnit->conversions
+                            ? $variant->baseUnit->conversions->map(fn($c) => [
+                                'id' => $c->id,
+                                'name' => $c->name,
+                                'abbreviation' => $c->abbreviation,
+                                'multiplier' => (float) $c->multiplier,
+                                'is_primary' => $c->is_primary,
+                            ])->toArray()
+                            : [],
                     ];
                 }
 
