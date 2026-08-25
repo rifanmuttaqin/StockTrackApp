@@ -68,7 +68,6 @@ class WhatsAppSetting extends Model
         return [
             'id' => 'string',
             'is_active' => 'boolean',
-            'api_key' => 'encrypted',
             'message_template' => 'array',
             'recipients' => 'array',
             'notify_low_stock' => 'boolean',
@@ -79,6 +78,31 @@ class WhatsAppSetting extends Model
             'last_sent_at' => 'datetime',
             'send_status' => 'boolean',
         ];
+    }
+
+    /**
+     * Accessor untuk mendekripsi API key secara aman.
+     */
+    public function getApiKeyAttribute($value)
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        try {
+            return decrypt($value);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            \Illuminate\Support\Facades\Log::warning('Gagal mendekripsi WhatsApp API key. APP_KEY mungkin telah berubah: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Mutator untuk mengenkripsi API key.
+     */
+    public function setApiKeyAttribute($value)
+    {
+        $this->attributes['api_key'] = !empty($value) ? encrypt($value) : null;
     }
 
     /**
