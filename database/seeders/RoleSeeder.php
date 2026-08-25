@@ -175,6 +175,11 @@ class RoleSeeder extends Seeder
                 ['name' => 'stock_opname.delete', 'display_name' => 'Delete Stock Opname', 'description' => 'Menghapus draft stock opname'],
                 ['name' => 'stock_opname.submit', 'display_name' => 'Submit Stock Opname', 'description' => 'Submit stock opname'],
                 ['name' => 'stock_opname.bypass_ownership', 'display_name' => 'Bypass Stock Opname Ownership', 'description' => 'Mengabaikan hak kepemilikan draft stock opname'],
+                // Unit Management Permissions
+                ['name' => 'units.view', 'display_name' => 'View Units', 'description' => 'Melihat daftar satuan'],
+                ['name' => 'units.create', 'display_name' => 'Create Units', 'description' => 'Membuat satuan baru'],
+                ['name' => 'units.update', 'display_name' => 'Update Units', 'description' => 'Mengedit data satuan'],
+                ['name' => 'units.delete', 'display_name' => 'Delete Units', 'description' => 'Menghapus satuan'],
             ],
             'inventory_staff' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -220,6 +225,8 @@ class RoleSeeder extends Seeder
                 ['name' => 'stock_opname.update', 'display_name' => 'Update Stock Opname', 'description' => 'Mengupdate draft stock opname'],
                 ['name' => 'stock_opname.delete', 'display_name' => 'Delete Stock Opname', 'description' => 'Menghapus draft stock opname'],
                 ['name' => 'stock_opname.submit', 'display_name' => 'Submit Stock Opname', 'description' => 'Submit stock opname'],
+                // Unit Management Permissions (View Only)
+                ['name' => 'units.view', 'display_name' => 'View Units', 'description' => 'Melihat daftar satuan'],
             ],
             'warehouse_supervisor' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
@@ -267,6 +274,11 @@ class RoleSeeder extends Seeder
                 // WhatsApp Management Permissions (View Only)
                 ['name' => 'manage_settings', 'display_name' => 'Manage Settings', 'description' => 'Mengelola pengaturan sistem'],
                 ['name' => 'whatsapp.view_log', 'display_name' => 'View WhatsApp Logs', 'description' => 'Melihat log pengiriman WhatsApp'],
+                // Unit Management Permissions
+                ['name' => 'units.view', 'display_name' => 'View Units', 'description' => 'Melihat daftar satuan'],
+                ['name' => 'units.create', 'display_name' => 'Create Units', 'description' => 'Membuat satuan baru'],
+                ['name' => 'units.update', 'display_name' => 'Update Units', 'description' => 'Mengedit data satuan'],
+                ['name' => 'units.delete', 'display_name' => 'Delete Units', 'description' => 'Menghapus satuan'],
             ],
             'management' => [
                 ['name' => 'view_dashboard', 'display_name' => 'View Dashboard', 'description' => 'Melihat dashboard'],
