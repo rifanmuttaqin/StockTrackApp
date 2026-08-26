@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { router, usePage } from '@inertiajs/react';
 import AppLayout from '../../../Layouts/AppLayout';
-import { Alert, LoadingSpinner } from '../../../Components/UI';
+import { Alert, LoadingSpinner, SearchableSelect } from '../../../Components/UI';
 import { usePermission } from '../../../Hooks/usePermission';
 import { useMobileDetection } from '../../../Hooks/useMobileDetection';
 import {
@@ -31,6 +31,16 @@ const Index = ({ products, stockOutData, filters, error }) => {
     start_date: filters?.start_date || '',
     end_date: filters?.end_date || '',
   });
+
+  const productOptions = React.useMemo(() => {
+    return [
+      { value: '', label: 'Semua Produk' },
+      ...(products || []).map(product => ({
+        value: product.id,
+        label: product.name
+      }))
+    ];
+  }, [products]);
 
   useEffect(() => {
     // Update local filters when props change
@@ -300,19 +310,14 @@ const Index = ({ products, stockOutData, filters, error }) => {
               <label htmlFor="product_id" className="block text-sm font-medium text-gray-700 mb-1">
                 Produk
               </label>
-              <select
-                id="product_id"
+              <SearchableSelect
+                options={productOptions}
                 value={localFilters.product_id}
-                onChange={(e) => handleFilterChange('product_id', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value="">Semua Produk</option>
-                {products && products.map((product) => (
-                  <option key={product.id} value={product.id}>
-                    {product.name}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => handleFilterChange('product_id', val)}
+                placeholder="Semua Produk"
+                searchPlaceholder="Cari nama produk..."
+                emptyMessage="Produk tidak ditemukan"
+              />
             </div>
 
             {/* Start Date Filter */}
