@@ -1,7 +1,6 @@
 // Main Pages
 export { default as Welcome } from './Welcome';
 export { default as Dashboard } from './Dashboard';
-export { default as Profile } from './Profile';
 
 // Profile Pages
 export { default as ProfileShow } from './Profile/Show';

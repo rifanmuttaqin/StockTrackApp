@@ -1,66 +1,57 @@
 import React, { useState } from 'react';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
-import { useAuth } from '../../Context/AuthContext';
 import AvatarUpload from '../../Components/Forms/AvatarUpload';
-import SessionsTable from '../../Components/Tables/SessionsTable';
-import ActivityLogTable from '../../Components/Tables/ActivityLogTable';
 import { Alert } from '../../Components/UI';
 
+const TABS = [
+    { id: 'profile', name: 'Informasi Profile' },
+    { id: 'avatar', name: 'Avatar' },
+];
+
+const ROLE_LABELS = {
+    admin: 'Administrator',
+    manager: 'Manager',
+    user: 'User',
+};
+
+const ROLE_BADGE_COLORS = {
+    admin: 'bg-purple-100 text-purple-800',
+    manager: 'bg-brand-100 text-brand-800',
+    user: 'bg-green-100 text-green-800',
+};
+
+function formatDate(dateString) {
+    if (!dateString) return '-';
+    return new Date(dateString).toLocaleString('id-ID', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+}
+
+function getRoleName(role) {
+    return ROLE_LABELS[role] ?? role ?? '-';
+}
+
+function getRoleBadgeColor(role) {
+    return ROLE_BADGE_COLORS[role] ?? 'bg-appbg text-ink';
+}
+
 export default function ProfileShow() {
-    const { user, sessions, activities } = usePage().props;
-    const { flash } = usePage().props;
-    const { updateUser } = useAuth();
+    const { user, flash, auth } = usePage().props;
     const [activeTab, setActiveTab] = useState('profile');
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+    const primaryRole = user?.roles?.[0] ?? auth?.roles?.[0] ?? null;
+    const avatarSrc = user?.avatar_url ?? (user?.avatar ? `/storage/${user.avatar}` : null);
 
     const handleAvatarUploadSuccess = () => {
         setShowSuccessMessage(true);
         setTimeout(() => setShowSuccessMessage(false), 3000);
-        // In a real implementation, you would refresh the user data
-        // updateUser({ ...user, avatar: newAvatar });
-    };
-
-    const handleSessionRevoked = () => {
-        setShowSuccessMessage(true);
-        setTimeout(() => setShowSuccessMessage(false), 3000);
-    };
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleString('id-ID', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        });
-    };
-
-    const getRoleName = (role) => {
-        switch (role) {
-            case 'admin':
-                return 'Administrator';
-            case 'manager':
-                return 'Manager';
-            case 'user':
-                return 'User';
-            default:
-                return role;
-        }
-    };
-
-    const getRoleBadgeColor = (role) => {
-        switch (role) {
-            case 'admin':
-                return 'bg-purple-100 text-purple-800';
-            case 'manager':
-                return 'bg-brand-100 text-brand-800';
-            case 'user':
-                return 'bg-green-100 text-green-800';
-            default:
-                return 'bg-appbg text-ink';
-        }
+        router.reload({ only: ['auth', 'user'] });
     };
 
     return (
@@ -75,15 +66,13 @@ export default function ProfileShow() {
 
             <div className="py-6">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    {/* Success Message */}
-                    {(flash.success || showSuccessMessage) && (
+                    {(flash?.success || showSuccessMessage) && (
                         <div className="mb-6">
-                            <Alert type="success" message={flash.success || 'Perubahan berhasil disimpan.'} />
+                            <Alert type="success" message={flash?.success || 'Perubahan berhasil disimpan.'} />
                         </div>
                     )}
 
-                    {/* Error Message */}
-                    {flash.error && (
+                    {flash?.error && (
                         <div className="mb-6">
                             <Alert type="error" message={flash.error} />
                         </div>
@@ -94,11 +83,11 @@ export default function ProfileShow() {
                         <div className="bg-gradient-to-r from-brand-500 to-brand-600 px-4 py-5 sm:px-6">
                             <div className="flex items-center">
                                 <div className="flex-shrink-0">
-                                    {user?.avatar ? (
+                                    {avatarSrc ? (
                                         <img
-                                            className="h-20 w-20 rounded-full border-4 border-white"
-                                            src={`/storage/${user.avatar}`}
-                                            alt={`${user.name}'s avatar`}
+                                            className="h-20 w-20 rounded-full border-4 border-white object-cover"
+                                            src={avatarSrc}
+                                            alt={`Avatar ${user?.name ?? ''}`}
                                         />
                                     ) : (
                                         <div className="h-20 w-20 rounded-full bg-white border-4 border-white flex items-center justify-center">
@@ -111,11 +100,13 @@ export default function ProfileShow() {
                                 <div className="ml-6">
                                     <h1 className="text-2xl font-bold text-white">{user?.name}</h1>
                                     <p className="text-brand-100">{user?.email}</p>
-                                    <div className="mt-2">
-                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(user?.role)}`}>
-                                            {getRoleName(user?.role)}
-                                        </span>
-                                    </div>
+                                    {primaryRole && (
+                                        <div className="mt-2">
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(primaryRole)}`}>
+                                                {getRoleName(primaryRole)}
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="ml-auto">
                                     <Link
@@ -134,12 +125,7 @@ export default function ProfileShow() {
                         {/* Tabs */}
                         <div className="border-b border-slate-200">
                             <nav className="-mb-px flex space-x-8 px-4" aria-label="Tabs">
-                                {[
-                                    { id: 'profile', name: 'Informasi Profile' },
-                                    { id: 'avatar', name: 'Avatar' },
-                                    { id: 'sessions', name: 'Sesi' },
-                                    { id: 'activity', name: 'Aktivitas' },
-                                ].map((tab) => (
+                                {TABS.map((tab) => (
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
@@ -159,7 +145,6 @@ export default function ProfileShow() {
 
                         {/* Tab Content */}
                         <div className="px-4 py-5 sm:p-6">
-                            {/* Profile Tab */}
                             {activeTab === 'profile' && (
                                 <div>
                                     <h3 className="text-lg leading-6 font-medium text-ink mb-4">
@@ -181,32 +166,27 @@ export default function ProfileShow() {
                                         <div className="sm:col-span-1">
                                             <dt className="text-sm font-medium text-slate-500">Role</dt>
                                             <dd className="mt-1">
-                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(user?.role)}`}>
-                                                    {getRoleName(user?.role)}
-                                                </span>
+                                                {primaryRole ? (
+                                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(primaryRole)}`}>
+                                                        {getRoleName(primaryRole)}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-sm text-ink">-</span>
+                                                )}
                                             </dd>
-                                        </div>
-                                        <div className="sm:col-span-2">
-                                            <dt className="text-sm font-medium text-slate-500">Alamat</dt>
-                                            <dd className="mt-1 text-sm text-ink">{user?.address || '-'}</dd>
-                                        </div>
-                                        <div className="sm:col-span-2">
-                                            <dt className="text-sm font-medium text-slate-500">Bio</dt>
-                                            <dd className="mt-1 text-sm text-ink">{user?.bio || '-'}</dd>
                                         </div>
                                         <div className="sm:col-span-1">
                                             <dt className="text-sm font-medium text-slate-500">Terakhir Login</dt>
-                                            <dd className="mt-1 text-sm text-ink">{user?.last_login_at ? formatDate(user.last_login_at) : '-'}</dd>
+                                            <dd className="mt-1 text-sm text-ink">{formatDate(user?.last_login_at)}</dd>
                                         </div>
                                         <div className="sm:col-span-1">
                                             <dt className="text-sm font-medium text-slate-500">Bergabung Sejak</dt>
-                                            <dd className="mt-1 text-sm text-ink">{user?.created_at ? formatDate(user.created_at) : '-'}</dd>
+                                            <dd className="mt-1 text-sm text-ink">{formatDate(user?.created_at)}</dd>
                                         </div>
                                     </dl>
                                 </div>
                             )}
 
-                            {/* Avatar Tab */}
                             {activeTab === 'avatar' && (
                                 <div>
                                     <div className="mb-6">
@@ -218,36 +198,6 @@ export default function ProfileShow() {
                                         </p>
                                     </div>
                                     <AvatarUpload user={user} onSuccess={handleAvatarUploadSuccess} />
-                                </div>
-                            )}
-
-                            {/* Sessions Tab */}
-                            {activeTab === 'sessions' && (
-                                <div>
-                                    <div className="mb-6">
-                                        <h3 className="text-lg leading-6 font-medium text-ink">
-                                            Sesi Aktif
-                                        </h3>
-                                        <p className="mt-1 text-sm text-slate-500">
-                                            Kelola sesi login Anda di berbagai perangkat.
-                                        </p>
-                                    </div>
-                                    <SessionsTable sessions={sessions} onSessionRevoked={handleSessionRevoked} />
-                                </div>
-                            )}
-
-                            {/* Activity Tab */}
-                            {activeTab === 'activity' && (
-                                <div>
-                                    <div className="mb-6">
-                                        <h3 className="text-lg leading-6 font-medium text-ink">
-                                            Log Aktivitas
-                                        </h3>
-                                        <p className="mt-1 text-sm text-slate-500">
-                                            Riwayat aktivitas akun Anda.
-                                        </p>
-                                    </div>
-                                    <ActivityLogTable activities={activities} />
                                 </div>
                             )}
                         </div>

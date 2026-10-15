@@ -11,10 +11,12 @@ use App\Repositories\Template\TemplateRepository;
 use App\Repositories\Unit\UnitRepository;
 use App\Repositories\User\UserRepository;
 use App\Services\Contracts\ProductServiceInterface;
+use App\Services\Contracts\ProfileServiceInterface;
 use App\Services\Contracts\TemplateServiceInterface;
 use App\Services\Contracts\UnitServiceInterface;
 use App\Services\Contracts\UserServiceInterface;
 use App\Services\Product\ProductService;
+use App\Services\Profile\ProfileService;
 use App\Services\Template\TemplateService;
 use App\Services\Unit\UnitService;
 use App\Services\User\UserService;
@@ -35,6 +37,7 @@ class RepositoryServiceProvider extends ServiceProvider
 
         // Bind Service Interfaces
         $this->app->bind(UserServiceInterface::class, UserService::class);
+        $this->app->bind(ProfileServiceInterface::class, ProfileService::class);
         $this->app->bind(ProductServiceInterface::class, ProductService::class);
         $this->app->bind(TemplateServiceInterface::class, TemplateService::class);
         $this->app->bind(UnitServiceInterface::class, UnitService::class);

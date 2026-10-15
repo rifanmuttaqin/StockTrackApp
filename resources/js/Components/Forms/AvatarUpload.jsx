@@ -1,47 +1,49 @@
 import React, { useState, useRef } from 'react';
-import { useForm } from '@inertiajs/react';
+import { useForm, router } from '@inertiajs/react';
 import Swal from 'sweetalert2';
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
+const ACCEPTED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+const ACCEPTED_LABEL = 'PNG, JPG, WEBP hingga 2MB';
+
+function resolveInitialPreview(user) {
+    if (user?.avatar_url) return user.avatar_url;
+    if (user?.avatar) return `/storage/${user.avatar}`;
+    return null;
+}
+
 export default function AvatarUpload({ user, onSuccess }) {
-    const [preview, setPreview] = useState(user?.avatar ? `/storage/${user.avatar}` : null);
+    const [preview, setPreview] = useState(() => resolveInitialPreview(user));
     const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef(null);
-    const [uploadProgress, setUploadProgress] = useState(0);
-    const [isUploading, setIsUploading] = useState(false);
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, progress } = useForm({
         avatar: null,
     });
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            processFile(file);
-        }
-    };
-
     const processFile = (file) => {
-        // Validate file type
-        if (!file.type.match('image.*')) {
-            Swal.fire('Error', 'Please select an image file.', 'error');
+        if (!file.type.startsWith('image/') || !ACCEPTED_MIME_TYPES.includes(file.type)) {
+            Swal.fire('Gagal', 'Pilih file gambar (JPG, PNG, WEBP).', 'error');
             return;
         }
 
-        // Validate file size (2MB)
-        if (file.size > 2 * 1024 * 1024) {
-            Swal.fire('Error', 'File size must be less than 2MB.', 'error');
+        if (file.size > MAX_FILE_SIZE) {
+            Swal.fire('Gagal', 'Ukuran file maksimal 2MB.', 'error');
             return;
         }
 
-        // Create preview
         const reader = new FileReader();
         reader.onload = (e) => {
             setPreview(e.target.result);
         };
         reader.readAsDataURL(file);
 
-        // Set form data
         setData('avatar', file);
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) processFile(file);
     };
 
     const handleDragOver = (e) => {
@@ -66,41 +68,47 @@ export default function AvatarUpload({ user, onSuccess }) {
 
     const submit = (e) => {
         e.preventDefault();
-        setIsUploading(true);
-        setUploadProgress(0);
+        if (!data.avatar) return;
 
-        // Simulate upload progress
-        const progressInterval = setInterval(() => {
-            setUploadProgress((prev) => {
-                if (prev >= 90) {
-                    clearInterval(progressInterval);
-                    return 90;
-                }
-                return prev + 10;
-            });
-        }, 200);
-
-        post('/profile/avatar', {
+        post(route('profile.avatar.update'), {
             forceFormData: true,
+            preserveScroll: true,
             onSuccess: () => {
-                clearInterval(progressInterval);
-                setUploadProgress(100);
-                setTimeout(() => {
-                    setIsUploading(false);
-                    setUploadProgress(0);
-                    if (onSuccess) onSuccess();
-                }, 500);
-            },
-            onError: () => {
-                clearInterval(progressInterval);
-                setIsUploading(false);
-                setUploadProgress(0);
+                setData('avatar', null);
+                if (onSuccess) onSuccess();
             },
         });
     };
 
-    const handleRemoveAvatar = () => {
-        // In a real implementation, this would call an API to delete the avatar
+    const handleRemoveAvatar = async () => {
+        const hasSavedAvatar = Boolean(user?.avatar || user?.avatar_url);
+
+        if (hasSavedAvatar) {
+            const result = await Swal.fire({
+                title: 'Hapus avatar?',
+                text: 'Foto profile akan dihapus permanen.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, hapus',
+                cancelButtonText: 'Batal',
+            });
+
+            if (!result.isConfirmed) return;
+
+            router.delete(route('profile.avatar.destroy'), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setPreview(null);
+                    setData('avatar', null);
+                    if (fileInputRef.current) {
+                        fileInputRef.current.value = '';
+                    }
+                    if (onSuccess) onSuccess();
+                },
+            });
+            return;
+        }
+
         setPreview(null);
         setData('avatar', null);
         if (fileInputRef.current) {
@@ -111,6 +119,9 @@ export default function AvatarUpload({ user, onSuccess }) {
     const openFileDialog = () => {
         fileInputRef.current?.click();
     };
+
+    const uploadPercent = progress?.percentage ?? 0;
+    const isUploading = processing;
 
     return (
         <div className="space-y-6">
@@ -124,7 +135,7 @@ export default function AvatarUpload({ user, onSuccess }) {
                             <img
                                 className="h-24 w-24 object-cover rounded-full"
                                 src={preview}
-                                alt="Avatar preview"
+                                alt="Pratinjau avatar"
                             />
                         ) : (
                             <div className="h-24 w-24 rounded-full bg-slate-300 flex items-center justify-center">
@@ -142,7 +153,7 @@ export default function AvatarUpload({ user, onSuccess }) {
                         <input
                             ref={fileInputRef}
                             type="file"
-                            accept="image/*"
+                            accept="image/jpeg,image/png,image/jpg,image/webp"
                             onChange={handleFileChange}
                             className="hidden"
                         />
@@ -163,7 +174,7 @@ export default function AvatarUpload({ user, onSuccess }) {
                             </button>
                         )}
                         <p className="mt-2 text-sm text-slate-500">
-                            PNG, JPG, GIF hingga 2MB
+                            {ACCEPTED_LABEL}
                         </p>
                     </div>
                 </div>
@@ -174,7 +185,7 @@ export default function AvatarUpload({ user, onSuccess }) {
 
             {/* Drag and Drop Area */}
             <div
-                className={`mt-2 flex justify-center rounded-lg border-2 border-dashed px-6 pt-5 pb-6 ${
+                className={`mt-2 flex justify-center rounded-lg border-2 border-dashed px-6 pt-5 pb-6 cursor-pointer ${
                     isDragging
                         ? 'border-brand-500 bg-brand-50'
                         : 'border-slate-300'
@@ -182,6 +193,7 @@ export default function AvatarUpload({ user, onSuccess }) {
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
+                onClick={openFileDialog}
             >
                 <div className="space-y-1 text-center">
                     <svg
@@ -198,38 +210,27 @@ export default function AvatarUpload({ user, onSuccess }) {
                             strokeLinejoin="round"
                         />
                     </svg>
-                    <div className="flex text-sm text-slate-500">
-                        <label
-                            htmlFor="file-upload"
-                            className="relative cursor-pointer rounded-md bg-white font-medium text-brand-700 focus-within:outline-none focus-within:ring-2 focus-within:ring-brand focus-within:ring-offset-2 hover:text-brand-600"
-                        >
-                            <span>Upload file</span>
-                            <input
-                                id="file-upload"
-                                name="file-upload"
-                                type="file"
-                                className="sr-only"
-                                accept="image/*"
-                                onChange={handleFileChange}
-                            />
-                        </label>
+                    <div className="flex justify-center text-sm text-slate-500">
+                        <span className="relative rounded-md bg-white font-medium text-brand-700 hover:text-brand-600">
+                            Upload file
+                        </span>
                         <p className="pl-1">atau drag and drop</p>
                     </div>
-                    <p className="text-xs text-slate-500">PNG, JPG, GIF hingga 2MB</p>
+                    <p className="text-xs text-slate-500">{ACCEPTED_LABEL}</p>
                 </div>
             </div>
 
             {/* Upload Progress */}
-            {isUploading && (
+            {isUploading && uploadPercent > 0 && (
                 <div className="mt-2">
                     <div className="flex items-center justify-between mb-1">
                         <span className="text-sm text-slate-700">Mengupload...</span>
-                        <span className="text-sm text-slate-700">{uploadProgress}%</span>
+                        <span className="text-sm text-slate-700">{uploadPercent}%</span>
                     </div>
                     <div className="w-full bg-slate-200 rounded-full h-2">
                         <div
                             className="bg-brand h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${uploadProgress}%` }}
+                            style={{ width: `${uploadPercent}%` }}
                         ></div>
                     </div>
                 </div>
@@ -240,10 +241,10 @@ export default function AvatarUpload({ user, onSuccess }) {
                 <div className="flex justify-end">
                     <button
                         onClick={submit}
-                        disabled={processing || isUploading}
+                        disabled={processing}
                         className="inline-flex justify-center rounded-md border border-transparent bg-brand py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 disabled:opacity-50"
                     >
-                        {processing || isUploading ? 'Memproses...' : 'Simpan Avatar'}
+                        {processing ? 'Memproses...' : 'Simpan Avatar'}
                     </button>
                 </div>
             )}

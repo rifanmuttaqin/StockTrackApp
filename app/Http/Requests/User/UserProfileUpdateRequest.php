@@ -13,10 +13,11 @@ class UserProfileUpdateRequest extends FormRequest
     public function authorize(): bool
     {
         $user = Auth::user();
-        $targetUserId = $this->route('id');
+        $target = $this->route('user') ?? $this->route('id');
+        $targetUserId = $target instanceof \App\Models\User ? $target->getKey() : $target;
 
         // User can update their own profile
-        if ($user->id === $targetUserId) {
+        if ($user && (string) $user->getKey() === (string) $targetUserId) {
             return true;
         }
 
@@ -31,7 +32,8 @@ class UserProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = $this->route('id') ?? $this->input('id');
+        $target = $this->route('user') ?? $this->route('id');
+        $userId = $target instanceof \App\Models\User ? $target->getKey() : ($target ?? $this->input('id'));
 
         return [
             'name' => 'sometimes|required|string|max:255',
@@ -39,7 +41,7 @@ class UserProfileUpdateRequest extends FormRequest
             'phone' => 'sometimes|nullable|string|max:20',
             'address' => 'sometimes|nullable|string|max:500',
             'birth_date' => 'sometimes|nullable|date|before:today',
-            'avatar' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'avatar' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
 
@@ -60,7 +62,7 @@ class UserProfileUpdateRequest extends FormRequest
             'birth_date.date' => 'Format tanggal lahir tidak valid',
             'birth_date.before' => 'Tanggal lahir harus sebelum hari ini',
             'avatar.image' => 'Avatar harus berupa gambar',
-            'avatar.mimes' => 'Avatar harus berformat jpeg, png, jpg, atau gif',
+            'avatar.mimes' => 'Avatar harus berformat jpeg, png, jpg, atau webp',
             'avatar.max' => 'Ukuran avatar maksimal 2MB',
         ];
     }
