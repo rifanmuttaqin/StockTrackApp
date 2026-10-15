@@ -11,6 +11,7 @@ import {
   MagnifyingGlassIcon,
   EyeIcon,
   CheckCircleIcon,
+  Square2StackIcon,
 } from '@heroicons/react/24/outline';
 
 const Index = ({ templates, filters, meta }) => {
@@ -175,6 +176,16 @@ const Index = ({ templates, filters, meta }) => {
         className: 'text-brand-700 hover:text-brand-900',
         title: 'Lihat Detail',
         onClick: () => router.get(route('templates.show', template.id)),
+      });
+    }
+
+    if (can('templates.create')) {
+      actions.push({
+        key: 'copy',
+        icon: Square2StackIcon,
+        className: 'text-brand-700 hover:text-brand-900',
+        title: 'Copy Template',
+        onClick: () => router.get(route('templates.copy', template.id)),
       });
     }
 

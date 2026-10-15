@@ -85,6 +85,55 @@ class TemplateRepository implements TemplateRepositoryInterface
     }
 
     /**
+     * Copy template items from source into a new template.
+     * Variants come from the (already user-edited) request payload,
+     * not blindly from the source, so add/remove before submit is honored.
+     */
+    public function copy(string $sourceId, array $data): Template
+    {
+        DB::beginTransaction();
+
+        try {
+            // Ensure source exists (non-deleted)
+            $source = Template::findOrFail($sourceId);
+
+            // Create new template — always inactive
+            $template = Template::create([
+                'name' => $data['name'],
+                'is_active' => false,
+            ]);
+
+            // Duplicate items from edited payload
+            $variantIds = array_values(array_unique($data['variants'] ?? []));
+            foreach ($variantIds as $variantId) {
+                // Validate that variant exists
+                $variant = ProductVariant::find($variantId);
+                if ($variant) {
+                    TemplateItem::create([
+                        'template_id' => $template->id,
+                        'product_variant_id' => $variantId,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            // Load relations
+            $template->load(['variants', 'items']);
+
+            return $template;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Failed to copy template', [
+                'error' => $e->getMessage(),
+                'source_id' => $sourceId,
+                'data' => $data,
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
      * Update template
      */
     public function update(string $id, array $data): bool

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Template;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Template\TemplateCopyRequest;
 use App\Http\Requests\Template\TemplateCreateRequest;
 use App\Http\Requests\Template\TemplateDeleteRequest;
 use App\Http\Requests\Template\TemplateSetActiveRequest;
@@ -26,7 +27,7 @@ class TemplateController extends Controller
 
         // Permission middleware
         $this->middleware('permission:templates.view')->only(['index', 'show']);
-        $this->middleware('permission:templates.create')->only(['create', 'store']);
+        $this->middleware('permission:templates.create')->only(['create', 'store', 'copy', 'copyStore']);
         $this->middleware('permission:templates.update')->only(['edit', 'update', 'setActive']);
         $this->middleware('permission:templates.delete')->only(['destroy', 'restore', 'forceDelete']);
     }
@@ -192,6 +193,77 @@ class TemplateController extends Controller
 
             return redirect()->back()
                 ->with('error', 'Gagal menambahkan template. ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    /**
+     * Show form for copying a template.
+     * Items from source are pre-selected; user may add/remove before submit.
+     */
+    public function copy(string $id): Response
+    {
+        try {
+            $template = $this->templateService->getTemplateWithVariants($id);
+
+            if (!$template) {
+                abort(404, 'Template tidak ditemukan.');
+            }
+
+            // Get all product variants with eager loading
+            $productVariants = ProductVariant::with('product')
+                ->whereHas('product', function ($query) {
+                    $query->whereNull('deleted_at');
+                })
+                ->whereNull('deleted_at')
+                ->get();
+
+            $this->logTemplateAction('view_template_copy_form', $id);
+
+            return Inertia::render('Templates/Copy', [
+                'sourceTemplate' => $template,
+                'productVariants' => $productVariants,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to load template copy form', [
+                'error' => $e->getMessage(),
+                'template_id' => $id,
+                'performed_by' => Auth::id(),
+            ]);
+
+            abort(404, 'Template tidak ditemukan.');
+        }
+    }
+
+    /**
+     * Store a copied template (new inactive template from edited payload)
+     */
+    public function copyStore(TemplateCopyRequest $request, string $id)
+    {
+        try {
+            $validatedData = $request->validated();
+            // Result is always inactive regardless of input
+            $validatedData['is_active'] = false;
+
+            $template = $this->templateService->copyTemplate($id, $validatedData);
+
+            $this->logTemplateAction('copy_template', $template->id, [
+                'source_template_id' => $id,
+                'name' => $template->name,
+                'variants_count' => count($validatedData['variants'] ?? []),
+            ]);
+
+            return redirect()->route('templates.index')
+                ->with('success', 'Template berhasil dicopy.');
+        } catch (\Exception $e) {
+            Log::error('Failed to copy template', [
+                'error' => $e->getMessage(),
+                'source_template_id' => $id,
+                'performed_by' => Auth::id(),
+            ]);
+
+            return redirect()->back()
+                ->with('error', 'Gagal mencopy template. ' . $e->getMessage())
                 ->withInput();
         }
     }

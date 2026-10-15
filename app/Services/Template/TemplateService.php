@@ -89,6 +89,65 @@ class TemplateService implements TemplateServiceInterface
     }
 
     /**
+     * Copy template: duplicate source items into a new (inactive) template
+     */
+    public function copyTemplate(string $sourceId, array $data): Template
+    {
+        Log::info('TemplateService::copyTemplate - Starting template copy', [
+            'source_id' => $sourceId,
+            'data' => $data,
+        ]);
+
+        try {
+            // Check if source template exists
+            $source = $this->templateRepository->getById($sourceId);
+            if (!$source) {
+                Log::warning('TemplateService::copyTemplate - Source template not found', [
+                    'source_id' => $sourceId,
+                ]);
+                throw new \Exception('Template sumber tidak ditemukan');
+            }
+
+            // Validate edited payload
+            $validator = Validator::make($data, [
+                'name' => 'required|string|max:255',
+                'variants' => 'required|array|min:1',
+                'variants.*' => 'required|string|exists:product_variants,id',
+            ]);
+
+            if ($validator->fails()) {
+                Log::warning('TemplateService::copyTemplate - Validation failed', [
+                    'errors' => $validator->errors()->toArray(),
+                ]);
+                throw new \InvalidArgumentException($validator->errors()->first());
+            }
+
+            $template = $this->templateRepository->copy($sourceId, $data);
+
+            Log::info('TemplateService::copyTemplate - Template copied successfully', [
+                'source_id' => $sourceId,
+                'template_id' => $template->id,
+                'template_name' => $template->name,
+            ]);
+
+            return $template;
+        } catch (\InvalidArgumentException $e) {
+            Log::error('TemplateService::copyTemplate - Validation error', [
+                'error' => $e->getMessage(),
+                'source_id' => $sourceId,
+            ]);
+            throw $e;
+        } catch (\Exception $e) {
+            Log::error('TemplateService::copyTemplate - Failed to copy template', [
+                'error' => $e->getMessage(),
+                'source_id' => $sourceId,
+                'trace' => $e->getTraceAsString(),
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
      * Update template dan items
      */
     public function updateTemplate(string $id, array $data): bool

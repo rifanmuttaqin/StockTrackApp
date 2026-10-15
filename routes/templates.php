@@ -20,6 +20,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('templates.create')
         ->middleware('permission:templates.create');
 
+    // Copy template form (prefilled from source, editable before submit)
+    // NOTE: must be registered before '/templates/{template}' to avoid route conflict
+    Route::get('/templates/{template}/copy', [TemplateController::class, 'copy'])
+        ->name('templates.copy')
+        ->middleware('permission:templates.create');
+
+    // Store copied template
+    Route::post('/templates/{template}/copy', [TemplateController::class, 'copyStore'])
+        ->name('templates.copy.store')
+        ->middleware('permission:templates.create');
+
     // Store new template
     Route::post('/templates', [TemplateController::class, 'store'])
         ->name('templates.store')

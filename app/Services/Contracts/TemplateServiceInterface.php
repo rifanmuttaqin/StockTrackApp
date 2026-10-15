@@ -22,6 +22,12 @@ interface TemplateServiceInterface
     public function createTemplate(array $data): Template;
 
     /**
+     * Copy template: duplicate source items into a new (inactive) template
+     * using the user-edited variants payload.
+     */
+    public function copyTemplate(string $sourceId, array $data): Template;
+
+    /**
      * Update template dan items
      */
     public function updateTemplate(string $id, array $data): bool;

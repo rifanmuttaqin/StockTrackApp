@@ -22,6 +22,13 @@ interface TemplateRepositoryInterface
     public function create(array $data): Template;
 
     /**
+     * Copy template items from source into a new template.
+     * $data contains edited payload: ['name' => string, 'variants' => string[]].
+     * Result is always inactive.
+     */
+    public function copy(string $sourceId, array $data): Template;
+
+    /**
      * Update template
      */
     public function update(string $id, array $data): bool;
