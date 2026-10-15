@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import {
-  X,
   Home,
   Package,
   Users,
   Settings,
-  LogOut,
   User,
   ChevronDown,
   UserPlus,
@@ -15,7 +13,6 @@ import {
   ArrowRight,
   ClipboardCheck
 } from 'lucide-react';
-import { Button } from '../UI/button';
 import { useAuth } from '../../Context/AuthContext';
 import { PERMISSIONS } from '../../Utils/constants';
 
@@ -152,6 +149,9 @@ const MobileMenu = ({ isOpen, onClose }) => {
     return null;
   }
 
+  const avatarSrc =
+    auth?.user?.avatar_url ?? (auth?.user?.avatar ? `/storage/${auth.user.avatar}` : null);
+
   return (
     <>
       {/* Overlay */}
@@ -164,45 +164,39 @@ const MobileMenu = ({ isOpen, onClose }) => {
 
       {/* Menu Panel */}
       <div
-        className="fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out"
+        className="fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out flex flex-col"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="mobile-menu-title"
+        aria-label="Menu navigasi utama"
         ref={menuRef}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-brand-600 bg-brand">
-          <h2 id="mobile-menu-title" className="text-lg font-semibold text-ink font-poppins">Menu</h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="text-ink hover:bg-brand-600"
-            aria-label="Tutup menu"
-          >
-            <X size={20} />
-          </Button>
-        </div>
-
         {/* User Profile */}
-        <div className="p-4 border-b border-slate-200 bg-appbg">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center">
-              <User className="text-ink" size={20} />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-ink font-poppins">
-                {auth?.user?.name || 'User'}
-              </p>
-              <p className="text-xs text-slate-500 font-poppins">
-                {auth?.user?.email || 'user@example.com'}
-              </p>
-            </div>
+        <div className="px-4 pt-6 pb-5 border-b border-slate-200 bg-appbg">
+          <div className="w-16 h-16 rounded-full bg-brand flex items-center justify-center overflow-hidden">
+            {avatarSrc ? (
+              <img
+                src={avatarSrc}
+                alt={auth?.user?.name || 'User'}
+                className="w-full h-full object-cover"
+              />
+            ) : auth?.user?.name ? (
+              <span className="text-xl font-semibold text-ink font-poppins">
+                {auth.user.name.charAt(0).toUpperCase()}
+              </span>
+            ) : (
+              <User className="text-ink" size={28} />
+            )}
           </div>
+          <p className="mt-3 text-sm font-semibold text-ink font-poppins text-left truncate max-w-full">
+            {auth?.user?.name || 'User'}
+          </p>
+          <p className="mt-0.5 text-xs text-slate-500 font-poppins text-left truncate max-w-full">
+            {auth?.user?.email || 'user@example.com'}
+          </p>
         </div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 p-4 space-y-2" role="navigation" aria-label="Main navigation">
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto" role="navigation" aria-label="Main navigation">
           {filteredNavigationItems.map((item) => {
             const Icon = item.icon;
             const hasSubMenu = item.subMenu && item.subMenu.length > 0;
@@ -311,21 +305,6 @@ const MobileMenu = ({ isOpen, onClose }) => {
             );
           })}
         </nav>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-slate-200">
-          <Link
-            href="/logout"
-            method="post"
-            as="button"
-            className="flex items-center space-x-3 w-full px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
-            style={{ minHeight: '44px' }}
-            role="menuitem"
-          >
-            <LogOut size={18} />
-            <span className="font-poppins">Keluar</span>
-          </Link>
-        </div>
       </div>
     </>
   );
