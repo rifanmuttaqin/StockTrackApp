@@ -16,9 +16,9 @@ const MobileFormSection = React.forwardRef(({ className, title, description, chi
     {...props}>
     {title && (
       <div className="space-y-2">
-        <h3 className="text-lg font-poppins font-semibold text-gray-900">{title}</h3>
+        <h3 className="text-lg font-poppins font-semibold text-ink">{title}</h3>
         {description && (
-          <p className="text-sm font-poppins text-gray-600">{description}</p>
+          <p className="text-sm font-poppins text-slate-500">{description}</p>
         )}
       </div>
     )}
@@ -33,7 +33,7 @@ const MobileFormField = React.forwardRef(({ className, label, error, required, c
     className={cn("space-y-2", className)}
     {...props}>
     {label && (
-      <label className="text-sm font-poppins font-medium text-gray-700">
+      <label className="text-sm font-poppins font-medium text-slate-700">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>

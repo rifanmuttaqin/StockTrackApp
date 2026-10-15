@@ -10,12 +10,12 @@ import { Alert, LoadingSpinner, Badge, Modal } from '../../Components/UI';
  */
 const PRODUCT_COLORS = [
   { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-900', badge: 'bg-red-100 text-red-800' },
-  { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-900', badge: 'bg-blue-100 text-blue-800' },
+  { bg: 'bg-brand-50', border: 'border-brand-200', text: 'text-brand-900', badge: 'bg-brand-100 text-brand-800' },
   { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-900', badge: 'bg-green-100 text-green-800' },
-  { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-900', badge: 'bg-yellow-100 text-yellow-800' },
+  { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-900', badge: 'bg-amber-100 text-amber-800' },
   { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-900', badge: 'bg-purple-100 text-purple-800' },
   { bg: 'bg-pink-50', border: 'border-pink-200', text: 'text-pink-900', badge: 'bg-pink-100 text-pink-800' },
-  { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-900', badge: 'bg-indigo-100 text-indigo-800' },
+  { bg: 'bg-brand-50', border: 'border-brand-200', text: 'text-brand-900', badge: 'bg-brand-100 text-brand-800' },
   { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-900', badge: 'bg-orange-100 text-orange-800' },
   { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-900', badge: 'bg-teal-100 text-teal-800' },
   { bg: 'bg-cyan-50', border: 'border-cyan-200', text: 'text-cyan-900', badge: 'bg-cyan-100 text-cyan-800' },
@@ -170,7 +170,7 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
         <div className="mb-6">
           <Link
             href={route('stock-in.index')}
-            className="inline-flex items-center text-gray-600 hover:text-gray-900"
+            className="inline-flex items-center text-slate-500 hover:text-ink"
           >
             <ArrowLeftIcon className="h-5 w-5 mr-1" />
             Kembali ke Daftar
@@ -192,7 +192,7 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
         
         {/* Loading Overlay */}
         {processing && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
             <LoadingSpinner size="lg" />
           </div>
         )}
@@ -202,12 +202,12 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <DocumentTextIcon className="h-6 w-6 text-indigo-600" />
-                <h1 className="text-2xl font-bold text-gray-900">
+                <DocumentTextIcon className="h-6 w-6 text-brand-700" />
+                <h1 className="text-2xl font-bold text-ink">
                   {stockIn.transaction_code || 'N/A'}
                 </h1>
               </div>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-slate-500">
                 Tanggal: {formatDate(stockIn.date)}
               </p>
             </div>
@@ -219,13 +219,13 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
           
           {/* Statistics */}
           <div className="grid grid-cols-2 gap-4 mt-6">
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-sm text-gray-500">Total Produk</p>
-              <p className="text-2xl font-bold text-gray-900">{totalItems}</p>
+            <div className="bg-appbg rounded-lg p-4">
+              <p className="text-sm text-slate-500">Total Produk</p>
+              <p className="text-2xl font-bold text-ink">{totalItems}</p>
             </div>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-sm text-gray-500">Total Quantity</p>
-              <p className="text-2xl font-bold text-gray-900">{totalQuantity}</p>
+            <div className="bg-appbg rounded-lg p-4">
+              <p className="text-sm text-slate-500">Total Quantity</p>
+              <p className="text-2xl font-bold text-ink">{totalQuantity}</p>
             </div>
           </div>
           
@@ -243,11 +243,11 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
           )}
           
           {/* Timestamps */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
+          <div className="mt-6 pt-6 border-t border-slate-200">
+            <p className="text-sm text-slate-500">
               Dibuat: {formatDateTime(stockIn.created_at)}
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-500">
               Terakhir Diupdate: {formatDateTime(stockIn.updated_at)}
             </p>
           </div>
@@ -255,10 +255,10 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
         
         {/* Items List */}
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Items</h2>
+          <h2 className="text-xl font-bold text-ink mb-4">Items</h2>
           
           {items.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">Tidak ada items</p>
+            <p className="text-slate-500 text-center py-8">Tidak ada items</p>
           ) : (
             <div className="space-y-4">
               {items.map((item) => {
@@ -284,7 +284,7 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
                         <p className={`text-2xl font-bold ${color.text}`}>
                           {item.quantity}
                         </p>
-                        <p className="text-sm text-gray-500">Qty</p>
+                        <p className="text-sm text-slate-500">Qty</p>
                       </div>
                     </div>
                   </div>
@@ -299,7 +299,7 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href={route('stock-in.index')}
-              className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center justify-center px-4 py-2 border border-slate-300 rounded-lg shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             >
               <ArrowLeftIcon className="h-5 w-5 mr-2" />
               Kembali
@@ -308,7 +308,7 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
               <>
                 <Link
                   href={route('stock-in.edit', stockIn.id)}
-                  className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="inline-flex items-center justify-center px-4 py-2 border border-slate-300 rounded-lg shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                 >
                   <PencilIcon className="h-5 w-5 mr-2" />
                   Edit Draft
@@ -336,34 +336,34 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
       >
         <div className="p-6">
           <div className="flex items-center mb-4">
-            <ExclamationTriangleIcon className="h-8 w-8 text-yellow-600 mr-3" />
+            <ExclamationTriangleIcon className="h-8 w-8 text-amber-600 mr-3" />
             <div>
-              <h3 className="text-lg font-medium text-gray-900">
+              <h3 className="text-lg font-medium text-ink">
                 Submit Stock In
               </h3>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-slate-500 mt-1">
                 Apakah Anda yakin ingin submit stock in ini? Stock akan bertambah secara permanen.
               </p>
             </div>
           </div>
 
-          <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="mt-4 p-4 bg-appbg rounded-lg border border-slate-200">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="font-medium text-gray-700">Transaction Code:</span>
-                <p className="text-gray-900">{stockIn.transaction_code || 'N/A'}</p>
+                <span className="font-medium text-slate-700">Transaction Code:</span>
+                <p className="text-ink">{stockIn.transaction_code || 'N/A'}</p>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Tanggal:</span>
-                <p className="text-gray-900">{formatDate(stockIn.date)}</p>
+                <span className="font-medium text-slate-700">Tanggal:</span>
+                <p className="text-ink">{formatDate(stockIn.date)}</p>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Total Produk:</span>
-                <p className="text-gray-900">{totalVariants}</p>
+                <span className="font-medium text-slate-700">Total Produk:</span>
+                <p className="text-ink">{totalVariants}</p>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Total Quantity:</span>
-                <p className="text-gray-900">{totalQuantity}</p>
+                <span className="font-medium text-slate-700">Total Quantity:</span>
+                <p className="text-ink">{totalQuantity}</p>
               </div>
             </div>
           </div>
@@ -372,7 +372,7 @@ const Show = ({ stockIn, items, totalQuantity, totalVariants }) => {
             <button
               type="button"
               onClick={() => setShowSubmitModal(false)}
-              className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             >
               <XMarkIcon className="h-4 w-4 mr-2" />
               Batal

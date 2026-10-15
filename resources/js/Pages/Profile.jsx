@@ -12,8 +12,8 @@ export default function Profile() {
             <div className="py-6">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="text-center">
-                        <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
-                        <p className="mt-2 text-gray-600">Redirecting to your profile...</p>
+                        <h1 className="text-2xl font-bold text-ink">Profile</h1>
+                        <p className="mt-2 text-slate-500">Redirecting to your profile...</p>
                     </div>
                 </div>
             </div>

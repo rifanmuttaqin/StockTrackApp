@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 const MobileCard = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-sm", className)}
+    className={cn("rounded-2xl border border-slate-200 bg-white text-ink shadow-sm", className)}
     {...props} />
 ))
 MobileCard.displayName = "MobileCard"
@@ -20,7 +20,7 @@ MobileCardHeader.displayName = "MobileCardHeader"
 const MobileCardTitle = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("font-poppins font-semibold text-xl leading-none tracking-tight text-gray-900", className)}
+    className={cn("font-poppins font-semibold text-xl leading-none tracking-tight text-ink", className)}
     {...props} />
 ))
 MobileCardTitle.displayName = "MobileCardTitle"
@@ -28,7 +28,7 @@ MobileCardTitle.displayName = "MobileCardTitle"
 const MobileCardDescription = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm font-poppins text-gray-600 mt-2", className)}
+    className={cn("text-sm font-poppins text-slate-500 mt-2", className)}
     {...props} />
 ))
 MobileCardDescription.displayName = "MobileCardDescription"

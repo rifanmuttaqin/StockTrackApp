@@ -292,19 +292,19 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
             {/* Edit Note Button */}
             <button
               onClick={() => handleOpenNoteModal(record)}
-              className="p-1.5 rounded-md bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+              className="p-1.5 rounded-md bg-white border border-slate-200 hover:bg-appbg hover:border-slate-300 transition-colors"
               title="Edit Catatan"
             >
-              <PencilIcon className="w-3 h-3 text-gray-600" />
+              <PencilIcon className="w-3 h-3 text-slate-500" />
             </button>
             {/* Remove Note Button */}
             <button
               onClick={() => handleRemoveNote(record.id)}
               disabled={noteLoading}
-              className="p-1.5 rounded-md bg-white border border-gray-200 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-1.5 rounded-md bg-white border border-slate-200 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               title="Hapus Catatan"
             >
-              <XMarkIcon className="w-3 h-3 text-gray-600" />
+              <XMarkIcon className="w-3 h-3 text-slate-500" />
             </button>
           </div>
         ) : (
@@ -312,7 +312,7 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
           <div className="absolute top-2 right-2 z-10">
             <button
               onClick={() => handleOpenNoteModal(record)}
-              className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200 transition-colors"
+              className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-appbg text-slate-700 border border-slate-200 hover:bg-slate-200 transition-colors"
               title="Tambah Catatan"
             >
               <DocumentTextIcon className="w-3 h-3 mr-1" />
@@ -326,13 +326,13 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
             <div className="flex-1">
               {/* Transaction Code - Prominent Display */}
               <div className="flex items-center gap-2 mb-1">
-                <DocumentTextIcon className="w-5 h-5 text-indigo-600" />
-                <MobileCardTitle className="text-base font-bold text-gray-900">
+                <DocumentTextIcon className="w-5 h-5 text-brand-700" />
+                <MobileCardTitle className="text-base font-bold text-ink">
                   {record.transaction_code || 'N/A'}
                 </MobileCardTitle>
               </div>
               {/* Date Display */}
-              <div className="flex items-center gap-1 text-sm text-gray-600">
+              <div className="flex items-center gap-1 text-sm text-slate-500">
                 <ClockIcon className="w-4 h-4" />
                 {new Date(record.date).toLocaleDateString('id-ID', {
                   day: 'numeric',
@@ -346,12 +346,12 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
         <MobileCardContent>
           <div className="space-y-2">
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-600">Total Produk:</span>
-              <span className="font-semibold text-gray-900">{record.items_count || 0}</span>
+              <span className="text-slate-500">Total Produk:</span>
+              <span className="font-semibold text-ink">{record.items_count || 0}</span>
             </div>
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-600">Total Quantity Out:</span>
-              <span className="font-semibold text-gray-900">{record.total_quantity || 0}</span>
+              <span className="text-slate-500">Total Quantity Out:</span>
+              <span className="font-semibold text-ink">{record.total_quantity || 0}</span>
             </div>
           </div>
         </MobileCardContent>
@@ -365,7 +365,7 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
             <div className="flex gap-2 w-full">
             <Link
               href={route('stock-out.show', record.id)}
-              className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             >
               <EyeIcon className="w-4 h-4 mr-1" />
               View Details
@@ -373,7 +373,7 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
             {can('stock-out.edit') && (
               <button
                 onClick={() => handleEdit(record.id)}
-                className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
               >
                 <PencilIcon className="w-4 h-4 mr-1" />
                 {isDraft ? 'Continue Draft' : 'Edit'}
@@ -410,9 +410,9 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
    */
   const renderEmptyState = useCallback(() => (
     <div className="text-center py-12">
-      <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
-      <h3 className="mt-2 text-sm font-medium text-gray-900">Tidak ada stock out</h3>
-      <p className="mt-1 text-sm text-gray-500">
+      <DocumentTextIcon className="mx-auto h-12 w-12 text-slate-400" />
+      <h3 className="mt-2 text-sm font-medium text-ink">Tidak ada stock out</h3>
+      <p className="mt-1 text-sm text-slate-500">
         {statusFilter === 'all'
           ? 'Belum ada stock out yang dibuat. Mulai dengan membuat stock out baru.'
           : `Tidak ada stock out dengan status ${statusFilter}.`}
@@ -421,7 +421,7 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
         <div className="mt-6">
           <button
             onClick={handleCreate}
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
           >
             <PlusIcon className="mr-2 h-4 w-4" />
             Buat Stock Out Baru
@@ -443,10 +443,10 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
               Daftar Stock Keluar
             </h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-slate-500">
               Kelola stock out dan tracking pengeluaran produk
             </p>
           </div>
@@ -454,7 +454,7 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
             {can('stock_out.create') && (
               <button
                 onClick={handleCreate}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
               >
                 <PlusIcon className="mr-2 h-4 w-4" />
                 Buat Stock Out Baru
@@ -473,7 +473,7 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
 
         {/* Loading Overlay */}
         {loading && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
             <LoadingSpinner size="lg" />
           </div>
         )}
@@ -485,14 +485,14 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                  <div className="w-8 h-8 bg-amber-500 rounded-md flex items-center justify-center">
                     <ClockIcon className="w-5 h-5 text-white" />
                   </div>
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Draft</dt>
-                    <dd className="text-lg font-medium text-gray-900">
+                    <dt className="text-sm font-medium text-slate-500 truncate">Total Draft</dt>
+                    <dd className="text-lg font-medium text-ink">
                       {statistics?.total_draft || 0}
                     </dd>
                   </dl>
@@ -512,8 +512,8 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Submit</dt>
-                    <dd className="text-lg font-medium text-gray-900">
+                    <dt className="text-sm font-medium text-slate-500 truncate">Total Submit</dt>
+                    <dd className="text-lg font-medium text-ink">
                       {statistics?.total_submit || 0}
                     </dd>
                   </dl>
@@ -527,14 +527,14 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-indigo-500 rounded-md flex items-center justify-center">
+                  <div className="w-8 h-8 bg-brand-500 rounded-md flex items-center justify-center">
                     <DocumentTextIcon className="w-5 h-5 text-white" />
                   </div>
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Items</dt>
-                    <dd className="text-lg font-medium text-gray-900">
+                    <dt className="text-sm font-medium text-slate-500 truncate">Total Items</dt>
+                    <dd className="text-lg font-medium text-ink">
                       {statistics?.total_items || 0}
                     </dd>
                   </dl>
@@ -546,14 +546,14 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
 
         {/* Filter Tabs */}
         <div className="mb-6">
-          <div className="border-b border-gray-200">
+          <div className="border-b border-slate-200">
             <nav className="-mb-px flex space-x-8" aria-label="Tabs">
               <button
                 onClick={() => handleStatusFilterChange('all')}
                 className={`${
                   statusFilter === 'all'
-                    ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-brand-500 text-brand-700'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                 } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
               >
                 Semua
@@ -562,8 +562,8 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
                 onClick={() => handleStatusFilterChange('draft')}
                 className={`${
                   statusFilter === 'draft'
-                    ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-brand-500 text-brand-700'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                 } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
               >
                 Draft
@@ -572,8 +572,8 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
                 onClick={() => handleStatusFilterChange('submit')}
                 className={`${
                   statusFilter === 'submit'
-                    ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-brand-500 text-brand-700'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                 } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
               >
                 Submit
@@ -592,15 +592,15 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
               {pagination && pagination.last_page > 1 && (
                 <div className="mt-8">
                   {isMobile ? (
-                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-gradient-to-r from-indigo-50 to-blue-50 px-4 py-4 rounded-xl shadow-sm border border-indigo-100">
-                      <span className="text-sm font-medium text-gray-700">
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-gradient-to-r from-brand-50 to-white px-4 py-4 rounded-xl shadow-sm border border-brand-100">
+                      <span className="text-sm font-medium text-slate-700">
                         Showing {pagination.from || 0}-{pagination.to || 0} of {pagination.total || 0} records
                       </span>
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handlePageChange(Math.max(1, pagination.current_page - 1))}
                           disabled={pagination.current_page <= 1}
-                          className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 hover:shadow-lg transition-all duration-200 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed disabled:shadow-none"
+                          className="inline-flex items-center px-4 py-2 text-sm font-medium text-ink bg-brand rounded-lg shadow-md hover:bg-brand-600 hover:shadow-lg transition-all duration-200 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed disabled:shadow-none"
                           aria-label="Previous page"
                         >
                           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -608,13 +608,13 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
                           </svg>
                           Previous
                         </button>
-                        <span className="inline-flex items-center px-4 py-2 text-sm font-semibold text-indigo-700 bg-indigo-100 rounded-lg">
+                        <span className="inline-flex items-center px-4 py-2 text-sm font-semibold text-brand-700 bg-brand-100 rounded-lg">
                           {pagination.current_page}
                         </span>
                         <button
                           onClick={() => handlePageChange(Math.min(pagination.last_page, pagination.current_page + 1))}
                           disabled={pagination.current_page >= pagination.last_page}
-                          className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 hover:shadow-lg transition-all duration-200 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed disabled:shadow-none"
+                          className="inline-flex items-center px-4 py-2 text-sm font-medium text-ink bg-brand rounded-lg shadow-md hover:bg-brand-600 hover:shadow-lg transition-all duration-200 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed disabled:shadow-none"
                           aria-label="Next page"
                         >
                           Next
@@ -627,12 +627,12 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
                   ) : (
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                       {/* Page Info */}
-                      <div className="text-sm text-gray-600">
-                        <span className="font-medium text-gray-900">
+                      <div className="text-sm text-slate-500">
+                        <span className="font-medium text-ink">
                           Showing {pagination.from || 0}-{pagination.to || 0}
                         </span>
                         {' '}of{' '}
-                        <span className="font-medium text-gray-900">{pagination.total || 0}</span>
+                        <span className="font-medium text-ink">{pagination.total || 0}</span>
                         {' '}records
                       </div>
                       
@@ -642,7 +642,7 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
                         <button
                           onClick={() => handlePageChange(Math.max(1, pagination.current_page - 1))}
                           disabled={pagination.current_page <= 1}
-                          className="relative inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-50 hover:border-indigo-300 hover:text-indigo-700 transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          className="relative inline-flex items-center px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-l-lg hover:bg-appbg hover:border-brand-300 hover:text-brand-700 transition-all duration-200 disabled:bg-appbg disabled:text-slate-400 disabled:cursor-not-allowed disabled:border-slate-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                           aria-label="Previous page"
                         >
                           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -688,7 +688,7 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
                               return (
                                 <span
                                   key={`ellipsis-${index}`}
-                                  className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300"
+                                  className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-slate-500 bg-white border border-slate-300"
                                 >
                                   ...
                                 </span>
@@ -700,10 +700,10 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
                               <button
                                 key={page}
                                 onClick={() => handlePageChange(page)}
-                                className={`relative inline-flex items-center justify-center min-w-[40px] px-3 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                                className={`relative inline-flex items-center justify-center min-w-[40px] px-3 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand ${
                                   isActive
-                                    ? 'relative inline-flex items-center justify-center min-w-[40px] px-3 py-2 text-sm font-semibold text-white bg-indigo-600 border border-indigo-600 rounded-lg shadow-md hover:bg-indigo-700'
-                                    : 'relative inline-flex items-center justify-center min-w-[40px] px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-indigo-300 hover:text-indigo-700'
+                                    ? 'relative inline-flex items-center justify-center min-w-[40px] px-3 py-2 text-sm font-semibold text-ink bg-brand border border-brand-600 rounded-lg shadow-md hover:bg-brand-600'
+                                    : 'relative inline-flex items-center justify-center min-w-[40px] px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-appbg hover:border-brand-300 hover:text-brand-700'
                                 }`}
                                 aria-label={`Go to page ${page}`}
                                 aria-current={isActive ? 'page' : undefined}
@@ -718,7 +718,7 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
                         <button
                           onClick={() => handlePageChange(Math.min(pagination.last_page, pagination.current_page + 1))}
                           disabled={pagination.current_page >= pagination.last_page}
-                          className="relative inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-50 hover:border-indigo-300 hover:text-indigo-700 transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          className="relative inline-flex items-center px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-r-lg hover:bg-appbg hover:border-brand-300 hover:text-brand-700 transition-all duration-200 disabled:bg-appbg disabled:text-slate-400 disabled:cursor-not-allowed disabled:border-slate-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                           aria-label="Next page"
                         >
                           Next
@@ -739,7 +739,7 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
 
         {/* Delete Confirmation Modal */}
         {deleteConfirm && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-75 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
               <div className="flex items-center mb-4">
                 <div className="flex-shrink-0">
@@ -748,33 +748,33 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 className="text-lg font-medium text-ink">
                     Hapus Stock Out
                   </h3>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-slate-500">
                     Apakah Anda yakin ingin menghapus stock out ini? Tindakan ini tidak dapat dibatalkan.
                   </p>
                 </div>
               </div>
-              <div className="bg-gray-50 rounded-md p-3 mb-4">
-                <p className="text-sm text-gray-600">
+              <div className="bg-appbg rounded-md p-3 mb-4">
+                <p className="text-sm text-slate-500">
                   <span className="font-medium">Transaction Code:</span> {deleteConfirm.transaction_code || 'N/A'}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-slate-500">
                   <span className="font-medium">Tanggal:</span> {new Date(deleteConfirm.date).toLocaleDateString('id-ID', {
                     day: 'numeric',
                     month: 'long',
                     year: 'numeric',
                   })}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-slate-500">
                   <span className="font-medium">Total Produk:</span> {deleteConfirm.items_count}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-slate-500">
                   <span className="font-medium">Total Quantity Out:</span> {deleteConfirm.total_quantity}
                 </p>
                 {deleteConfirm.note && (
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-slate-500">
                     <span className="font-medium">Catatan:</span> {deleteConfirm.note}
                   </p>
                 )}
@@ -782,7 +782,7 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
               <div className="flex justify-end space-x-3">
                 <button
                   onClick={cancelDelete}
-                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                 >
                   Batal
                 </button>
@@ -799,26 +799,26 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
 
         {/* Note Modal */}
         {noteModal.isOpen && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-75 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
               {/* Modal Header */}
-              <div className="px-4 py-3 border-b border-gray-200">
+              <div className="px-4 py-3 border-b border-slate-200">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 className="text-lg font-medium text-ink">
                     {noteModal.currentNote ? 'Edit Catatan' : 'Tambah Catatan'}
                   </h3>
                   <button
                     onClick={handleCloseNoteModal}
-                    className="p-1 rounded-md hover:bg-gray-100 transition-colors"
+                    className="p-1 rounded-md hover:bg-appbg transition-colors"
                   >
-                    <XMarkIcon className="w-5 h-5 text-gray-500" />
+                    <XMarkIcon className="w-5 h-5 text-slate-500" />
                   </button>
                 </div>
               </div>
 
               {/* Modal Body */}
               <div className="px-4 py-4">
-                <label htmlFor="note-text" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="note-text" className="block text-sm font-medium text-slate-700 mb-2">
                   Catatan
                 </label>
                 <textarea
@@ -827,12 +827,12 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
                   onChange={(e) => setNoteText(e.target.value)}
                   maxLength={500}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand resize-none"
                   placeholder="Masukkan catatan..."
                   disabled={noteLoading}
                 />
                 <div className="mt-1 text-right">
-                  <span className={`text-xs ${noteText.length > 450 ? 'text-amber-600' : 'text-gray-500'}`}>
+                  <span className={`text-xs ${noteText.length > 450 ? 'text-amber-600' : 'text-slate-500'}`}>
                     {noteText.length} / 500 karakter
                   </span>
                 </div>
@@ -850,18 +850,18 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
               </div>
 
               {/* Modal Footer */}
-              <div className="px-4 py-3 border-t border-gray-200 flex justify-end space-x-3">
+              <div className="px-4 py-3 border-t border-slate-200 flex justify-end space-x-3">
                 <button
                   onClick={handleCloseNoteModal}
                   disabled={noteLoading}
-                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Batal
                 </button>
                 <button
                   onClick={handleSaveNote}
                   disabled={noteLoading || noteText.trim() === ''}
-                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {noteLoading ? 'Menyimpan...' : 'Simpan'}
                 </button>
@@ -875,7 +875,7 @@ const Index = ({ stockOutRecords, pagination, statistics, filters }) => {
       {can('stock_out.create') && (
         <button
           onClick={handleCreate}
-          className={`fixed z-40 flex items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 ${
+          className={`fixed z-40 flex items-center justify-center rounded-full bg-brand text-ink shadow-lg hover:bg-brand-600 active:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand transition-all duration-200 ${
             isMobile
               ? 'bottom-20 right-4 w-14 h-14'
               : 'bottom-6 right-6 w-12 h-12'

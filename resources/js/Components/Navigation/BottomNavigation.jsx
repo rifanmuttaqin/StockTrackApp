@@ -63,7 +63,7 @@ const BottomNavigation = () => {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-50 bg-blue-600 border-t border-blue-700"
+      className="fixed bottom-0 left-0 right-0 z-50 bg-brand border-t border-brand-600"
       role="navigation"
       aria-label="Bottom navigation"
     >
@@ -76,8 +76,8 @@ const BottomNavigation = () => {
               href={item.href}
               className={`flex flex-col items-center justify-center space-y-1 transition-colors duration-200 ${
                 item.active
-                  ? 'text-white'
-                  : 'text-blue-200 hover:text-white'
+                  ? 'text-ink font-semibold'
+                  : 'text-ink/60 hover:text-ink'
               }`}
               style={{ minHeight: '44px' }}
               aria-label={item.name}
@@ -85,12 +85,12 @@ const BottomNavigation = () => {
             >
               <Icon
                 size={20}
-                className={`${item.active ? 'text-white' : 'text-blue-200'}`}
+                className={`${item.active ? 'text-ink font-semibold' : 'text-brand-200'}`}
                 aria-hidden="true"
               />
               <span
                 className={`text-xs font-poppins ${
-                  item.active ? 'text-white font-medium' : 'text-blue-200'
+                  item.active ? 'text-ink font-semibold' : 'text-ink/60'
                 }`}
               >
                 {item.name}

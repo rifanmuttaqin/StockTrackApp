@@ -27,6 +27,25 @@ module.exports = {
     		colors: {
     			background: 'hsl(var(--background))',
     			foreground: 'hsl(var(--foreground))',
+    			// Brand palette — StockTrackApp green theme
+    			brand: {
+    				DEFAULT: '#84CC16',
+    				50: '#F7FEE7',
+    				100: '#ECFCCB',
+    				200: '#D9F99D',
+    				300: '#BEF264',
+    				400: '#A3E635',
+    				500: '#84CC16',
+    				600: '#65A30D',
+    				700: '#4D7C0F',
+    				800: '#3F6212',
+    				900: '#365314',
+    			},
+    			appbg: '#F7FAF5',
+    			ink: '#0F172A',
+    			success: '#22C55E',
+    			warning: '#F59E0B',
+    			error: '#EF4444',
     			card: {
     				DEFAULT: 'hsl(var(--card))',
     				foreground: 'hsl(var(--card-foreground))'
@@ -36,19 +55,19 @@ module.exports = {
     				foreground: 'hsl(var(--popover-foreground))'
     			},
     			primary: {
-    				DEFAULT: 'hsl(var(--primary))',
-    				foreground: 'hsl(var(--primary-foreground))',
-    				50: '#eff6ff',
-    				100: '#dbeafe',
-    				200: '#bfdbfe',
-    				300: '#93c5fd',
-    				400: '#60a5fa',
-    				500: '#3b82f6',
-    				600: '#2563eb',
-    				700: '#1d4ed8',
-    				800: '#1e40af',
-    				900: '#1e3a8a',
-    				950: '#172554'
+    				DEFAULT: '#84CC16',
+    				foreground: '#0F172A',
+    				50: '#F7FEE7',
+    				100: '#ECFCCB',
+    				200: '#D9F99D',
+    				300: '#BEF264',
+    				400: '#A3E635',
+    				500: '#84CC16',
+    				600: '#65A30D',
+    				700: '#4D7C0F',
+    				800: '#3F6212',
+    				900: '#365314',
+    				950: '#1A2E05'
     			},
     			secondary: {
     				DEFAULT: 'hsl(var(--secondary))',

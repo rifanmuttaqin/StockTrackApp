@@ -93,8 +93,8 @@ const MobileDashboard = ({
               className={cn(
                 'flex-1 py-2 text-sm font-medium rounded-lg transition-colors',
                 period === p.key
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'bg-white text-gray-600 border border-gray-200'
+                  ? 'bg-brand text-ink shadow-sm'
+                  : 'bg-white text-slate-500 border border-slate-200'
               )}
             >
               {p.label}
@@ -111,21 +111,21 @@ const MobileDashboard = ({
 
         {/* Low Stock Products */}
         {lowStockProducts.length > 0 && (
-          <div className="bg-white rounded-xl border border-gray-200 p-4">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">
+          <div className="bg-white rounded-xl border border-slate-200 p-4">
+            <h3 className="text-sm font-semibold text-ink mb-3">
               Stok Menipis
             </h3>
             <div className="space-y-2">
               {lowStockProducts.slice(0, 5).map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0"
+                  className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0"
                 >
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <p className="text-sm font-medium text-ink truncate">
                       {item.product_name}
                     </p>
-                    <p className="text-xs text-gray-500">{item.variant_name}</p>
+                    <p className="text-xs text-slate-500">{item.variant_name}</p>
                   </div>
                   <span className={cn(
                     'ml-3 flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full',

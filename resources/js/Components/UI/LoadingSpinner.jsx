@@ -9,12 +9,12 @@ export default function LoadingSpinner({ size = 'md', color = 'blue' }) {
     };
 
     const colorClasses = {
-        blue: 'text-blue-600',
-        gray: 'text-gray-600',
+        blue: 'text-brand-700',
+        gray: 'text-slate-500',
         white: 'text-white',
         green: 'text-green-600',
         red: 'text-red-600',
-        yellow: 'text-yellow-600',
+        yellow: 'text-amber-600',
     };
 
     return (

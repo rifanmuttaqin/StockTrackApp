@@ -89,8 +89,8 @@ const QuickActions = ({
 
       <MobileCardContent className="pt-0">
         {actions.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            <svg className="h-12 w-12 mx-auto text-gray-300 mb-3" fill="currentColor" viewBox="0 0 20 20">
+          <div className="text-center py-8 text-slate-500">
+            <svg className="h-12 w-12 mx-auto text-slate-300 mb-3" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
             </svg>
             <p className="text-sm font-poppins">Tidak ada aksi tersedia</p>
@@ -108,9 +108,9 @@ const QuickActions = ({
                 onClick={action.onClick}
                 className={cn(
                   'flex flex-col items-center justify-center h-20 p-3 space-y-2 active:scale-95 transition-transform',
-                  action.variant === 'primary' && 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100',
+                  action.variant === 'primary' && 'bg-brand-50 border-brand-200 text-brand-700 hover:bg-brand-100',
                   action.variant === 'success' && 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100',
-                  action.variant === 'warning' && 'bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100',
+                  action.variant === 'warning' && 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100',
                   action.variant === 'danger' && 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100'
                 )}
               >

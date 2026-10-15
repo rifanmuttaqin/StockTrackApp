@@ -81,7 +81,7 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
   const getKeterangan = (diff) => {
     if (diff > 0) return { label: 'Surplus', color: 'text-green-700 bg-green-50' };
     if (diff < 0) return { label: 'Shortage', color: 'text-red-700 bg-red-50' };
-    return { label: 'Matching', color: 'text-gray-700 bg-gray-50' };
+    return { label: 'Matching', color: 'text-slate-700 bg-appbg' };
   };
 
   const getRowBg = (diff) => {
@@ -121,12 +121,12 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
       >
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow-md p-8 text-center">
-            <ClipboardDocumentCheckIcon className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Akses Terbatas</h2>
-            <p className="text-gray-600">
+            <ClipboardDocumentCheckIcon className="mx-auto h-16 w-16 text-slate-400 mb-4" />
+            <h2 className="text-xl font-semibold text-ink mb-2">Akses Terbatas</h2>
+            <p className="text-slate-500">
               Halaman ini hanya dapat diakses pada mode desktop.
             </p>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-slate-500 mt-2">
               Silakan buka aplikasi menggunakan perangkat desktop untuk melihat laporan stock opname.
             </p>
           </div>
@@ -148,10 +148,10 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
               Laporan Stock Opname
             </h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-slate-500">
               Lihat dan analisis data stock opname berdasarkan rentang tanggal
             </p>
           </div>
@@ -181,7 +181,7 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
 
         {/* Loading Overlay */}
         {loading && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
             <LoadingSpinner size="lg" />
           </div>
         )}
@@ -191,11 +191,11 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <ClipboardDocumentCheckIcon className="h-8 w-8 text-indigo-600" />
+                <ClipboardDocumentCheckIcon className="h-8 w-8 text-brand-700" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Total Record</p>
-                <p className="text-2xl font-semibold text-gray-900">
+                <p className="text-sm font-medium text-slate-500">Total Record</p>
+                <p className="text-2xl font-semibold text-ink">
                   {statistics.total_records || 0}
                 </p>
               </div>
@@ -208,7 +208,7 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
                 <ExclamationTriangleIcon className="h-8 w-8 text-red-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Total Shortage</p>
+                <p className="text-sm font-medium text-slate-500">Total Shortage</p>
                 <p className="text-2xl font-semibold text-red-600">
                   {statistics.total_shortage || 0}
                 </p>
@@ -222,7 +222,7 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
                 <ArrowUpIcon className="h-8 w-8 text-green-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Total Surplus</p>
+                <p className="text-sm font-medium text-slate-500">Total Surplus</p>
                 <p className="text-2xl font-semibold text-green-600">
                   {statistics.total_surplus || 0}
                 </p>
@@ -233,11 +233,11 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <CheckCircleIcon className="h-8 w-8 text-gray-600" />
+                <CheckCircleIcon className="h-8 w-8 text-slate-500" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Total Matching</p>
-                <p className="text-2xl font-semibold text-gray-900">
+                <p className="text-sm font-medium text-slate-500">Total Matching</p>
+                <p className="text-2xl font-semibold text-ink">
                   {statistics.total_matching || 0}
                 </p>
               </div>
@@ -248,13 +248,13 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
         {/* Filters */}
         <div className="bg-white shadow rounded-lg p-6 mb-6">
           <div className="flex items-center mb-4">
-            <FunnelIcon className="h-5 w-5 text-gray-400 mr-2" />
-            <h3 className="text-lg font-medium text-gray-900">Filter Laporan</h3>
+            <FunnelIcon className="h-5 w-5 text-slate-400 mr-2" />
+            <h3 className="text-lg font-medium text-ink">Filter Laporan</h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label htmlFor="date_from" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="date_from" className="block text-sm font-medium text-slate-700 mb-1">
                 Tanggal Mulai
               </label>
               <div className="relative">
@@ -263,22 +263,22 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
                   id="date_from"
                   value={localFilters.date_from}
                   onChange={(e) => handleFilterChange('date_from', e.target.value)}
-                  className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer ${
+                  className={`w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand cursor-pointer ${
                     localFilters.date_from ? 'text-transparent' : ''
                   }`}
                   style={{ colorScheme: 'light' }}
                 />
                 {localFilters.date_from && (
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-sm text-gray-700">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-sm text-slate-700">
                     {formatDate(localFilters.date_from)}
                   </div>
                 )}
-                <CalendarIcon className="absolute inset-y-0 right-0 flex items-center pr-3 h-5 w-5 text-gray-400 pointer-events-none" />
+                <CalendarIcon className="absolute inset-y-0 right-0 flex items-center pr-3 h-5 w-5 text-slate-400 pointer-events-none" />
               </div>
             </div>
 
             <div>
-              <label htmlFor="date_to" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="date_to" className="block text-sm font-medium text-slate-700 mb-1">
                 Tanggal Akhir
               </label>
               <div className="relative">
@@ -287,17 +287,17 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
                   id="date_to"
                   value={localFilters.date_to}
                   onChange={(e) => handleFilterChange('date_to', e.target.value)}
-                  className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer ${
+                  className={`w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand cursor-pointer ${
                     localFilters.date_to ? 'text-transparent' : ''
                   }`}
                   style={{ colorScheme: 'light' }}
                 />
                 {localFilters.date_to && (
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-sm text-gray-700">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-sm text-slate-700">
                     {formatDate(localFilters.date_to)}
                   </div>
                 )}
-                <CalendarIcon className="absolute inset-y-0 right-0 flex items-center pr-3 h-5 w-5 text-gray-400 pointer-events-none" />
+                <CalendarIcon className="absolute inset-y-0 right-0 flex items-center pr-3 h-5 w-5 text-slate-400 pointer-events-none" />
               </div>
             </div>
 
@@ -305,14 +305,14 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
               <div className="flex items-center justify-end w-full space-x-3">
                 <button
                   onClick={handleResetFilters}
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                 >
                   <XMarkIcon className="mr-2 h-4 w-4" />
                   Reset
                 </button>
                 <button
                   onClick={handleApplyFilters}
-                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                 >
                   <FunnelIcon className="mr-2 h-4 w-4" />
                   Terapkan Filter
@@ -325,74 +325,74 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
         {/* Report Table */}
         <div className="bg-white shadow rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-200">
+              <thead className="bg-appbg">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Kode Transaksi
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Tanggal
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Produk
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Varian
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Stok Sistem (Draft)
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Stok Sistem (Submit)
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Stok Fisik
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Selisih
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Keterangan
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-slate-200">
                 {flatItems.length > 0 ? (
                   flatItems.map((item, idx) => {
                     const keterangan = getKeterangan(item.difference);
                     const rowBg = getRowBg(item.difference);
                     return (
                       <tr key={`${item.record_id}-${idx}`} className={rowBg}>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-ink">
                           {item.code}
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-700">
                           {formatDate(item.date)}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-700">
+                        <td className="px-4 py-3 text-sm text-slate-700">
                           {item.product_name}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-700">
+                        <td className="px-4 py-3 text-sm text-slate-700">
                           {item.variant_name}
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-center text-gray-700">
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-center text-slate-700">
                           {item.system_stock_draft ?? '-'}
-                          {item.unit?.abbreviation && <span className="text-xs text-gray-400 ml-1">{item.unit.abbreviation}</span>}
+                          {item.unit?.abbreviation && <span className="text-xs text-slate-400 ml-1">{item.unit.abbreviation}</span>}
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-center text-gray-700">
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-center text-slate-700">
                           {item.system_stock_submit ?? '-'}
-                          {item.unit?.abbreviation && <span className="text-xs text-gray-400 ml-1">{item.unit.abbreviation}</span>}
+                          {item.unit?.abbreviation && <span className="text-xs text-slate-400 ml-1">{item.unit.abbreviation}</span>}
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-center font-medium text-gray-900">
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-center font-medium text-ink">
                           {item.physical_stock ?? '-'}
-                          {item.unit?.abbreviation && <span className="text-xs text-gray-400 ml-1">{item.unit.abbreviation}</span>}
+                          {item.unit?.abbreviation && <span className="text-xs text-slate-400 ml-1">{item.unit.abbreviation}</span>}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-center font-semibold">
-                          <span className={item.difference > 0 ? 'text-green-600' : item.difference < 0 ? 'text-red-600' : 'text-gray-600'}>
+                          <span className={item.difference > 0 ? 'text-green-600' : item.difference < 0 ? 'text-red-600' : 'text-slate-500'}>
                             {item.difference > 0 ? '+' : ''}{item.difference ?? '-'}
                           </span>
-                          {item.unit?.abbreviation && <span className="text-xs text-gray-400 ml-1">{item.unit.abbreviation}</span>}
+                          {item.unit?.abbreviation && <span className="text-xs text-slate-400 ml-1">{item.unit.abbreviation}</span>}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-center">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${keterangan.color}`}>
@@ -405,11 +405,11 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
                 ) : (
                   <tr>
                     <td colSpan={9} className="px-6 py-12 text-center">
-                      <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                      <h3 className="text-sm font-medium text-gray-900 mb-1">
+                      <DocumentTextIcon className="mx-auto h-12 w-12 text-slate-400 mb-4" />
+                      <h3 className="text-sm font-medium text-ink mb-1">
                         Tidak ada data stock opname
                       </h3>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-slate-500">
                         Silakan ubah filter atau pilih rentang tanggal yang berbeda.
                       </p>
                     </td>
@@ -421,8 +421,8 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
 
           {/* Summary Info */}
           {flatItems.length > 0 && (
-            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
-              <div className="flex items-center justify-between text-sm text-gray-600">
+            <div className="bg-appbg px-6 py-4 border-t border-slate-200">
+              <div className="flex items-center justify-between text-sm text-slate-500">
                 <div>
                   <span className="font-medium">Total Record:</span> {records.length}
                 </div>
@@ -434,7 +434,7 @@ const Index = ({ records = [], statistics = {}, filters = {}, error }) => {
           )}
         </div>
 
-        <div className="mt-4 text-xs text-gray-500 italic">
+        <div className="mt-4 text-xs text-slate-500 italic">
           * Konversi menggunakan rate yang berlaku saat ini. Rate dapat berubah jika admin memperbarui multiplier.
         </div>
       </div>

@@ -30,8 +30,8 @@ const Show = ({ unit }) => {
       showCancelButton: true,
       confirmButtonText: 'Ya, Hapus',
       cancelButtonText: 'Batal',
-      confirmButtonColor: '#dc2626',
-      cancelButtonColor: '#6b7280',
+      confirmButtonColor: '#EF4444',
+      cancelButtonColor: '#64748B',
     });
 
     if (result.isConfirmed) {
@@ -71,15 +71,15 @@ const Show = ({ unit }) => {
             <div className="flex items-center">
               <Link
                 href={route('units.index')}
-                className="inline-flex items-center text-gray-500 hover:text-gray-700 mr-4"
+                className="inline-flex items-center text-slate-500 hover:text-slate-700 mr-4"
               >
                 <ArrowLeftIcon className="h-5 w-5" />
               </Link>
               <div>
-                <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
                   {unit?.name}
                 </h2>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-slate-500">
                   Singkatan: {unit?.abbreviation}
                 </p>
               </div>
@@ -89,7 +89,7 @@ const Show = ({ unit }) => {
             {can('units.edit') && (
               <Link
                 href={route('units.edit', unit.id)}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
               >
                 <PencilIcon className="h-4 w-4 mr-2" />
                 Edit Satuan
@@ -127,7 +127,7 @@ const Show = ({ unit }) => {
 
         {/* Loading Overlay */}
         {loading && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
             <LoadingSpinner size="lg" />
           </div>
         )}
@@ -135,43 +135,43 @@ const Show = ({ unit }) => {
         {/* Unit Information Card */}
         <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
           <div className="px-4 py-5 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
+            <h3 className="text-lg leading-6 font-medium text-ink">
               Informasi Satuan
             </h3>
-            <p className="mt-1 max-w-2xl text-sm text-gray-500">
+            <p className="mt-1 max-w-2xl text-sm text-slate-500">
               Detail lengkap mengenai satuan ini
             </p>
           </div>
-          <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+          <div className="border-t border-slate-200 px-4 py-5 sm:px-6">
             <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
               <div>
-                <dt className="text-sm font-medium text-gray-500">Nama Satuan</dt>
-                <dd className="mt-1 text-sm text-gray-900 font-semibold">{unit?.name}</dd>
+                <dt className="text-sm font-medium text-slate-500">Nama Satuan</dt>
+                <dd className="mt-1 text-sm text-ink font-semibold">{unit?.name}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Singkatan</dt>
+                <dt className="text-sm font-medium text-slate-500">Singkatan</dt>
                 <dd className="mt-1">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-appbg text-ink">
                     {unit?.abbreviation}
                   </span>
                 </dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Tipe</dt>
+                <dt className="text-sm font-medium text-slate-500">Tipe</dt>
                 <dd className="mt-1">
                   {isConversion ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                       Satuan Konversi
                     </span>
                   ) : (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-100 text-brand-800">
                       Satuan Dasar
                     </span>
                   )}
                 </dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Jumlah Varian</dt>
+                <dt className="text-sm font-medium text-slate-500">Jumlah Varian</dt>
                 <dd className="mt-1">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                     {unit?.variants_count || 0} Varian
@@ -179,18 +179,18 @@ const Show = ({ unit }) => {
                 </dd>
               </div>
               <div className="sm:col-span-2">
-                <dt className="text-sm font-medium text-gray-500">Deskripsi</dt>
-                <dd className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">
+                <dt className="text-sm font-medium text-slate-500">Deskripsi</dt>
+                <dd className="mt-1 text-sm text-ink whitespace-pre-wrap">
                   {unit?.description || '-'}
                 </dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Dibuat Pada</dt>
-                <dd className="mt-1 text-sm text-gray-900">{formatDate(unit?.created_at)}</dd>
+                <dt className="text-sm font-medium text-slate-500">Dibuat Pada</dt>
+                <dd className="mt-1 text-sm text-ink">{formatDate(unit?.created_at)}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Terakhir Diupdate</dt>
-                <dd className="mt-1 text-sm text-gray-900">{formatDate(unit?.updated_at)}</dd>
+                <dt className="text-sm font-medium text-slate-500">Terakhir Diupdate</dt>
+                <dd className="mt-1 text-sm text-ink">{formatDate(unit?.updated_at)}</dd>
               </div>
             </dl>
           </div>
@@ -200,22 +200,22 @@ const Show = ({ unit }) => {
         {isConversion && (
           <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
             <div className="px-4 py-5 sm:px-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
+              <h3 className="text-lg leading-6 font-medium text-ink">
                 Detail Konversi
               </h3>
-              <p className="mt-1 max-w-2xl text-sm text-gray-500">
+              <p className="mt-1 max-w-2xl text-sm text-slate-500">
                 Informasi konversi dari satuan dasar
               </p>
             </div>
-            <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+            <div className="border-t border-slate-200 px-4 py-5 sm:px-6">
               <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Satuan Dasar</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
+                  <dt className="text-sm font-medium text-slate-500">Satuan Dasar</dt>
+                  <dd className="mt-1 text-sm text-ink">
                     {unit?.base_unit ? (
                       <Link
                         href={route('units.show', unit.base_unit.id)}
-                        className="text-indigo-600 hover:text-indigo-900 font-medium"
+                        className="text-brand-700 hover:text-brand-900 font-medium"
                       >
                         {unit.base_unit.name} ({unit.base_unit.abbreviation})
                       </Link>
@@ -223,28 +223,28 @@ const Show = ({ unit }) => {
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Multiplier</dt>
-                  <dd className="mt-1 text-sm text-gray-900 font-semibold">{unit?.multiplier}</dd>
+                  <dt className="text-sm font-medium text-slate-500">Multiplier</dt>
+                  <dd className="mt-1 text-sm text-ink font-semibold">{unit?.multiplier}</dd>
                 </div>
                 <div className="sm:col-span-2">
-                  <dt className="text-sm font-medium text-gray-500">Nama Lengkap Konversi</dt>
+                  <dt className="text-sm font-medium text-slate-500">Nama Lengkap Konversi</dt>
                   <dd className="mt-1">
-                    <div className="p-3 bg-indigo-50 border border-indigo-200 rounded-md">
-                      <p className="text-sm font-medium text-indigo-800">
+                    <div className="p-3 bg-brand-50 border border-brand-200 rounded-md">
+                      <p className="text-sm font-medium text-brand-800">
                         1 {unit?.name} = {unit?.multiplier} {unit?.base_unit?.name}
                       </p>
                     </div>
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Konversi Utama</dt>
+                  <dt className="text-sm font-medium text-slate-500">Konversi Utama</dt>
                   <dd className="mt-1">
                     {unit?.is_primary ? (
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                         Ya
                       </span>
                     ) : (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-appbg text-ink">
                         Tidak
                       </span>
                     )}
@@ -258,55 +258,55 @@ const Show = ({ unit }) => {
         {/* Conversions List (for base units) */}
         {!isConversion && unit?.conversions && unit.conversions.length > 0 && (
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-            <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
+            <div className="px-4 py-5 sm:px-6 border-b border-slate-200">
+              <h3 className="text-lg leading-6 font-medium text-ink">
                 Satuan Konversi
               </h3>
-              <p className="mt-1 max-w-2xl text-sm text-gray-500">
+              <p className="mt-1 max-w-2xl text-sm text-slate-500">
                 Daftar satuan konversi yang menggunakan satuan ini sebagai dasar
               </p>
             </div>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-slate-200">
+                <thead className="bg-appbg">
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                       Nama
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                       Singkatan
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                       Multiplier
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                       Konversi
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                       Utama
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-slate-200">
                   {unit.conversions.map((conversion) => (
-                    <tr key={conversion.id} className="hover:bg-gray-50">
+                    <tr key={conversion.id} className="hover:bg-appbg">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Link
                           href={route('units.show', conversion.id)}
-                          className="text-sm font-medium text-indigo-600 hover:text-indigo-900"
+                          className="text-sm font-medium text-brand-700 hover:text-brand-900"
                         >
                           {conversion.name}
                         </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-appbg text-ink">
                           {conversion.abbreviation}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-ink">
                         {conversion.multiplier}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
                         1 {conversion.name} = {conversion.multiplier} {unit.name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -315,7 +315,7 @@ const Show = ({ unit }) => {
                             Ya
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-appbg text-slate-500">
                             Tidak
                           </span>
                         )}
@@ -332,13 +332,13 @@ const Show = ({ unit }) => {
         {!isConversion && (!unit?.conversions || unit.conversions.length === 0) && (
           <div className="bg-white shadow overflow-hidden sm:rounded-lg">
             <div className="px-4 py-8 text-center">
-              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100 mb-4">
-                <svg className="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-appbg mb-4">
+                <svg className="h-6 w-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-1">Belum Ada Satuan Konversi</h3>
-              <p className="text-sm text-gray-500">
+              <h3 className="text-lg font-medium text-ink mb-1">Belum Ada Satuan Konversi</h3>
+              <p className="text-sm text-slate-500">
                 Satuan dasar ini belum memiliki satuan konversi.
               </p>
             </div>
@@ -351,7 +351,7 @@ const Show = ({ unit }) => {
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <div className="w-8 h-8 bg-brand rounded-md flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
@@ -359,8 +359,8 @@ const Show = ({ unit }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Jumlah Varian</dt>
-                    <dd className="text-lg font-medium text-gray-900">
+                    <dt className="text-sm font-medium text-slate-500 truncate">Jumlah Varian</dt>
+                    <dd className="text-lg font-medium text-ink">
                       {unit?.variants_count || 0}
                     </dd>
                   </dl>
@@ -381,8 +381,8 @@ const Show = ({ unit }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Tipe</dt>
-                    <dd className="text-lg font-medium text-gray-900">
+                    <dt className="text-sm font-medium text-slate-500 truncate">Tipe</dt>
+                    <dd className="text-lg font-medium text-ink">
                       {isConversion ? 'Konversi' : 'Dasar'}
                     </dd>
                   </dl>
@@ -395,7 +395,7 @@ const Show = ({ unit }) => {
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                  <div className="w-8 h-8 bg-amber-500 rounded-md flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -403,8 +403,8 @@ const Show = ({ unit }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Terakhir Update</dt>
-                    <dd className="text-lg font-medium text-gray-900">
+                    <dt className="text-sm font-medium text-slate-500 truncate">Terakhir Update</dt>
+                    <dd className="text-lg font-medium text-ink">
                       {unit?.updated_at
                         ? new Date(unit.updated_at).toLocaleDateString('id-ID', {
                             day: 'numeric',
@@ -420,16 +420,16 @@ const Show = ({ unit }) => {
         </div>
 
         {/* Help Information */}
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="mt-6 bg-brand-50 border border-brand-200 rounded-lg p-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="h-5 w-5 text-brand-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">Informasi Satuan</h3>
-              <div className="mt-2 text-sm text-blue-700">
+              <h3 className="text-sm font-medium text-brand-800">Informasi Satuan</h3>
+              <div className="mt-2 text-sm text-brand-700">
                 <ul className="list-disc pl-5 space-y-1">
                   <li>Satuan Dasar adalah satuan utama yang digunakan dalam pencatatan stok</li>
                   <li>Satuan Konversi memungkinkan Anda membeli atau menjual dalam satuan berbeda</li>

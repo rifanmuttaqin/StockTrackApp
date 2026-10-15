@@ -48,17 +48,17 @@ const Edit = ({ unit, baseUnits }) => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
               Edit Satuan: {unit?.name}
             </h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-slate-500">
               Update informasi satuan
             </p>
           </div>
           <div className="mt-4 flex md:mt-0 md:ml-4 space-x-3">
             <Link
               href={route('units.index')}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             >
               Kembali
             </Link>
@@ -75,7 +75,7 @@ const Edit = ({ unit, baseUnits }) => {
 
         {/* Loading Overlay */}
         {processing && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
             <LoadingSpinner size="lg" />
           </div>
         )}
@@ -87,7 +87,7 @@ const Edit = ({ unit, baseUnits }) => {
             <MobileFormSection
               title="Tipe Satuan"
               description="Tipe satuan tidak dapat diubah setelah dibuat"
-              className="p-6 border-b border-gray-200"
+              className="p-6 border-b border-slate-200"
             >
               <div>
                 {isConversion ? (
@@ -95,7 +95,7 @@ const Edit = ({ unit, baseUnits }) => {
                     Satuan Konversi
                   </span>
                 ) : (
-                  <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                  <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-brand-100 text-brand-800">
                     Satuan Dasar
                   </span>
                 )}
@@ -106,7 +106,7 @@ const Edit = ({ unit, baseUnits }) => {
             <MobileFormSection
               title="Informasi Satuan"
               description="Update informasi dasar satuan"
-              className="p-6 border-b border-gray-200"
+              className="p-6 border-b border-slate-200"
             >
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {/* Name */}
@@ -120,7 +120,7 @@ const Edit = ({ unit, baseUnits }) => {
                     value={data.name}
                     onChange={(e) => setData('name', e.target.value)}
                     placeholder="Contoh: Lusin"
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm"
                   />
                 </MobileFormField>
 
@@ -135,7 +135,7 @@ const Edit = ({ unit, baseUnits }) => {
                     value={data.abbreviation}
                     onChange={(e) => setData('abbreviation', e.target.value)}
                     placeholder="Contoh: lsn"
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm"
                   />
                 </MobileFormField>
               </div>
@@ -146,12 +146,12 @@ const Edit = ({ unit, baseUnits }) => {
               <MobileFormSection
                 title="Pengaturan Konversi"
                 description="Atur multiplier untuk konversi"
-                className="p-6 border-b border-gray-200"
+                className="p-6 border-b border-slate-200"
               >
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   {/* Base Unit (read-only display) */}
                   <MobileFormField label="Satuan Dasar">
-                    <div className="block w-full px-3 py-2 border border-gray-200 rounded-md bg-gray-50 text-sm text-gray-700">
+                    <div className="block w-full px-3 py-2 border border-slate-200 rounded-md bg-appbg text-sm text-slate-700">
                       {selectedBaseUnit
                         ? `${selectedBaseUnit.name} (${selectedBaseUnit.abbreviation})`
                         : '-'}
@@ -171,9 +171,9 @@ const Edit = ({ unit, baseUnits }) => {
                       value={data.multiplier}
                       onChange={(e) => setData('multiplier', e.target.value)}
                       placeholder="Contoh: 12"
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm"
                     />
-                    <p className="mt-1 text-xs text-gray-500">
+                    <p className="mt-1 text-xs text-slate-500">
                       Berapa unit satuan dasar dalam 1 unit satuan ini
                     </p>
                   </MobileFormField>
@@ -181,8 +181,8 @@ const Edit = ({ unit, baseUnits }) => {
 
                 {/* Preview */}
                 {previewText && (
-                  <div className="mt-4 p-3 bg-indigo-50 border border-indigo-200 rounded-md">
-                    <p className="text-sm font-medium text-indigo-800">
+                  <div className="mt-4 p-3 bg-brand-50 border border-brand-200 rounded-md">
+                    <p className="text-sm font-medium text-brand-800">
                       Preview: {previewText}
                     </p>
                   </div>
@@ -195,9 +195,9 @@ const Edit = ({ unit, baseUnits }) => {
                       type="checkbox"
                       checked={data.is_primary}
                       onChange={(e) => setData('is_primary', e.target.checked)}
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-brand-700 focus:ring-brand border-slate-300 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700">
+                    <span className="ml-2 text-sm text-slate-700">
                       Jadikan Konversi Utama (Ditampilkan di badge stok tabel produk)
                     </span>
                   </label>
@@ -212,7 +212,7 @@ const Edit = ({ unit, baseUnits }) => {
             <MobileFormSection
               title="Deskripsi"
               description="Update deskripsi satuan (opsional)"
-              className="p-6 border-b border-gray-200"
+              className="p-6 border-b border-slate-200"
             >
               <MobileFormField
                 label="Deskripsi"
@@ -223,7 +223,7 @@ const Edit = ({ unit, baseUnits }) => {
                   onChange={(e) => setData('description', e.target.value)}
                   rows={3}
                   placeholder="Deskripsi satuan..."
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm"
                 />
               </MobileFormField>
             </MobileFormSection>
@@ -232,17 +232,17 @@ const Edit = ({ unit, baseUnits }) => {
             <input type="hidden" name="updated_at" value={data.updated_at} />
 
             {/* Form Actions */}
-            <div className="px-6 py-4 bg-gray-50 flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
+            <div className="px-6 py-4 bg-appbg flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
               <Link
                 href={route('units.index')}
-                className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
               >
                 Batal
               </Link>
               <button
                 type="submit"
                 disabled={processing}
-                className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {processing ? (
                   <>
@@ -265,31 +265,31 @@ const Edit = ({ unit, baseUnits }) => {
         {/* Unit Info Card */}
         <div className="mt-6 bg-white shadow sm:rounded-lg">
           <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+            <h3 className="text-lg leading-6 font-medium text-ink mb-4">
               Informasi Tambahan
             </h3>
             <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
               <div>
-                <dt className="text-sm font-medium text-gray-500">ID Satuan</dt>
-                <dd className="mt-1 text-sm text-gray-900">{unit?.id}</dd>
+                <dt className="text-sm font-medium text-slate-500">ID Satuan</dt>
+                <dd className="mt-1 text-sm text-ink">{unit?.id}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Tipe</dt>
+                <dt className="text-sm font-medium text-slate-500">Tipe</dt>
                 <dd className="mt-1">
                   {isConversion ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                       Satuan Konversi
                     </span>
                   ) : (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-100 text-brand-800">
                       Satuan Dasar
                     </span>
                   )}
                 </dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Dibuat Pada</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-slate-500">Dibuat Pada</dt>
+                <dd className="mt-1 text-sm text-ink">
                   {unit?.created_at ? new Date(unit.created_at).toLocaleDateString('id-ID', {
                     year: 'numeric',
                     month: 'long',
@@ -300,8 +300,8 @@ const Edit = ({ unit, baseUnits }) => {
                 </dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Terakhir Diupdate</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-slate-500">Terakhir Diupdate</dt>
+                <dd className="mt-1 text-sm text-ink">
                   {unit?.updated_at ? new Date(unit.updated_at).toLocaleDateString('id-ID', {
                     year: 'numeric',
                     month: 'long',

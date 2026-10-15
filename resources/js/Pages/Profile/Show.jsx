@@ -55,11 +55,11 @@ export default function ProfileShow() {
             case 'admin':
                 return 'bg-purple-100 text-purple-800';
             case 'manager':
-                return 'bg-blue-100 text-blue-800';
+                return 'bg-brand-100 text-brand-800';
             case 'user':
                 return 'bg-green-100 text-green-800';
             default:
-                return 'bg-gray-100 text-gray-800';
+                return 'bg-appbg text-ink';
         }
     };
 
@@ -91,7 +91,7 @@ export default function ProfileShow() {
 
                     <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                         {/* Profile Header */}
-                        <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-5 sm:px-6">
+                        <div className="bg-gradient-to-r from-brand-500 to-brand-600 px-4 py-5 sm:px-6">
                             <div className="flex items-center">
                                 <div className="flex-shrink-0">
                                     {user?.avatar ? (
@@ -102,7 +102,7 @@ export default function ProfileShow() {
                                         />
                                     ) : (
                                         <div className="h-20 w-20 rounded-full bg-white border-4 border-white flex items-center justify-center">
-                                            <span className="text-2xl font-bold text-blue-500">
+                                            <span className="text-2xl font-bold text-brand-600">
                                                 {user?.name?.charAt(0).toUpperCase()}
                                             </span>
                                         </div>
@@ -110,7 +110,7 @@ export default function ProfileShow() {
                                 </div>
                                 <div className="ml-6">
                                     <h1 className="text-2xl font-bold text-white">{user?.name}</h1>
-                                    <p className="text-blue-100">{user?.email}</p>
+                                    <p className="text-brand-100">{user?.email}</p>
                                     <div className="mt-2">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(user?.role)}`}>
                                             {getRoleName(user?.role)}
@@ -120,7 +120,7 @@ export default function ProfileShow() {
                                 <div className="ml-auto">
                                     <Link
                                         href="/profile/edit"
-                                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-brand-700 bg-white hover:bg-brand-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                                     >
                                         <svg className="mr-2 -ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -132,7 +132,7 @@ export default function ProfileShow() {
                         </div>
 
                         {/* Tabs */}
-                        <div className="border-b border-gray-200">
+                        <div className="border-b border-slate-200">
                             <nav className="-mb-px flex space-x-8 px-4" aria-label="Tabs">
                                 {[
                                     { id: 'profile', name: 'Informasi Profile' },
@@ -146,8 +146,8 @@ export default function ProfileShow() {
                                         className={`
                                             py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap
                                             ${activeTab === tab.id
-                                                ? 'border-blue-500 text-blue-600'
-                                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                                ? 'border-brand-500 text-brand-700'
+                                                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                                             }
                                         `}
                                     >
@@ -162,24 +162,24 @@ export default function ProfileShow() {
                             {/* Profile Tab */}
                             {activeTab === 'profile' && (
                                 <div>
-                                    <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+                                    <h3 className="text-lg leading-6 font-medium text-ink mb-4">
                                         Informasi Profile
                                     </h3>
                                     <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
                                         <div className="sm:col-span-1">
-                                            <dt className="text-sm font-medium text-gray-500">Nama Lengkap</dt>
-                                            <dd className="mt-1 text-sm text-gray-900">{user?.name || '-'}</dd>
+                                            <dt className="text-sm font-medium text-slate-500">Nama Lengkap</dt>
+                                            <dd className="mt-1 text-sm text-ink">{user?.name || '-'}</dd>
                                         </div>
                                         <div className="sm:col-span-1">
-                                            <dt className="text-sm font-medium text-gray-500">Email</dt>
-                                            <dd className="mt-1 text-sm text-gray-900">{user?.email || '-'}</dd>
+                                            <dt className="text-sm font-medium text-slate-500">Email</dt>
+                                            <dd className="mt-1 text-sm text-ink">{user?.email || '-'}</dd>
                                         </div>
                                         <div className="sm:col-span-1">
-                                            <dt className="text-sm font-medium text-gray-500">Nomor Telepon</dt>
-                                            <dd className="mt-1 text-sm text-gray-900">{user?.phone || '-'}</dd>
+                                            <dt className="text-sm font-medium text-slate-500">Nomor Telepon</dt>
+                                            <dd className="mt-1 text-sm text-ink">{user?.phone || '-'}</dd>
                                         </div>
                                         <div className="sm:col-span-1">
-                                            <dt className="text-sm font-medium text-gray-500">Role</dt>
+                                            <dt className="text-sm font-medium text-slate-500">Role</dt>
                                             <dd className="mt-1">
                                                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(user?.role)}`}>
                                                     {getRoleName(user?.role)}
@@ -187,20 +187,20 @@ export default function ProfileShow() {
                                             </dd>
                                         </div>
                                         <div className="sm:col-span-2">
-                                            <dt className="text-sm font-medium text-gray-500">Alamat</dt>
-                                            <dd className="mt-1 text-sm text-gray-900">{user?.address || '-'}</dd>
+                                            <dt className="text-sm font-medium text-slate-500">Alamat</dt>
+                                            <dd className="mt-1 text-sm text-ink">{user?.address || '-'}</dd>
                                         </div>
                                         <div className="sm:col-span-2">
-                                            <dt className="text-sm font-medium text-gray-500">Bio</dt>
-                                            <dd className="mt-1 text-sm text-gray-900">{user?.bio || '-'}</dd>
+                                            <dt className="text-sm font-medium text-slate-500">Bio</dt>
+                                            <dd className="mt-1 text-sm text-ink">{user?.bio || '-'}</dd>
                                         </div>
                                         <div className="sm:col-span-1">
-                                            <dt className="text-sm font-medium text-gray-500">Terakhir Login</dt>
-                                            <dd className="mt-1 text-sm text-gray-900">{user?.last_login_at ? formatDate(user.last_login_at) : '-'}</dd>
+                                            <dt className="text-sm font-medium text-slate-500">Terakhir Login</dt>
+                                            <dd className="mt-1 text-sm text-ink">{user?.last_login_at ? formatDate(user.last_login_at) : '-'}</dd>
                                         </div>
                                         <div className="sm:col-span-1">
-                                            <dt className="text-sm font-medium text-gray-500">Bergabung Sejak</dt>
-                                            <dd className="mt-1 text-sm text-gray-900">{user?.created_at ? formatDate(user.created_at) : '-'}</dd>
+                                            <dt className="text-sm font-medium text-slate-500">Bergabung Sejak</dt>
+                                            <dd className="mt-1 text-sm text-ink">{user?.created_at ? formatDate(user.created_at) : '-'}</dd>
                                         </div>
                                     </dl>
                                 </div>
@@ -210,10 +210,10 @@ export default function ProfileShow() {
                             {activeTab === 'avatar' && (
                                 <div>
                                     <div className="mb-6">
-                                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                                        <h3 className="text-lg leading-6 font-medium text-ink">
                                             Avatar
                                         </h3>
-                                        <p className="mt-1 text-sm text-gray-500">
+                                        <p className="mt-1 text-sm text-slate-500">
                                             Perbarui foto profile Anda.
                                         </p>
                                     </div>
@@ -225,10 +225,10 @@ export default function ProfileShow() {
                             {activeTab === 'sessions' && (
                                 <div>
                                     <div className="mb-6">
-                                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                                        <h3 className="text-lg leading-6 font-medium text-ink">
                                             Sesi Aktif
                                         </h3>
-                                        <p className="mt-1 text-sm text-gray-500">
+                                        <p className="mt-1 text-sm text-slate-500">
                                             Kelola sesi login Anda di berbagai perangkat.
                                         </p>
                                     </div>
@@ -240,10 +240,10 @@ export default function ProfileShow() {
                             {activeTab === 'activity' && (
                                 <div>
                                     <div className="mb-6">
-                                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                                        <h3 className="text-lg leading-6 font-medium text-ink">
                                             Log Aktivitas
                                         </h3>
-                                        <p className="mt-1 text-sm text-gray-500">
+                                        <p className="mt-1 text-sm text-slate-500">
                                             Riwayat aktivitas akun Anda.
                                         </p>
                                     </div>

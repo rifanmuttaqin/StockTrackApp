@@ -28,18 +28,18 @@ const MobileUserList = ({
   const getSortIcon = (field) => {
     if (filters.sort !== field) {
       return (
-        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
         </svg>
       );
     }
 
     return filters.order === 'asc' ? (
-      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
       </svg>
     ) : (
-      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
       </svg>
     );
@@ -71,7 +71,7 @@ const MobileUserList = ({
               Filter
             </MobileButton>
 
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-slate-500">
               {users.length} user{users.length !== 1 ? 's' : ''}
             </span>
           </div>
@@ -83,11 +83,11 @@ const MobileUserList = ({
         <MobileCard>
           <div className="p-4 space-y-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Role</label>
               <select
                 value={filters.role || ''}
                 onChange={(e) => onFilterChange('role', e.target.value)}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
+                className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand focus:ring-brand sm:text-sm p-2 border"
               >
                 <option value="">Semua Role</option>
                 {roles.map((role) => (
@@ -99,11 +99,11 @@ const MobileUserList = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
               <select
                 value={filters.status || ''}
                 onChange={(e) => onFilterChange('status', e.target.value)}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
+                className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand focus:ring-brand sm:text-sm p-2 border"
               >
                 <option value="">Semua Status</option>
                 <option value="active">Aktif</option>
@@ -161,11 +161,11 @@ const MobileUserList = ({
       {users.length === 0 ? (
         <MobileCard>
           <div className="p-8 text-center">
-            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="mx-auto h-12 w-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No users found</h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <h3 className="mt-2 text-sm font-medium text-ink">No users found</h3>
+            <p className="mt-1 text-sm text-slate-500">
               {filters.search || filters.role || filters.status
                 ? 'Try adjusting your search or filters'
                 : 'Get started by creating a new user'}

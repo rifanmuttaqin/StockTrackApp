@@ -40,15 +40,15 @@ export default function EmailVerification({ email }) {
     return (
         <div className="space-y-6">
             <div className="text-center">
-                <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-yellow-100">
-                    <svg className="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-amber-100">
+                    <svg className="h-8 w-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                 </div>
-                <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+                <h2 className="mt-6 text-3xl font-extrabold text-ink">
                     Verifikasi Email Anda
                 </h2>
-                <p className="mt-2 text-sm text-gray-600">
+                <p className="mt-2 text-sm text-slate-500">
                     Kami telah mengirimkan link verifikasi ke email Anda. Silakan periksa inbox Anda.
                 </p>
             </div>
@@ -64,13 +64,13 @@ export default function EmailVerification({ email }) {
 
             <div className="bg-white py-8 px-6 shadow rounded-lg">
                 <div className="text-center">
-                    <p className="text-sm text-gray-600 mb-4">
+                    <p className="text-sm text-slate-500 mb-4">
                         Tidak menerima email? Periksa folder spam Anda atau kirim ulang email verifikasi.
                     </p>
 
                     <form onSubmit={handleResend}>
                         <div className="mb-4">
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
                                 Email Address
                             </label>
                             <input
@@ -79,7 +79,7 @@ export default function EmailVerification({ email }) {
                                 type="email"
                                 autoComplete="email"
                                 required
-                                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm"
                                 placeholder="email@example.com"
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
@@ -93,7 +93,7 @@ export default function EmailVerification({ email }) {
                         <button
                             type="submit"
                             disabled={processing || countdown > 0}
-                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {processing ? (
                                 <div className="flex items-center">
@@ -113,7 +113,7 @@ export default function EmailVerification({ email }) {
             <div className="text-center">
                 <a
                     href="/login"
-                    className="font-medium text-blue-600 hover:text-blue-500"
+                    className="font-medium text-brand-700 hover:text-brand-600"
                 >
                     Kembali ke Login
                 </a>

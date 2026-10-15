@@ -126,7 +126,7 @@ const Index = ({ templates, filters, meta }) => {
               Aktif
             </span>
           )}
-          <div className="font-medium text-gray-900">
+          <div className="font-medium text-ink">
             {value}
           </div>
         </div>
@@ -146,7 +146,7 @@ const Index = ({ templates, filters, meta }) => {
       sortable: true,
       render: (value, row) => (
         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-          row.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+          row.is_active ? 'bg-green-100 text-green-800' : 'bg-appbg text-ink'
         }`}>
           {row.is_active ? 'Aktif' : 'Tidak Aktif'}
         </span>
@@ -157,7 +157,7 @@ const Index = ({ templates, filters, meta }) => {
       label: 'Dibuat Pada',
       sortable: true,
       render: (value, row) => (
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-slate-500">
           {formatDate(value)}
         </span>
       ),
@@ -172,7 +172,7 @@ const Index = ({ templates, filters, meta }) => {
       actions.push({
         key: 'view',
         icon: EyeIcon,
-        className: 'text-blue-600 hover:text-blue-900',
+        className: 'text-brand-700 hover:text-brand-900',
         title: 'Lihat Detail',
         onClick: () => router.get(route('templates.show', template.id)),
       });
@@ -182,7 +182,7 @@ const Index = ({ templates, filters, meta }) => {
       actions.push({
         key: 'edit',
         icon: PencilIcon,
-        className: 'text-indigo-600 hover:text-indigo-900',
+        className: 'text-brand-700 hover:text-brand-900',
         title: 'Edit Template',
         onClick: () => router.get(route('templates.edit', template.id)),
       });
@@ -225,10 +225,10 @@ const Index = ({ templates, filters, meta }) => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
               Manajemen Templates
             </h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-slate-500">
               Kelola template dan varian produk yang terkait
             </p>
           </div>
@@ -236,7 +236,7 @@ const Index = ({ templates, filters, meta }) => {
             {can('templates.create') && (
               <Link
                 href={route('templates.create')}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
               >
                 <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -257,7 +257,7 @@ const Index = ({ templates, filters, meta }) => {
 
         {/* Loading Overlay */}
         {loading && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
             <LoadingSpinner size="lg" />
           </div>
         )}
@@ -266,14 +266,14 @@ const Index = ({ templates, filters, meta }) => {
         <div className="mb-4">
           <div className="relative flex-1">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+              <MagnifyingGlassIcon className="h-5 w-5 text-slate-400" />
             </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Cari berdasarkan nama template..."
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-md leading-5 bg-white placeholder-slate-400 focus:outline-none focus:placeholder-slate-400 focus:ring-1 focus:ring-brand focus:border-brand sm:text-sm"
             />
           </div>
         </div>
@@ -302,38 +302,38 @@ const Index = ({ templates, filters, meta }) => {
                 <button
                   onClick={() => handlePageChange(Math.max(1, meta.current_page - 1))}
                   disabled={meta.current_page <= 1}
-                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="px-3 py-1 text-sm bg-brand text-ink rounded disabled:bg-slate-300 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-slate-700">
                   Halaman {meta.current_page} dari {meta.last_page}
                 </span>
                 <button
                   onClick={() => handlePageChange(Math.min(meta.last_page, meta.current_page + 1))}
                   disabled={meta.current_page >= meta.last_page}
-                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="px-3 py-1 text-sm bg-brand text-ink rounded disabled:bg-slate-300 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>
               </div>
             ) : (
               <div className="flex justify-between items-center bg-white px-4 py-3 rounded-lg shadow">
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-slate-700">
                   Menampilkan {meta.from} sampai {meta.to} dari {meta.total} template
                 </span>
                 <div className="flex space-x-2">
                   <button
                     onClick={() => handlePageChange(Math.max(1, meta.current_page - 1))}
                     disabled={meta.current_page <= 1}
-                    className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    className="px-3 py-1 text-sm bg-brand text-ink rounded disabled:bg-slate-300 disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => handlePageChange(Math.min(meta.last_page, meta.current_page + 1))}
                     disabled={meta.current_page >= meta.last_page}
-                    className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    className="px-3 py-1 text-sm bg-brand text-ink rounded disabled:bg-slate-300 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>
@@ -349,7 +349,7 @@ const Index = ({ templates, filters, meta }) => {
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-indigo-500 rounded-md flex items-center justify-center">
+                  <div className="w-8 h-8 bg-brand-500 rounded-md flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
@@ -357,8 +357,8 @@ const Index = ({ templates, filters, meta }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Template</dt>
-                    <dd className="text-lg font-medium text-gray-900">{meta?.total || 0}</dd>
+                    <dt className="text-sm font-medium text-slate-500 truncate">Total Template</dt>
+                    <dd className="text-lg font-medium text-ink">{meta?.total || 0}</dd>
                   </dl>
                 </div>
               </div>
@@ -377,8 +377,8 @@ const Index = ({ templates, filters, meta }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Template Aktif</dt>
-                    <dd className="text-lg font-medium text-gray-900">{meta?.active_count || 0}</dd>
+                    <dt className="text-sm font-medium text-slate-500 truncate">Template Aktif</dt>
+                    <dd className="text-lg font-medium text-ink">{meta?.active_count || 0}</dd>
                   </dl>
                 </div>
               </div>
@@ -389,7 +389,7 @@ const Index = ({ templates, filters, meta }) => {
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <div className="w-8 h-8 bg-brand rounded-md flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
@@ -397,8 +397,8 @@ const Index = ({ templates, filters, meta }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Varian</dt>
-                    <dd className="text-lg font-medium text-gray-900">{meta?.total_variants || 0}</dd>
+                    <dt className="text-sm font-medium text-slate-500 truncate">Total Varian</dt>
+                    <dd className="text-lg font-medium text-ink">{meta?.total_variants || 0}</dd>
                   </dl>
                 </div>
               </div>
@@ -407,16 +407,16 @@ const Index = ({ templates, filters, meta }) => {
         </div>
 
         {/* Help Information */}
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="mt-6 bg-brand-50 border border-brand-200 rounded-lg p-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="h-5 w-5 text-brand-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">Informasi Template</h3>
-              <div className="mt-2 text-sm text-blue-700">
+              <h3 className="text-sm font-medium text-brand-800">Informasi Template</h3>
+              <div className="mt-2 text-sm text-brand-700">
                 <ul className="list-disc pl-5 space-y-1">
                   <li>Template digunakan untuk mengelompokkan varian produk</li>
                   <li>Hanya satu template yang dapat aktif dalam satu waktu</li>

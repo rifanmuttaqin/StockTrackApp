@@ -19,7 +19,7 @@ const MobileLoadingSpinner = React.forwardRef(({ className, size = "default", ..
     >
       <svg
         className={cn(
-          "animate-spin text-blue-600",
+          "animate-spin text-brand-700",
           sizeClasses[size]
         )}
         xmlns="http://www.w3.org/2000/svg"

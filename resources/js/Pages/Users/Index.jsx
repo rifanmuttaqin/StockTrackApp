@@ -123,7 +123,7 @@ const Index = ({ users, roles, filters, meta }) => {
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
               User Management
             </h2>
           </div>
@@ -131,7 +131,7 @@ const Index = ({ users, roles, filters, meta }) => {
             {can('users.export') && (
               <button
                 onClick={handleExport}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
               >
                 <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -142,7 +142,7 @@ const Index = ({ users, roles, filters, meta }) => {
             {can('users.create') && (
               <Link
                 href={route('users.create')}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
               >
                 <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -163,7 +163,7 @@ const Index = ({ users, roles, filters, meta }) => {
 
         {/* Loading Overlay */}
         {loading && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
             <LoadingSpinner size="lg" />
           </div>
         )}
@@ -211,17 +211,17 @@ const Index = ({ users, roles, filters, meta }) => {
                 <button
                   onClick={() => handlePageChange(Math.max(1, meta.current_page - 1))}
                   disabled={meta.current_page <= 1}
-                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="px-3 py-1 text-sm bg-brand text-ink rounded disabled:bg-slate-300 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-slate-700">
                   Page {meta.current_page} of {meta.last_page}
                 </span>
                 <button
                   onClick={() => handlePageChange(Math.min(meta.last_page, meta.current_page + 1))}
                   disabled={meta.current_page >= meta.last_page}
-                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="px-3 py-1 text-sm bg-brand text-ink rounded disabled:bg-slate-300 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>
@@ -242,7 +242,7 @@ const Index = ({ users, roles, filters, meta }) => {
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-indigo-500 rounded-md flex items-center justify-center">
+                  <div className="w-8 h-8 bg-brand-500 rounded-md flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
@@ -250,8 +250,8 @@ const Index = ({ users, roles, filters, meta }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Users</dt>
-                    <dd className="text-lg font-medium text-gray-900">{meta?.total || 0}</dd>
+                    <dt className="text-sm font-medium text-slate-500 truncate">Total Users</dt>
+                    <dd className="text-lg font-medium text-ink">{meta?.total || 0}</dd>
                   </dl>
                 </div>
               </div>
@@ -270,8 +270,8 @@ const Index = ({ users, roles, filters, meta }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Active Users</dt>
-                    <dd className="text-lg font-medium text-gray-900">{meta?.active_count || 0}</dd>
+                    <dt className="text-sm font-medium text-slate-500 truncate">Active Users</dt>
+                    <dd className="text-lg font-medium text-ink">{meta?.active_count || 0}</dd>
                   </dl>
                 </div>
               </div>
@@ -282,7 +282,7 @@ const Index = ({ users, roles, filters, meta }) => {
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-gray-500 rounded-md flex items-center justify-center">
+                  <div className="w-8 h-8 bg-appbg0 rounded-md flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -291,8 +291,8 @@ const Index = ({ users, roles, filters, meta }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Inactive Users</dt>
-                    <dd className="text-lg font-medium text-gray-900">{meta?.inactive_count || 0}</dd>
+                    <dt className="text-sm font-medium text-slate-500 truncate">Inactive Users</dt>
+                    <dd className="text-lg font-medium text-ink">{meta?.inactive_count || 0}</dd>
                   </dl>
                 </div>
               </div>
@@ -311,8 +311,8 @@ const Index = ({ users, roles, filters, meta }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Suspended Users</dt>
-                    <dd className="text-lg font-medium text-gray-900">{meta?.suspended_count || 0}</dd>
+                    <dt className="text-sm font-medium text-slate-500 truncate">Suspended Users</dt>
+                    <dd className="text-lg font-medium text-ink">{meta?.suspended_count || 0}</dd>
                   </dl>
                 </div>
               </div>

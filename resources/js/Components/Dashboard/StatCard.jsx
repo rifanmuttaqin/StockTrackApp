@@ -13,15 +13,15 @@ const StatCard = ({
   ...props
 }) => {
   const changeColorClasses = {
-    positive: 'text-green-600 bg-green-50',
-    negative: 'text-red-600 bg-red-50',
-    neutral: 'text-gray-600 bg-gray-50',
+    positive: 'text-green-700 bg-green-50',
+    negative: 'text-red-700 bg-red-50',
+    neutral: 'text-slate-500 bg-slate-100',
   };
 
   const iconBgClasses = {
     positive: 'bg-green-100 text-green-600',
     negative: 'bg-red-100 text-red-600',
-    neutral: 'bg-blue-100 text-blue-600',
+    neutral: 'bg-brand-100 text-brand-700',
   };
 
   return (
@@ -41,8 +41,8 @@ const StatCard = ({
               </div>
             )}
             <div>
-              <p className="text-sm font-poppins text-gray-600">{title}</p>
-              <p className="text-2xl font-poppins font-semibold text-gray-900 mt-1">
+              <p className="text-sm font-poppins text-slate-500">{title}</p>
+              <p className="text-2xl font-poppins font-semibold text-ink mt-1">
                 {value}
               </p>
             </div>

@@ -132,7 +132,7 @@ export default function WhatsAppSettingsIndex({
         <div className="flex gap-6">
             {/* Sidebar Tabs */}
             <div className="w-56 flex-shrink-0">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
                     <nav className="p-2 space-y-1">
                         {tabs.map((tab) => (
                             <button
@@ -140,8 +140,8 @@ export default function WhatsAppSettingsIndex({
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                     activeTab === tab.id
-                                        ? 'bg-blue-50 text-blue-700 border-l-2 border-blue-600'
-                                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                        ? 'bg-brand-50 text-brand-700 border-l-2 border-brand-500'
+                                        : 'text-slate-500 hover:bg-appbg hover:text-ink'
                                 }`}
                             >
                                 {tab.label}
@@ -168,8 +168,8 @@ export default function WhatsAppSettingsIndex({
                         onClick={() => setActiveTab(tab.id)}
                         className={`whitespace-nowrap px-4 py-2 text-sm font-medium rounded-full transition-colors ${
                             activeTab === tab.id
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-brand text-ink'
+                                : 'bg-appbg text-slate-500 hover:bg-slate-200'
                         }`}
                     >
                         {tab.label}
@@ -201,10 +201,10 @@ export default function WhatsAppSettingsIndex({
 
     // =========== TAB 1: CONNECTION ===========
     const renderConnectionTab = () => (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900">Konfigurasi API</h3>
-                <p className="mt-1 text-sm text-gray-500">Atur koneksi WhatsApp Business API.</p>
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+            <div className="px-6 py-4 border-b border-slate-200">
+                <h3 className="text-lg font-semibold text-ink">Konfigurasi API</h3>
+                <p className="mt-1 text-sm text-slate-500">Atur koneksi WhatsApp Business API.</p>
             </div>
             <div className="p-6 space-y-5">
                 {/* Toggle Active */}
@@ -219,10 +219,10 @@ export default function WhatsAppSettingsIndex({
                         && (data.api_key || hasExistingKey);
 
                     return (
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div className="flex items-center justify-between p-4 bg-appbg rounded-lg">
                             <div>
-                                <h4 className="text-sm font-medium text-gray-900">Notifikasi WhatsApp</h4>
-                                <p className="text-xs text-gray-500 mt-0.5">Aktifkan/nonaktifkan pengiriman notifikasi via WhatsApp</p>
+                                <h4 className="text-sm font-medium text-ink">Notifikasi WhatsApp</h4>
+                                <p className="text-xs text-slate-500 mt-0.5">Aktifkan/nonaktifkan pengiriman notifikasi via WhatsApp</p>
                                 {!canActivate && data.recipients?.length > 0 && selectedWithPhone.length === 0 && (
                                     <p className="text-xs text-orange-600 mt-1">⚠ Pilih penerima yang memiliki nomor telepon terlebih dahulu</p>
                                 )}
@@ -232,7 +232,7 @@ export default function WhatsAppSettingsIndex({
                                 onClick={() => canActivate && setData('is_active', !data.is_active)}
                                 disabled={!canActivate && !data.is_active}
                                 className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    data.is_active ? 'bg-blue-600' : canActivate ? 'bg-gray-300 cursor-pointer' : 'bg-gray-200 cursor-not-allowed'
+                                    data.is_active ? 'bg-brand' : canActivate ? 'bg-slate-300 cursor-pointer' : 'bg-slate-200 cursor-not-allowed'
                                 }`}
                                 role="switch"
                                 aria-checked={data.is_active}
@@ -250,16 +250,16 @@ export default function WhatsAppSettingsIndex({
 
                 {/* API Key */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
                         API Key <span className="text-red-500">*</span>
                     </label>
                     {hasExistingKey && !showApiKey && (
                         <div className="flex items-center gap-2 mb-2">
-                            <span className="text-sm text-gray-500">API key sudah tersimpan.</span>
+                            <span className="text-sm text-slate-500">API key sudah tersimpan.</span>
                             <button
                                 type="button"
                                 onClick={() => setShowApiKey(true)}
-                                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                                className="text-sm text-brand-700 hover:text-brand-700 font-medium"
                             >
                                 Ganti API Key
                             </button>
@@ -272,7 +272,7 @@ export default function WhatsAppSettingsIndex({
                                 value={data.api_key}
                                 onChange={(e) => setData('api_key', e.target.value)}
                                 placeholder="Masukkan API key"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[44px]"
+                                className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand min-h-[44px]"
                             />
                             {errors.api_key && (
                                 <p className="mt-1 text-sm text-red-600">{errors.api_key}</p>
@@ -283,7 +283,7 @@ export default function WhatsAppSettingsIndex({
 
                 {/* API URL */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
                         API URL <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -291,9 +291,9 @@ export default function WhatsAppSettingsIndex({
                         value={data.api_url}
                         onChange={(e) => setData('api_url', e.target.value)}
                         placeholder="https://api.example.com"
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[44px]"
+                        className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand min-h-[44px]"
                     />
-                    <p className="mt-1 text-xs text-gray-500">Base URL tanpa path endpoint (contoh: https://192.168.1.118:8080)</p>
+                    <p className="mt-1 text-xs text-slate-500">Base URL tanpa path endpoint (contoh: https://192.168.1.118:8080)</p>
                     {errors.api_url && (
                         <p className="mt-1 text-sm text-red-600">{errors.api_url}</p>
                     )}
@@ -301,7 +301,7 @@ export default function WhatsAppSettingsIndex({
 
                 {/* Instance ID */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
                         Instance ID <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -309,35 +309,35 @@ export default function WhatsAppSettingsIndex({
                         value={data.phone_number_id}
                         onChange={(e) => setData('phone_number_id', e.target.value)}
                         placeholder="Contoh: simplecmpos"
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[44px]"
+                        className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand min-h-[44px]"
                     />
-                    <p className="mt-1 text-xs text-gray-500">ID instance WhatsApp yang digunakan di URL endpoint (contoh: <code className="bg-gray-100 px-1 rounded">simplecmpos</code> → /message/sendText/simplecmpos)</p>
+                    <p className="mt-1 text-xs text-slate-500">ID instance WhatsApp yang digunakan di URL endpoint (contoh: <code className="bg-appbg px-1 rounded">simplecmpos</code> → /message/sendText/simplecmpos)</p>
                     {errors.phone_number_id && (
                         <p className="mt-1 text-sm text-red-600">{errors.phone_number_id}</p>
                     )}
                 </div>
 
                 {/* Test Connection */}
-                <div className="border-t border-gray-200 pt-5 mt-5">
-                    <h4 className="text-sm font-medium text-gray-900 mb-3">Test Koneksi</h4>
+                <div className="border-t border-slate-200 pt-5 mt-5">
+                    <h4 className="text-sm font-medium text-ink mb-3">Test Koneksi</h4>
                     <div className="flex gap-3">
                         <input
                             type="text"
                             value={testPhone}
                             onChange={(e) => setTestPhone(e.target.value)}
                             placeholder="Nomor telepon (contoh: 6281234567890)"
-                            className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[44px]"
+                            className="flex-1 border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand min-h-[44px]"
                         />
                         <button
                             type="button"
                             onClick={handleTestConnection}
                             disabled={isTesting || !data.is_active}
-                            className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+                            className="px-4 py-2 bg-brand text-ink text-sm font-medium rounded-md hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
                         >
                             {isTesting ? 'Mengirim...' : 'Kirim Test'}
                         </button>
                     </div>
-                    <p className="mt-2 text-xs text-gray-500">
+                    <p className="mt-2 text-xs text-slate-500">
                         ℹ️ Pesan test tetap bisa dikirim meskipun Status Pengiriman Aktif dimatikan
                     </p>
                     {testResult && (
@@ -354,103 +354,103 @@ export default function WhatsAppSettingsIndex({
     const renderTemplateTab = () => (
         <div className="space-y-6">
             {/* Low Stock Template */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-base font-semibold text-gray-900">Template Low Stock</h3>
-                    <p className="mt-1 text-sm text-gray-500">Pesan yang dikirim ketika stok di bawah threshold.</p>
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+                <div className="px-6 py-4 border-b border-slate-200">
+                    <h3 className="text-base font-semibold text-ink">Template Low Stock</h3>
+                    <p className="mt-1 text-sm text-slate-500">Pesan yang dikirim ketika stok di bawah threshold.</p>
                 </div>
                 <div className="p-6 space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Subjek</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Subjek</label>
                         <input
                             type="text"
                             value={data.message_template?.low_stock?.subject || ''}
                             onChange={(e) => handleTemplateChange('low_stock', 'subject', e.target.value)}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px]"
+                            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand min-h-[44px]"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Isi Pesan</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Isi Pesan</label>
                         <textarea
                             value={data.message_template?.low_stock?.body || ''}
                             onChange={(e) => handleTemplateChange('low_stock', 'body', e.target.value)}
                             rows={6}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
                         />
                     </div>
                 </div>
             </div>
 
             {/* Out of Stock Template */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-base font-semibold text-gray-900">Template Out of Stock</h3>
-                    <p className="mt-1 text-sm text-gray-500">Pesan yang dikirim ketika stok habis.</p>
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+                <div className="px-6 py-4 border-b border-slate-200">
+                    <h3 className="text-base font-semibold text-ink">Template Out of Stock</h3>
+                    <p className="mt-1 text-sm text-slate-500">Pesan yang dikirim ketika stok habis.</p>
                 </div>
                 <div className="p-6 space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Subjek</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Subjek</label>
                         <input
                             type="text"
                             value={data.message_template?.out_of_stock?.subject || ''}
                             onChange={(e) => handleTemplateChange('out_of_stock', 'subject', e.target.value)}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px]"
+                            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand min-h-[44px]"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Isi Pesan</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Isi Pesan</label>
                         <textarea
                             value={data.message_template?.out_of_stock?.body || ''}
                             onChange={(e) => handleTemplateChange('out_of_stock', 'body', e.target.value)}
                             rows={6}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
                         />
                     </div>
                 </div>
             </div>
 
             {/* Stock Opname Template */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-base font-semibold text-gray-900">Template Stock Opname</h3>
-                    <p className="mt-1 text-sm text-gray-500">Pesan yang dikirim ketika stock opname disubmit.</p>
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+                <div className="px-6 py-4 border-b border-slate-200">
+                    <h3 className="text-base font-semibold text-ink">Template Stock Opname</h3>
+                    <p className="mt-1 text-sm text-slate-500">Pesan yang dikirim ketika stock opname disubmit.</p>
                 </div>
                 <div className="p-6 space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Subjek</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Subjek</label>
                         <input
                             type="text"
                             value={data.message_template?.stock_opname?.subject || ''}
                             onChange={(e) => handleTemplateChange('stock_opname', 'subject', e.target.value)}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px]"
+                            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand min-h-[44px]"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Pengantar / Pembuka</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Pengantar / Pembuka</label>
                         <textarea
                             value={data.message_template?.stock_opname?.opening || ''}
                             onChange={(e) => handleTemplateChange('stock_opname', 'opening', e.target.value)}
                             rows={2}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
                             placeholder="Teks pembuka sebelum detail opname..."
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Isi Pesan (Body)</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Isi Pesan (Body)</label>
                         <textarea
                             value={data.message_template?.stock_opname?.body || ''}
                             onChange={(e) => handleTemplateChange('stock_opname', 'body', e.target.value)}
                             rows={8}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand font-mono"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Penutup / Akhir</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Penutup / Akhir</label>
                         <textarea
                             value={data.message_template?.stock_opname?.closing || ''}
                             onChange={(e) => handleTemplateChange('stock_opname', 'closing', e.target.value)}
                             rows={2}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
                             placeholder="Teks penutup setelah detail opname..."
                         />
                     </div>
@@ -458,8 +458,8 @@ export default function WhatsAppSettingsIndex({
             </div>
 
             {/* Placeholder Guide */}
-            <div className="bg-blue-50 rounded-lg border border-blue-200 p-4">
-                <h4 className="text-sm font-semibold text-blue-900 mb-2">Placeholder yang Tersedia</h4>
+            <div className="bg-brand-50 rounded-lg border border-brand-200 p-4">
+                <h4 className="text-sm font-semibold text-brand-900 mb-2">Placeholder yang Tersedia</h4>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {[
                         ['{product_name}', 'Nama Produk'],
@@ -476,10 +476,10 @@ export default function WhatsAppSettingsIndex({
                         ['{total_difference}', 'Total Selisih'],
                     ].map(([placeholder, label]) => (
                         <div key={placeholder} className="flex items-center gap-2 text-sm">
-                            <code className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded text-xs font-mono">
+                            <code className="px-2 py-0.5 bg-brand-100 text-brand-800 rounded text-xs font-mono">
                                 {placeholder}
                             </code>
-                            <span className="text-blue-700">{label}</span>
+                            <span className="text-brand-700">{label}</span>
                         </div>
                     ))}
                 </div>
@@ -495,12 +495,12 @@ export default function WhatsAppSettingsIndex({
         });
 
         return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+            <div className="px-6 py-4 border-b border-slate-200">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h3 className="text-base font-semibold text-gray-900">Penerima Notifikasi</h3>
-                        <p className="mt-1 text-sm text-gray-500">
+                        <h3 className="text-base font-semibold text-ink">Penerima Notifikasi</h3>
+                        <p className="mt-1 text-sm text-slate-500">
                             Pilih pengguna yang akan menerima notifikasi WhatsApp.
                             Terpilih: {data.recipients?.length || 0} dari {users.length}
                         </p>
@@ -509,15 +509,15 @@ export default function WhatsAppSettingsIndex({
                         <button
                             type="button"
                             onClick={handleSelectAllRecipients}
-                            className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                            className="text-sm text-brand-700 hover:text-brand-700 font-medium"
                         >
                             Pilih Semua
                         </button>
-                        <span className="text-gray-300">|</span>
+                        <span className="text-slate-300">|</span>
                         <button
                             type="button"
                             onClick={handleDeselectAllRecipients}
-                            className="text-sm text-gray-600 hover:text-gray-700 font-medium"
+                            className="text-sm text-slate-500 hover:text-slate-700 font-medium"
                         >
                             Batal Semua
                         </button>
@@ -530,8 +530,8 @@ export default function WhatsAppSettingsIndex({
                 )}
 
                 {selectedUsersWithoutPhone.length > 0 && (
-                    <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                        <p className="text-sm text-yellow-800">
+                    <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                        <p className="text-sm text-amber-800">
                             <span className="font-medium">Peringatan:</span> {selectedUsersWithoutPhone.length} penerima belum memiliki nomor telepon dan tidak akan menerima notifikasi WhatsApp. Minta mereka mengisi nomor telepon di menu Profile.
                         </p>
                     </div>
@@ -547,25 +547,25 @@ export default function WhatsAppSettingsIndex({
                                 className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${
                                     isSelected
                                         ? hasPhone
-                                            ? 'bg-blue-50 border-blue-300'
+                                            ? 'bg-brand-50 border-brand-300'
                                             : 'bg-orange-50 border-orange-300'
-                                        : 'bg-white border-gray-200 hover:bg-gray-50'
+                                        : 'bg-white border-slate-200 hover:bg-appbg'
                                 }`}
                             >
                                 <input
                                     type="checkbox"
                                     checked={isSelected || false}
                                     onChange={() => handleRecipientToggle(user.id)}
-                                    className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                                    className="h-4 w-4 text-brand-700 rounded border-slate-300 focus:ring-brand"
                                 />
                                 <div className="ml-3 flex-1">
-                                    <span className="text-sm font-medium text-gray-900">{user.name}</span>
-                                    <span className="text-sm text-gray-500 ml-2">{user.email}</span>
+                                    <span className="text-sm font-medium text-ink">{user.name}</span>
+                                    <span className="text-sm text-slate-500 ml-2">{user.email}</span>
                                     {!hasPhone && (
                                         <span className="ml-2 text-xs text-orange-600 font-medium">⚠ Tanpa No. HP</span>
                                     )}
                                     {hasPhone && (
-                                        <span className="ml-2 text-xs text-gray-400">📞 {user.phone}</span>
+                                        <span className="ml-2 text-xs text-slate-400">📞 {user.phone}</span>
                                     )}
                                 </div>
                             </label>
@@ -573,7 +573,7 @@ export default function WhatsAppSettingsIndex({
                     })}
                 </div>
                 {users.length === 0 && (
-                    <p className="text-center text-gray-500 text-sm py-8">Tidak ada pengguna tersedia.</p>
+                    <p className="text-center text-slate-500 text-sm py-8">Tidak ada pengguna tersedia.</p>
                 )}
             </div>
         </div>
@@ -584,23 +584,23 @@ export default function WhatsAppSettingsIndex({
     const renderPreferencesTab = () => (
         <div className="space-y-6">
             {/* Alert Types */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-base font-semibold text-gray-900">Jenis Notifikasi</h3>
-                    <p className="mt-1 text-sm text-gray-500">Atur jenis stok alert yang akan dikirimkan via WhatsApp.</p>
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+                <div className="px-6 py-4 border-b border-slate-200">
+                    <h3 className="text-base font-semibold text-ink">Jenis Notifikasi</h3>
+                    <p className="mt-1 text-sm text-slate-500">Atur jenis stok alert yang akan dikirimkan via WhatsApp.</p>
                 </div>
                 <div className="p-6 space-y-4">
                     {/* Low Stock Toggle */}
-                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between p-4 bg-appbg rounded-lg">
                         <div>
-                            <h4 className="text-sm font-medium text-gray-900">Peringatan Stok Rendah</h4>
-                            <p className="text-xs text-gray-500 mt-0.5">Kirim notifikasi ketika stok di bawah threshold</p>
+                            <h4 className="text-sm font-medium text-ink">Peringatan Stok Rendah</h4>
+                            <p className="text-xs text-slate-500 mt-0.5">Kirim notifikasi ketika stok di bawah threshold</p>
                         </div>
                         <button
                             type="button"
                             onClick={() => setData('notify_low_stock', !data.notify_low_stock)}
                             className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                data.notify_low_stock ? 'bg-blue-600' : 'bg-gray-300'
+                                data.notify_low_stock ? 'bg-brand' : 'bg-slate-300'
                             }`}
                             role="switch"
                             aria-checked={data.notify_low_stock}
@@ -614,16 +614,16 @@ export default function WhatsAppSettingsIndex({
                     </div>
 
                     {/* Out of Stock Toggle */}
-                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between p-4 bg-appbg rounded-lg">
                         <div>
-                            <h4 className="text-sm font-medium text-gray-900">Notifikasi Stok Habis</h4>
-                            <p className="text-xs text-gray-500 mt-0.5">Kirim notifikasi ketika stok benar-benar habis</p>
+                            <h4 className="text-sm font-medium text-ink">Notifikasi Stok Habis</h4>
+                            <p className="text-xs text-slate-500 mt-0.5">Kirim notifikasi ketika stok benar-benar habis</p>
                         </div>
                         <button
                             type="button"
                             onClick={() => setData('notify_out_of_stock', !data.notify_out_of_stock)}
                             className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                data.notify_out_of_stock ? 'bg-blue-600' : 'bg-gray-300'
+                                data.notify_out_of_stock ? 'bg-brand' : 'bg-slate-300'
                             }`}
                             role="switch"
                             aria-checked={data.notify_out_of_stock}
@@ -637,16 +637,16 @@ export default function WhatsAppSettingsIndex({
                     </div>
 
                     {/* Stock Opname Toggle */}
-                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between p-4 bg-appbg rounded-lg">
                         <div>
-                            <h4 className="text-sm font-medium text-gray-900">Notifikasi Stock Opname</h4>
-                            <p className="text-xs text-gray-500 mt-0.5">Kirim notifikasi ketika stock opname disubmit</p>
+                            <h4 className="text-sm font-medium text-ink">Notifikasi Stock Opname</h4>
+                            <p className="text-xs text-slate-500 mt-0.5">Kirim notifikasi ketika stock opname disubmit</p>
                         </div>
                         <button
                             type="button"
                             onClick={() => setData('notify_stock_opname', !data.notify_stock_opname)}
                             className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                data.notify_stock_opname ? 'bg-blue-600' : 'bg-gray-300'
+                                data.notify_stock_opname ? 'bg-brand' : 'bg-slate-300'
                             }`}
                             role="switch"
                             aria-checked={data.notify_stock_opname}
@@ -662,14 +662,14 @@ export default function WhatsAppSettingsIndex({
             </div>
 
             {/* Batch Settings */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-base font-semibold text-gray-900">Pengaturan Batch</h3>
-                    <p className="mt-1 text-sm text-gray-500">Atur jumlah pesan per batch dan jeda antar batch.</p>
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+                <div className="px-6 py-4 border-b border-slate-200">
+                    <h3 className="text-base font-semibold text-ink">Pengaturan Batch</h3>
+                    <p className="mt-1 text-sm text-slate-500">Atur jumlah pesan per batch dan jeda antar batch.</p>
                 </div>
                 <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-slate-700 mb-1">
                             Jumlah per Batch
                         </label>
                         <input
@@ -678,14 +678,14 @@ export default function WhatsAppSettingsIndex({
                             max="100"
                             value={data.batch_size}
                             onChange={(e) => setData('batch_size', parseInt(e.target.value) || 1)}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px]"
+                            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand min-h-[44px]"
                         />
                         {errors.batch_size && (
                             <p className="mt-1 text-sm text-red-600">{errors.batch_size}</p>
                         )}
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-slate-700 mb-1">
                             Jeda Antar Batch (detik)
                         </label>
                         <input
@@ -694,7 +694,7 @@ export default function WhatsAppSettingsIndex({
                             max="60"
                             value={data.batch_delay}
                             onChange={(e) => setData('batch_delay', parseInt(e.target.value) || 1)}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px]"
+                            className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand min-h-[44px]"
                         />
                         {errors.batch_delay && (
                             <p className="mt-1 text-sm text-red-600">{errors.batch_delay}</p>
@@ -709,39 +709,39 @@ export default function WhatsAppSettingsIndex({
     const renderStatusTab = () => (
         <div className="space-y-6">
             {/* Service Status */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-base font-semibold text-gray-900">Status Layanan</h3>
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+                <div className="px-6 py-4 border-b border-slate-200">
+                    <h3 className="text-base font-semibold text-ink">Status Layanan</h3>
                 </div>
                 <div className="p-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Status</div>
+                        <div className="p-4 bg-appbg rounded-lg">
+                            <div className="text-xs font-medium text-slate-500 uppercase tracking-wide">Status</div>
                             <div className="mt-1 flex items-center gap-2">
-                                <span className={`inline-block w-2.5 h-2.5 rounded-full ${status.is_active ? 'bg-green-500' : 'bg-gray-400'}`} />
-                                <span className="text-sm font-semibold text-gray-900">
+                                <span className={`inline-block w-2.5 h-2.5 rounded-full ${status.is_active ? 'bg-green-500' : 'bg-slate-400'}`} />
+                                <span className="text-sm font-semibold text-ink">
                                     {status.is_active ? 'Aktif' : 'Nonaktif'}
                                 </span>
                             </div>
                         </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Konfigurasi</div>
+                        <div className="p-4 bg-appbg rounded-lg">
+                            <div className="text-xs font-medium text-slate-500 uppercase tracking-wide">Konfigurasi</div>
                             <div className="mt-1 flex items-center gap-2">
-                                <span className={`inline-block w-2.5 h-2.5 rounded-full ${status.is_configured ? 'bg-green-500' : 'bg-yellow-500'}`} />
-                                <span className="text-sm font-semibold text-gray-900">
+                                <span className={`inline-block w-2.5 h-2.5 rounded-full ${status.is_configured ? 'bg-green-500' : 'bg-amber-500'}`} />
+                                <span className="text-sm font-semibold text-ink">
                                     {status.is_configured ? 'Lengkap' : 'Belum Lengkap'}
                                 </span>
                             </div>
                         </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Pengiriman Terakhir</div>
-                            <div className="mt-1 text-sm font-semibold text-gray-900">
+                        <div className="p-4 bg-appbg rounded-lg">
+                            <div className="text-xs font-medium text-slate-500 uppercase tracking-wide">Pengiriman Terakhir</div>
+                            <div className="mt-1 text-sm font-semibold text-ink">
                                 {formatDate(initialSettings.last_sent_at)}
                             </div>
                         </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Jumlah Penerima</div>
-                            <div className="mt-1 text-sm font-semibold text-gray-900">
+                        <div className="p-4 bg-appbg rounded-lg">
+                            <div className="text-xs font-medium text-slate-500 uppercase tracking-wide">Jumlah Penerima</div>
+                            <div className="mt-1 text-sm font-semibold text-ink">
                                 {status.recipients_count} orang
                             </div>
                         </div>
@@ -758,21 +758,21 @@ export default function WhatsAppSettingsIndex({
             </div>
 
             {/* Send Status Toggle */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-base font-semibold text-gray-900">Kontrol Pengiriman</h3>
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+                <div className="px-6 py-4 border-b border-slate-200">
+                    <h3 className="text-base font-semibold text-ink">Kontrol Pengiriman</h3>
                 </div>
                 <div className="p-6">
-                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between p-4 bg-appbg rounded-lg">
                         <div>
-                            <h4 className="text-sm font-medium text-gray-900">Status Pengiriman Aktif</h4>
-                            <p className="text-xs text-gray-500 mt-0.5">Matikan untuk menunda notifikasi otomatis tanpa mengubah konfigurasi</p>
+                            <h4 className="text-sm font-medium text-ink">Status Pengiriman Aktif</h4>
+                            <p className="text-xs text-slate-500 mt-0.5">Matikan untuk menunda notifikasi otomatis tanpa mengubah konfigurasi</p>
                         </div>
                         <button
                             type="button"
                             onClick={() => setData('send_status', !data.send_status)}
                             className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                data.send_status ? 'bg-green-600' : 'bg-gray-300'
+                                data.send_status ? 'bg-green-600' : 'bg-slate-300'
                             }`}
                             role="switch"
                             aria-checked={data.send_status}
@@ -812,8 +812,8 @@ export default function WhatsAppSettingsIndex({
                 {/* Header */}
                 <div className="md:flex md:items-center md:justify-between mb-6">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-900">WhatsApp Settings</h2>
-                        <p className="mt-1 text-sm text-gray-500">
+                        <h2 className="text-2xl font-bold text-ink">WhatsApp Settings</h2>
+                        <p className="mt-1 text-sm text-slate-500">
                             Kelola konfigurasi notifikasi WhatsApp untuk stok alert.
                         </p>
                     </div>
@@ -831,7 +831,7 @@ export default function WhatsAppSettingsIndex({
                         <button
                             type="submit"
                             disabled={processing}
-                            className="px-6 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+                            className="px-6 py-2.5 bg-brand text-ink text-sm font-medium rounded-md hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
                         >
                             {processing ? 'Menyimpan...' : 'Simpan'}
                         </button>

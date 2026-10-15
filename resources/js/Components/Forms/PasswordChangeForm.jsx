@@ -77,7 +77,7 @@ export default function PasswordChangeForm({ user, errors = {}, isOwnProfile = f
 
     const getStrengthColor = () => {
         if (passwordStrength <= 2) return 'bg-red-500';
-        if (passwordStrength === 3) return 'bg-yellow-500';
+        if (passwordStrength === 3) return 'bg-amber-500';
         return 'bg-green-500';
     };
 
@@ -86,7 +86,7 @@ export default function PasswordChangeForm({ user, errors = {}, isOwnProfile = f
             {/* Only show current password field for own profile */}
             {isOwnProfile && (
                 <div>
-                    <label htmlFor="current_password" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="current_password" className="block text-sm font-medium text-slate-700">
                         Password Saat Ini
                     </label>
                     <div className="mt-1">
@@ -96,7 +96,7 @@ export default function PasswordChangeForm({ user, errors = {}, isOwnProfile = f
                             name="current_password"
                             value={data.current_password}
                             onChange={(e) => setData('current_password', e.target.value)}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                            className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand focus:ring-brand sm:text-sm"
                             autoComplete="current-password"
                             required
                         />
@@ -108,7 +108,7 @@ export default function PasswordChangeForm({ user, errors = {}, isOwnProfile = f
             )}
 
             <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="password" className="block text-sm font-medium text-slate-700">
                     Password Baru
                 </label>
                 <div className="mt-1">
@@ -118,7 +118,7 @@ export default function PasswordChangeForm({ user, errors = {}, isOwnProfile = f
                         name="password"
                         value={data.password}
                         onChange={(e) => setData('password', e.target.value)}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand focus:ring-brand sm:text-sm"
                         autoComplete="new-password"
                         required
                     />
@@ -130,16 +130,16 @@ export default function PasswordChangeForm({ user, errors = {}, isOwnProfile = f
                 {data.password && (
                     <div className="mt-2">
                         <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs text-gray-500">Kekuatan Password:</span>
+                            <span className="text-xs text-slate-500">Kekuatan Password:</span>
                             <span className={`text-xs font-medium ${
                                 passwordStrength <= 2 ? 'text-red-500' :
-                                passwordStrength === 3 ? 'text-yellow-500' :
+                                passwordStrength === 3 ? 'text-warning' :
                                 'text-green-500'
                             }`}>
                                 {passwordStrengthText}
                             </span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-slate-200 rounded-full h-2">
                             <div
                                 className={`h-2 rounded-full ${getStrengthColor()}`}
                                 style={{ width: `${(passwordStrength / 5) * 100}%` }}
@@ -150,7 +150,7 @@ export default function PasswordChangeForm({ user, errors = {}, isOwnProfile = f
             </div>
 
             <div>
-                <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="password_confirmation" className="block text-sm font-medium text-slate-700">
                     Konfirmasi Password Baru
                 </label>
                 <div className="mt-1">
@@ -160,7 +160,7 @@ export default function PasswordChangeForm({ user, errors = {}, isOwnProfile = f
                         name="password_confirmation"
                         value={data.password_confirmation}
                         onChange={(e) => setData('password_confirmation', e.target.value)}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand focus:ring-brand sm:text-sm"
                         autoComplete="new-password"
                         required
                     />
@@ -174,7 +174,7 @@ export default function PasswordChangeForm({ user, errors = {}, isOwnProfile = f
                 <button
                     type="submit"
                     disabled={processing}
-                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                    className="inline-flex justify-center rounded-md border border-transparent bg-brand py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 disabled:opacity-50"
                 >
                     {processing ? (
                         <>

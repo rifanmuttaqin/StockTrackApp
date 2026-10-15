@@ -19,7 +19,7 @@ const NotificationTable = ({
             );
         }
         return (
-            <Badge className="bg-gray-100 text-gray-800">
+            <Badge className="bg-appbg text-ink">
                 Sudah Dibaca
             </Badge>
         );
@@ -42,28 +42,28 @@ const NotificationTable = ({
 
     return (
         <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-200" role="table" aria-label="Daftar notifikasi stok">
-                <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-200" role="table" aria-label="Daftar notifikasi stok">
+                <thead className="bg-appbg">
                     <tr>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                             Produk
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                             Varian
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                             Stok Saat Ini
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                             Threshold
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                             Tipe
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                             Status
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
                             Tanggal
                         </th>
                         <th scope="col" className="relative px-6 py-3">
@@ -71,10 +71,10 @@ const NotificationTable = ({
                         </th>
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white" role="rowgroup">
+                <tbody className="divide-y divide-slate-200 bg-white" role="rowgroup">
                     {notifications.length === 0 ? (
                         <tr>
-                            <td colSpan="8" className="px-6 py-12 text-center text-sm text-gray-500">
+                            <td colSpan="8" className="px-6 py-12 text-center text-sm text-slate-500">
                                 Tidak ada notifikasi ditemukan.
                             </td>
                         </tr>
@@ -82,14 +82,14 @@ const NotificationTable = ({
                         notifications.map((notification) => (
                             <tr
                                 key={notification.id}
-                                className={`hover:bg-gray-50 transition-colors ${notification.read_at === null ? 'bg-blue-50/40 font-medium' : ''}`}
+                                className={`hover:bg-appbg transition-colors ${notification.read_at === null ? 'bg-brand-50/40 font-medium' : ''}`}
                                 role="row"
                             >
-                                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                                <td className="whitespace-nowrap px-6 py-4 text-sm text-ink">
                                     {can('product_variants.view') ? (
                                         <Link
                                             href={route('variants.show', notification.data?.product_variant_id)}
-                                            className="text-indigo-600 hover:text-indigo-900 hover:underline font-semibold"
+                                            className="text-brand-700 hover:text-brand-900 hover:underline font-semibold"
                                         >
                                             {notification.data?.product_name}
                                         </Link>
@@ -97,15 +97,15 @@ const NotificationTable = ({
                                         notification.data?.product_name
                                     )}
                                 </td>
-                                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                                <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500">
                                     {notification.data?.variant_name}
                                 </td>
-                                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                                <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500">
                                     <span className={notification.data?.stock_current <= 0 ? 'font-bold text-red-600' : ''}>
                                         {notification.data?.stock_current}
                                     </span>
                                 </td>
-                                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                                <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500">
                                     {notification.data?.stock_threshold}
                                 </td>
                                 <td className="whitespace-nowrap px-6 py-4 text-sm">
@@ -114,7 +114,7 @@ const NotificationTable = ({
                                 <td className="whitespace-nowrap px-6 py-4 text-sm">
                                     {getStatusBadge(notification.read_at)}
                                 </td>
-                                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                                <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500">
                                     {formatDate(notification.created_at)}
                                 </td>
                                 <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
@@ -122,7 +122,7 @@ const NotificationTable = ({
                                         {can('product_variants.view') && (
                                             <Link
                                                 href={route('variants.show', notification.data?.product_variant_id)}
-                                                className="text-indigo-600 hover:text-indigo-900"
+                                                className="text-brand-700 hover:text-brand-900"
                                                 title="Lihat Detail Varian"
                                                 aria-label={`Lihat detail ${notification.data?.product_name}`}
                                             >

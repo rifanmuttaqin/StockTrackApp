@@ -46,8 +46,8 @@ export default function NotificationDropdown() {
             );
         }
         return (
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-100">
-                <svg className="h-4 w-4 text-yellow-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100">
+                <svg className="h-4 w-4 text-amber-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                 </svg>
             </div>
@@ -75,7 +75,7 @@ export default function NotificationDropdown() {
             {/* Bell Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="relative inline-flex items-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:outline-none"
+                className="relative inline-flex items-center rounded-md p-2 text-slate-400 transition duration-150 ease-in-out hover:bg-appbg hover:text-slate-500 focus:outline-none"
             >
                 <svg
                     className="h-6 w-6"
@@ -103,14 +103,14 @@ export default function NotificationDropdown() {
             {isOpen && (
                 <div className="absolute right-0 mt-2 w-80 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50">
                     {/* Header */}
-                    <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
-                        <h3 className="text-sm font-semibold text-gray-900">Notifikasi</h3>
+                    <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+                        <h3 className="text-sm font-semibold text-ink">Notifikasi</h3>
                         {unreadCount > 0 && (
                             <button
                                 onClick={async () => {
                                     await markAllAsRead();
                                 }}
-                                className="text-xs text-blue-600 hover:text-blue-800"
+                                className="text-xs text-brand-700 hover:text-brand-800"
                             >
                                 Tandai semua dibaca
                             </button>
@@ -121,28 +121,28 @@ export default function NotificationDropdown() {
                     <div className="max-h-96 overflow-y-auto">
                         {isLoading ? (
                             <div className="flex items-center justify-center py-8">
-                                <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
+                                <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-brand-600"></div>
                             </div>
                         ) : notifications.length === 0 ? (
-                            <div className="py-8 text-center text-sm text-gray-500">
+                            <div className="py-8 text-center text-sm text-slate-500">
                                 Tidak ada notifikasi baru
                             </div>
                         ) : (
-                            <ul className="divide-y divide-gray-100">
+                            <ul className="divide-y divide-slate-100">
                                 {notifications.map((notification) => (
                                     <li
                                         key={notification.id}
-                                        className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                                        className="flex items-start gap-3 px-4 py-3 hover:bg-appbg transition-colors"
                                     >
                                         {getNotificationIcon(notification.data?.type)}
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-medium text-gray-900 truncate">
+                                            <p className="text-sm font-medium text-ink truncate">
                                                 {notification.data?.product_name}
                                             </p>
-                                            <p className="text-xs text-gray-500">
+                                            <p className="text-xs text-slate-500">
                                                 {notification.data?.variant_name} - Stok: {notification.data?.stock_current}/{notification.data?.stock_threshold}
                                             </p>
-                                            <p className="text-xs text-gray-400 mt-0.5">
+                                            <p className="text-xs text-slate-400 mt-0.5">
                                                 {getRelativeTime(notification.created_at)}
                                             </p>
                                         </div>
@@ -151,7 +151,7 @@ export default function NotificationDropdown() {
                                                 e.stopPropagation();
                                                 markAsRead(notification.id);
                                             }}
-                                            className="shrink-0 text-gray-400 hover:text-gray-600"
+                                            className="shrink-0 text-slate-400 hover:text-slate-500"
                                             title="Tandai dibaca"
                                         >
                                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -165,11 +165,11 @@ export default function NotificationDropdown() {
                     </div>
 
                     {/* Footer */}
-                    <div className="border-t border-gray-200 px-4 py-3">
+                    <div className="border-t border-slate-200 px-4 py-3">
                         <Link
                             href={route('notifications.index')}
                             onClick={() => setIsOpen(false)}
-                            className="block text-center text-sm font-medium text-blue-600 hover:text-blue-800"
+                            className="block text-center text-sm font-medium text-brand-700 hover:text-brand-800"
                         >
                             Lihat semua notifikasi
                         </Link>

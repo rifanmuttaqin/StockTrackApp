@@ -109,18 +109,18 @@ const MobileUserTable = ({
   const getSortIcon = useCallback((field) => {
     if (filters.sort !== field) {
       return (
-        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
         </svg>
       );
     }
 
     return filters.order === 'asc' ? (
-      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
       </svg>
     ) : (
-      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
       </svg>
     );
@@ -152,10 +152,10 @@ const MobileUserTable = ({
                 placeholder="Cari nama atau email..."
                 value={filters.search || ''}
                 onChange={(e) => onFilterChange('search', e.target.value)}
-                className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3 pr-10 border"
+                className="block w-full rounded-lg border-slate-300 shadow-sm focus:border-brand focus:ring-brand sm:text-sm p-3 pr-10 border"
               />
               <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -174,7 +174,7 @@ const MobileUserTable = ({
                 Filter & Sort
               </MobileButton>
 
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-slate-500">
                 {userCountText}
               </span>
             </div>
@@ -186,11 +186,11 @@ const MobileUserTable = ({
           <MobileCard>
             <div className="p-4 space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Role</label>
                 <select
                   value={filters.role || ''}
                   onChange={(e) => onFilterChange('role', e.target.value)}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
+                  className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand focus:ring-brand sm:text-sm p-2 border"
                 >
                   <option value="">Semua Role</option>
                   {roleOptions}
@@ -198,11 +198,11 @@ const MobileUserTable = ({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
                 <select
                   value={filters.status || ''}
                   onChange={(e) => onFilterChange('status', e.target.value)}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
+                  className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand focus:ring-brand sm:text-sm p-2 border"
                 >
                   <option value="">Semua Status</option>
                   <option value="active">Aktif</option>
@@ -212,7 +212,7 @@ const MobileUserTable = ({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Sort By</label>
                 <div className="grid grid-cols-2 gap-2">
                   <MobileButton
                     variant="outline"
@@ -263,11 +263,11 @@ const MobileUserTable = ({
         {usersArray.length === 0 ? (
           <MobileCard>
             <div className="p-8 text-center">
-              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="mx-auto h-12 w-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No users found</h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <h3 className="mt-2 text-sm font-medium text-ink">No users found</h3>
+              <p className="mt-1 text-sm text-slate-500">
                 {filters.search || filters.role || filters.status
                   ? 'Try adjusting your search or filters'
                   : 'Get started by creating a new user'}
@@ -298,7 +298,7 @@ const MobileUserTable = ({
         title="Konfirmasi Hapus"
       >
         <div className="mt-2">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-500">
             Apakah Anda yakin ingin menghapus user "{selectedUser?.name}"? Tindakan ini tidak dapat dibatalkan.
           </p>
         </div>
@@ -334,7 +334,7 @@ const MobileUserTable = ({
         title="Konfirmasi Ubah Status"
       >
         <div className="mt-2">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-500">
             Apakah Anda yakin ingin mengubah status user "{selectedUser?.name}" menjadi "{newStatus === 'active' ? 'Aktif' : 'Tidak Aktif'}"?
           </p>
         </div>
@@ -361,7 +361,7 @@ const MobileUserTable = ({
         title="Assign Role"
       >
         <div className="mt-2">
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-slate-500 mb-4">
             Pilih role untuk user "{selectedUser?.name}":
           </p>
           <div className="space-y-2">
@@ -374,11 +374,11 @@ const MobileUserTable = ({
                   value={role.id}
                   checked={selectedRole === role.id}
                   onChange={(e) => setSelectedRole(e.target.value)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                  className="h-4 w-4 text-brand-700 focus:ring-brand border-slate-300"
                 />
-                <label htmlFor={`role-modal-${role.id}`} className="ml-2 block text-sm text-gray-900">
+                <label htmlFor={`role-modal-${role.id}`} className="ml-2 block text-sm text-ink">
                   {role.name}
-                  <span className="ml-2 text-xs text-gray-500">({role.description})</span>
+                  <span className="ml-2 text-xs text-slate-500">({role.description})</span>
                 </label>
               </div>
             ))}

@@ -115,7 +115,7 @@ export default function AvatarUpload({ user, onSuccess }) {
     return (
         <div className="space-y-6">
             <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-slate-700">
                     Avatar
                 </label>
                 <div className="mt-1 flex items-center space-x-6">
@@ -127,9 +127,9 @@ export default function AvatarUpload({ user, onSuccess }) {
                                 alt="Avatar preview"
                             />
                         ) : (
-                            <div className="h-24 w-24 rounded-full bg-gray-300 flex items-center justify-center">
+                            <div className="h-24 w-24 rounded-full bg-slate-300 flex items-center justify-center">
                                 <svg
-                                    className="h-12 w-12 text-gray-400"
+                                    className="h-12 w-12 text-slate-400"
                                     fill="currentColor"
                                     viewBox="0 0 24 24"
                                 >
@@ -149,7 +149,7 @@ export default function AvatarUpload({ user, onSuccess }) {
                         <button
                             type="button"
                             onClick={openFileDialog}
-                            className="bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            className="bg-white py-2 px-3 border border-slate-300 rounded-md shadow-sm text-sm leading-4 font-medium text-slate-700 hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                         >
                             Pilih Avatar
                         </button>
@@ -157,12 +157,12 @@ export default function AvatarUpload({ user, onSuccess }) {
                             <button
                                 type="button"
                                 onClick={handleRemoveAvatar}
-                                className="ml-3 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                className="ml-3 bg-white py-2 px-3 border border-slate-300 rounded-md shadow-sm text-sm leading-4 font-medium text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                             >
                                 Hapus
                             </button>
                         )}
-                        <p className="mt-2 text-sm text-gray-500">
+                        <p className="mt-2 text-sm text-slate-500">
                             PNG, JPG, GIF hingga 2MB
                         </p>
                     </div>
@@ -176,8 +176,8 @@ export default function AvatarUpload({ user, onSuccess }) {
             <div
                 className={`mt-2 flex justify-center rounded-lg border-2 border-dashed px-6 pt-5 pb-6 ${
                     isDragging
-                        ? 'border-blue-400 bg-blue-50'
-                        : 'border-gray-300'
+                        ? 'border-brand-500 bg-brand-50'
+                        : 'border-slate-300'
                 }`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
@@ -185,7 +185,7 @@ export default function AvatarUpload({ user, onSuccess }) {
             >
                 <div className="space-y-1 text-center">
                     <svg
-                        className="mx-auto h-12 w-12 text-gray-400"
+                        className="mx-auto h-12 w-12 text-slate-400"
                         stroke="currentColor"
                         fill="none"
                         viewBox="0 0 48 48"
@@ -198,10 +198,10 @@ export default function AvatarUpload({ user, onSuccess }) {
                             strokeLinejoin="round"
                         />
                     </svg>
-                    <div className="flex text-sm text-gray-600">
+                    <div className="flex text-sm text-slate-500">
                         <label
                             htmlFor="file-upload"
-                            className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500"
+                            className="relative cursor-pointer rounded-md bg-white font-medium text-brand-700 focus-within:outline-none focus-within:ring-2 focus-within:ring-brand focus-within:ring-offset-2 hover:text-brand-600"
                         >
                             <span>Upload file</span>
                             <input
@@ -215,7 +215,7 @@ export default function AvatarUpload({ user, onSuccess }) {
                         </label>
                         <p className="pl-1">atau drag and drop</p>
                     </div>
-                    <p className="text-xs text-gray-500">PNG, JPG, GIF hingga 2MB</p>
+                    <p className="text-xs text-slate-500">PNG, JPG, GIF hingga 2MB</p>
                 </div>
             </div>
 
@@ -223,12 +223,12 @@ export default function AvatarUpload({ user, onSuccess }) {
             {isUploading && (
                 <div className="mt-2">
                     <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-gray-700">Mengupload...</span>
-                        <span className="text-sm text-gray-700">{uploadProgress}%</span>
+                        <span className="text-sm text-slate-700">Mengupload...</span>
+                        <span className="text-sm text-slate-700">{uploadProgress}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-slate-200 rounded-full h-2">
                         <div
-                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                            className="bg-brand h-2 rounded-full transition-all duration-300"
                             style={{ width: `${uploadProgress}%` }}
                         ></div>
                     </div>
@@ -241,7 +241,7 @@ export default function AvatarUpload({ user, onSuccess }) {
                     <button
                         onClick={submit}
                         disabled={processing || isUploading}
-                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-brand py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 disabled:opacity-50"
                     >
                         {processing || isUploading ? 'Memproses...' : 'Simpan Avatar'}
                     </button>

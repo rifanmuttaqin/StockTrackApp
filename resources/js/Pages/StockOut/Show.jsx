@@ -45,7 +45,7 @@ export default function Show({ stockOut, items, totalQuantity, totalVariants }) 
         <div className="mb-6">
           <Link
             href={route('stock-out.index')}
-            className="inline-flex items-center text-gray-600 hover:text-gray-900"
+            className="inline-flex items-center text-slate-500 hover:text-ink"
           >
             <ArrowLeftIcon className="h-5 w-5 mr-1" />
             Back to List
@@ -56,10 +56,10 @@ export default function Show({ stockOut, items, totalQuantity, totalVariants }) 
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-ink">
                 Stock Out Details
               </h1>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-slate-500 mt-1">
                 Date: {formatDate(stockOut.date)}
               </p>
             </div>
@@ -70,22 +70,22 @@ export default function Show({ stockOut, items, totalQuantity, totalVariants }) 
           
           {/* Statistics */}
           <div className="grid grid-cols-2 gap-4 mt-6">
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-sm text-gray-500">Total Variants</p>
-              <p className="text-2xl font-bold text-gray-900">{totalVariants}</p>
+            <div className="bg-appbg rounded-lg p-4">
+              <p className="text-sm text-slate-500">Total Variants</p>
+              <p className="text-2xl font-bold text-ink">{totalVariants}</p>
             </div>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-sm text-gray-500">Total Quantity</p>
-              <p className="text-2xl font-bold text-gray-900">{totalQuantity}</p>
+            <div className="bg-appbg rounded-lg p-4">
+              <p className="text-sm text-slate-500">Total Quantity</p>
+              <p className="text-2xl font-bold text-ink">{totalQuantity}</p>
             </div>
           </div>
           
           {/* Timestamps */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
+          <div className="mt-6 pt-6 border-t border-slate-200">
+            <p className="text-sm text-slate-500">
               Created: {formatDate(stockOut.created_at)}
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-500">
               Updated: {formatDate(stockOut.updated_at)}
             </p>
           </div>
@@ -93,31 +93,31 @@ export default function Show({ stockOut, items, totalQuantity, totalVariants }) 
         
         {/* Items List */}
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Items</h2>
+          <h2 className="text-xl font-bold text-ink mb-4">Items</h2>
           
           {items.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No items found</p>
+            <p className="text-slate-500 text-center py-8">No items found</p>
           ) : (
             <div className="space-y-4">
               {items.map((item) => (
-                <div key={item.id} className="border border-gray-200 rounded-lg p-4">
+                <div key={item.id} className="border border-slate-200 rounded-lg p-4">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-ink">
                         {item.productVariant?.product?.name || 'Unknown Product'}
                       </h3>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-slate-500">
                         {item.productVariant?.variant_name || 'Unknown Variant'}
                       </p>
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-xs text-slate-400 mt-1">
                         SKU: {item.productVariant?.sku || 'N/A'}
                       </p>
                     </div>
                     <div className="text-right mt-2 sm:mt-0">
-                      <p className="text-2xl font-bold text-gray-900">
+                      <p className="text-2xl font-bold text-ink">
                         {item.quantity}
                       </p>
-                      <p className="text-sm text-gray-500">Qty</p>
+                      <p className="text-sm text-slate-500">Qty</p>
                     </div>
                   </div>
                 </div>
@@ -131,7 +131,7 @@ export default function Show({ stockOut, items, totalQuantity, totalVariants }) 
           <div className="mt-6">
             <Link
               href={route('stock-out.edit', stockOut.id)}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="inline-flex items-center px-4 py-2 bg-brand text-ink rounded-lg hover:bg-brand-600"
             >
               <PencilIcon className="h-5 w-5 mr-2" />
               Edit Draft

@@ -108,7 +108,7 @@ const UserTable = ({
   const getStatusBadge = (status) => {
     const statusConfig = {
       active: { bg: 'bg-green-100', text: 'text-green-800', label: 'Aktif' },
-      inactive: { bg: 'bg-gray-100', text: 'text-gray-800', label: 'Tidak Aktif' },
+      inactive: { bg: 'bg-appbg', text: 'text-ink', label: 'Tidak Aktif' },
       suspended: { bg: 'bg-red-100', text: 'text-red-800', label: 'Ditangguhkan' },
     };
 
@@ -138,9 +138,9 @@ const UserTable = ({
         <div className="px-4 py-5 sm:p-6">
           {/* Bulk Actions */}
           {selectedUsers.length > 0 && (
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <div className="mb-4 p-3 bg-brand-50 border border-brand-200 rounded-md">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-blue-800">
+                <span className="text-sm text-brand-800">
                   {selectedUsers.length} user{selectedUsers.length > 1 ? 's' : ''} selected
                 </span>
                 <div className="flex space-x-2">
@@ -161,7 +161,7 @@ const UserTable = ({
                         setBulkAction('deactivate');
                         setShowBulkModal(true);
                       }}
-                      className="px-3 py-1 text-xs bg-yellow-600 text-white rounded hover:bg-yellow-700"
+                      className="px-3 py-1 text-xs bg-warning text-white rounded hover:bg-amber-600"
                     >
                       Deactivate
                     </button>
@@ -201,7 +201,7 @@ const UserTable = ({
                   )}
                   <button
                     onClick={() => setSelectedUsers([])}
-                    className="px-3 py-1 text-xs bg-gray-600 text-white rounded hover:bg-gray-700"
+                    className="px-3 py-1 text-xs bg-slate-600 text-white rounded hover:bg-slate-700"
                   >
                     Clear
                   </button>
@@ -218,14 +218,14 @@ const UserTable = ({
                 placeholder="Cari nama atau email..."
                 value={filters.search || ''}
                 onChange={(e) => onFilterChange('search', e.target.value)}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand focus:ring-brand sm:text-sm"
               />
             </div>
             <div>
               <select
                 value={filters.role || ''}
                 onChange={(e) => onFilterChange('role', e.target.value)}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand focus:ring-brand sm:text-sm"
               >
                 <option value="">Semua Role</option>
                 {roles.map((role) => (
@@ -239,7 +239,7 @@ const UserTable = ({
               <select
                 value={filters.status || ''}
                 onChange={(e) => onFilterChange('status', e.target.value)}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand focus:ring-brand sm:text-sm"
               >
                 <option value="">Semua Status</option>
                 <option value="active">Aktif</option>
@@ -251,11 +251,11 @@ const UserTable = ({
 
           {/* Table */}
           <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-300" role="table" aria-label="Daftar pengguna">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-200" role="table" aria-label="Daftar pengguna">
+              <thead className="bg-appbg">
                 <tr role="row">
                   {can('users.edit') || can('users.delete') ? (
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                       <input
                         type="checkbox"
                         checked={selectedUsers.length === usersArray.length}
@@ -266,13 +266,13 @@ const UserTable = ({
                             setSelectedUsers([]);
                           }
                         }}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-brand-700 focus:ring-brand border-slate-300 rounded"
                       />
                     </th>
                   ) : null}
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-appbg"
                     onClick={() => onSortChange('name')}
                     aria-label="Sort by name"
                   >
@@ -287,7 +287,7 @@ const UserTable = ({
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-appbg"
                     onClick={() => onSortChange('email')}
                     aria-label="Sort by email"
                   >
@@ -300,12 +300,12 @@ const UserTable = ({
                       )}
                     </div>
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" aria-label="Role">
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider" aria-label="Role">
                     Role
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-appbg"
                     onClick={() => onSortChange('status')}
                     aria-label="Sort by status"
                   >
@@ -320,7 +320,7 @@ const UserTable = ({
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-appbg"
                     onClick={() => onSortChange('last_login_at')}
                     aria-label="Sort by last login"
                   >
@@ -338,18 +338,18 @@ const UserTable = ({
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200" role="rowgroup">
+              <tbody className="bg-white divide-y divide-slate-200" role="rowgroup">
                 {usersArray.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="px-6 py-4 text-center text-sm text-gray-500">
+                    <td colSpan="6" className="px-6 py-4 text-center text-sm text-slate-500">
                       Tidak ada data user
                     </td>
                   </tr>
                 ) : (
                   usersArray.map((user, userIndex) => (
-                    <tr key={`user-${user.id || userIndex}-${userIndex}`} className="hover:bg-gray-50" role="row">
+                    <tr key={`user-${user.id || userIndex}-${userIndex}`} className="hover:bg-appbg" role="row">
                       {can('users.edit') || can('users.delete') ? (
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
                           <input
                             type="checkbox"
                             checked={selectedUsers.includes(user.id)}
@@ -360,22 +360,22 @@ const UserTable = ({
                                 setSelectedUsers(selectedUsers.filter(id => id !== user.id));
                               }
                             }}
-                            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                            className="h-4 w-4 text-brand-700 focus:ring-brand border-slate-300 rounded"
                           />
                         </td>
                       ) : null}
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-ink">
                         {user.name}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
                         {user.email}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
                         <div className="flex flex-wrap gap-1">
                           {user.roles?.map((role) => (
                             <span
                               key={role.id}
-                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
+                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-100 text-brand-800"
                             >
                               {role.name}
                             </span>
@@ -385,7 +385,7 @@ const UserTable = ({
                       <td className="px-6 py-4 whitespace-nowrap">
                         {getStatusBadge(user.status)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
                         {formatDate(user.last_login_at)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -393,7 +393,7 @@ const UserTable = ({
                           {can('users.show') && (
                             <Link
                               href={route('users.show', user.id)}
-                              className="text-indigo-600 hover:text-indigo-900"
+                              className="text-brand-700 hover:text-brand-900"
                               title="Lihat detail pengguna"
                               aria-label={`Lihat detail ${user.name}`}
                             >
@@ -406,7 +406,7 @@ const UserTable = ({
                           {can('users.edit') && (
                             <Link
                               href={route('users.edit', user.id)}
-                              className="text-indigo-600 hover:text-indigo-900"
+                              className="text-brand-700 hover:text-brand-900"
                               title="Edit pengguna"
                               aria-label={`Edit ${user.name}`}
                             >
@@ -418,7 +418,7 @@ const UserTable = ({
                           {can('users.edit') && (
                             <button
                               onClick={() => handleToggleStatus(user)}
-                              className="text-yellow-600 hover:text-yellow-900"
+                              className="text-amber-600 hover:text-amber-900"
                               title="Toggle status pengguna"
                               aria-label={`Toggle status ${user.name}`}
                             >
@@ -482,14 +482,14 @@ const UserTable = ({
         title="Konfirmasi Hapus"
       >
         <div className="mt-2">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-500">
             Apakah Anda yakin ingin menghapus user "{selectedUser?.name}"? Tindakan ini tidak dapat dibatalkan.
           </p>
         </div>
         <div className="mt-4 flex justify-end space-x-3">
           <button
             type="button"
-            className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="bg-white py-2 px-4 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             onClick={() => setShowDeleteModal(false)}
             disabled={processing}
           >
@@ -520,21 +520,21 @@ const UserTable = ({
         title="Konfirmasi Ubah Status"
       >
         <div className="mt-2">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-500">
             Apakah Anda yakin ingin mengubah status user "{selectedUser?.name}" menjadi "{newStatus === 'active' ? 'Aktif' : 'Tidak Aktif'}"?
           </p>
         </div>
         <div className="mt-4 flex justify-end space-x-3">
           <button
             type="button"
-            className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="bg-white py-2 px-4 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             onClick={() => setShowStatusModal(false)}
           >
             Batal
           </button>
           <button
             type="button"
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             onClick={confirmStatusToggle}
           >
             Ubah Status
@@ -549,7 +549,7 @@ const UserTable = ({
         title="Assign Role"
       >
         <div className="mt-2">
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-slate-500 mb-4">
             Pilih role untuk user "{selectedUser?.name}":
           </p>
           <div className="space-y-2">
@@ -562,11 +562,11 @@ const UserTable = ({
                   value={role.id}
                   checked={selectedRole === role.id}
                   onChange={(e) => setSelectedRole(e.target.value)}
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                  className="h-4 w-4 text-brand-700 focus:ring-brand border-slate-300"
                 />
-                <label htmlFor={`role-modal-${role.id}`} className="ml-2 block text-sm text-gray-900">
+                <label htmlFor={`role-modal-${role.id}`} className="ml-2 block text-sm text-ink">
                   {role.name}
-                  <span className="ml-2 text-xs text-gray-500">({role.description})</span>
+                  <span className="ml-2 text-xs text-slate-500">({role.description})</span>
                 </label>
               </div>
             ))}
@@ -575,14 +575,14 @@ const UserTable = ({
         <div className="mt-4 flex justify-end space-x-3">
           <button
             type="button"
-            className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="bg-white py-2 px-4 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             onClick={() => setShowRoleModal(false)}
           >
             Batal
           </button>
           <button
             type="button"
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             onClick={confirmRoleAssignment}
             disabled={!selectedRole}
           >
@@ -598,14 +598,14 @@ const UserTable = ({
         title={`Confirm ${bulkAction} ${selectedUsers.length} user${selectedUsers.length > 1 ? 's' : ''}`}
       >
         <div className="mt-2">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-500">
             Are you sure you want to {bulkAction} {selectedUsers.length} user{selectedUsers.length > 1 ? 's' : ''}? This action cannot be undone.
           </p>
         </div>
         <div className="mt-4 flex justify-end space-x-3">
           <button
             type="button"
-            className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="bg-white py-2 px-4 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             onClick={() => setShowBulkModal(false)}
             disabled={processing}
           >
@@ -619,12 +619,12 @@ const UserTable = ({
                 : bulkAction === 'activate'
                 ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
                 : bulkAction === 'deactivate'
-                ? 'bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500'
+                ? 'bg-warning hover:bg-amber-600 focus:ring-warning'
                 : bulkAction === 'suspend'
                 ? 'bg-orange-600 hover:bg-orange-700 focus:ring-orange-500'
                 : bulkAction === 'unsuspend'
                 ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
-                : 'bg-gray-600 hover:bg-gray-700 focus:ring-gray-500'
+                : 'bg-slate-600 hover:bg-slate-700 focus:ring-slate-500'
             } focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50`}
             onClick={() => {
               const executeBulkAction = async () => {

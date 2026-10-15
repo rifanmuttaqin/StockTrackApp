@@ -210,7 +210,7 @@ const Index = ({ products, stockOutData, filters, error }) => {
     return (
       <span>
         {formatStockValue(converted)}
-        {unit && <span className="text-xs text-gray-400 ml-1">{unit}</span>}
+        {unit && <span className="text-xs text-slate-400 ml-1">{unit}</span>}
       </span>
     );
   };
@@ -230,14 +230,14 @@ const Index = ({ products, stockOutData, filters, error }) => {
       >
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow-md p-8 text-center">
-            <CubeIcon className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <CubeIcon className="mx-auto h-16 w-16 text-slate-400 mb-4" />
+            <h2 className="text-xl font-semibold text-ink mb-2">
               Akses Terbatas
             </h2>
-            <p className="text-gray-600">
+            <p className="text-slate-500">
               Halaman ini hanya dapat diakses pada mode desktop.
             </p>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-slate-500 mt-2">
               Silakan buka aplikasi menggunakan perangkat desktop untuk melihat laporan stock out.
             </p>
           </div>
@@ -259,10 +259,10 @@ const Index = ({ products, stockOutData, filters, error }) => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
               Laporan Stock Out
             </h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-slate-500">
               Lihat dan analisis data stock out berdasarkan produk dan tanggal
             </p>
           </div>
@@ -292,7 +292,7 @@ const Index = ({ products, stockOutData, filters, error }) => {
 
         {/* Loading Overlay */}
         {loading && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
             <LoadingSpinner size="lg" />
           </div>
         )}
@@ -300,14 +300,14 @@ const Index = ({ products, stockOutData, filters, error }) => {
         {/* Filters Section */}
         <div className="bg-white shadow rounded-lg p-6 mb-6">
           <div className="flex items-center mb-4">
-            <FunnelIcon className="h-5 w-5 text-gray-400 mr-2" />
-            <h3 className="text-lg font-medium text-gray-900">Filter Laporan</h3>
+            <FunnelIcon className="h-5 w-5 text-slate-400 mr-2" />
+            <h3 className="text-lg font-medium text-ink">Filter Laporan</h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Product Filter */}
             <div>
-              <label htmlFor="product_id" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="product_id" className="block text-sm font-medium text-slate-700 mb-1">
                 Produk
               </label>
               <SearchableSelect
@@ -322,7 +322,7 @@ const Index = ({ products, stockOutData, filters, error }) => {
 
             {/* Start Date Filter */}
             <div>
-              <label htmlFor="start_date" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="start_date" className="block text-sm font-medium text-slate-700 mb-1">
                 Tanggal Mulai
               </label>
               <div className="relative">
@@ -332,23 +332,23 @@ const Index = ({ products, stockOutData, filters, error }) => {
                   value={localFilters.start_date}
                   onChange={(e) => handleFilterChange('start_date', e.target.value)}
                   placeholder="DD Bulan Tahun"
-                  className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer ${
+                  className={`w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand cursor-pointer ${
                     localFilters.start_date ? 'text-transparent' : ''
                   }`}
                   style={{ colorScheme: 'light' }}
                 />
                 {localFilters.start_date && (
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-sm text-gray-700">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-sm text-slate-700">
                     {formatDateForInput(localFilters.start_date)}
                   </div>
                 )}
-                <CalendarIcon className="absolute inset-y-0 right-0 flex items-center pr-3 h-5 w-5 text-gray-400 pointer-events-none" />
+                <CalendarIcon className="absolute inset-y-0 right-0 flex items-center pr-3 h-5 w-5 text-slate-400 pointer-events-none" />
               </div>
             </div>
 
             {/* End Date Filter */}
             <div>
-              <label htmlFor="end_date" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="end_date" className="block text-sm font-medium text-slate-700 mb-1">
                 Tanggal Akhir
               </label>
               <div className="relative">
@@ -358,30 +358,30 @@ const Index = ({ products, stockOutData, filters, error }) => {
                   value={localFilters.end_date}
                   onChange={(e) => handleFilterChange('end_date', e.target.value)}
                   placeholder="DD Bulan Tahun"
-                  className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer ${
+                  className={`w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand cursor-pointer ${
                     localFilters.end_date ? 'text-transparent' : ''
                   }`}
                   style={{ colorScheme: 'light' }}
                 />
                 {localFilters.end_date && (
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-sm text-gray-700">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-sm text-slate-700">
                     {formatDateForInput(localFilters.end_date)}
                   </div>
                 )}
-                <CalendarIcon className="absolute inset-y-0 right-0 flex items-center pr-3 h-5 w-5 text-gray-400 pointer-events-none" />
+                <CalendarIcon className="absolute inset-y-0 right-0 flex items-center pr-3 h-5 w-5 text-slate-400 pointer-events-none" />
               </div>
             </div>
 
             {/* Unit Conversion Filter */}
             <div>
-              <label htmlFor="unit_conversion" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="unit_conversion" className="block text-sm font-medium text-slate-700 mb-1">
                 Konversi Satuan
               </label>
               <select
                 id="unit_conversion"
                 value={selectedConversion}
                 onChange={(e) => setSelectedConversion(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand"
               >
                 <option value="">Satuan Dasar</option>
                 {allConversions.map((conv) => (
@@ -397,14 +397,14 @@ const Index = ({ products, stockOutData, filters, error }) => {
           <div className="flex items-center justify-end mt-4 space-x-3">
             <button
               onClick={handleResetFilters}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             >
               <XMarkIcon className="mr-2 h-4 w-4" />
               Reset
             </button>
             <button
               onClick={handleApplyFilters}
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             >
               <FunnelIcon className="mr-2 h-4 w-4" />
               Terapkan Filter
@@ -415,11 +415,11 @@ const Index = ({ products, stockOutData, filters, error }) => {
         {/* Report Table */}
         <div className="bg-white shadow rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-200">
+              <thead className="bg-appbg">
                 <tr>
                   {/* Product/Variasi Column */}
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50 sticky left-0 z-10 shadow-r">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider bg-appbg sticky left-0 z-10 shadow-r">
                     Produk / Variasi
                   </th>
                   {/* Date Columns */}
@@ -427,59 +427,59 @@ const Index = ({ products, stockOutData, filters, error }) => {
                     stockOutData.dates.map((date) => (
                       <th
                         key={date}
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]"
+                        className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider min-w-[120px]"
                       >
                         {formatDate(date)}
                       </th>
                     ))
                   ) : (
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
                       Tanggal
                     </th>
                   )}
                   {/* Total (Jumlah) Column */}
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px] bg-green-50">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider min-w-[100px] bg-green-50">
                     Jumlah
                   </th>
                   {/* Average Column */}
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px] bg-indigo-50">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider min-w-[100px] bg-brand-50">
                     Rata-rata
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-slate-200">
                 {stockOutData?.products && stockOutData.products.length > 0 ? (
                   stockOutData.products.map((product) => (
                     <React.Fragment key={product.id}>
                       {/* Product Name Row */}
-                      <tr className="bg-gray-50">
-                        <td className="px-6 py-3 whitespace-nowrap text-sm font-bold text-gray-900 sticky left-0 bg-gray-50 shadow-r">
+                      <tr className="bg-appbg">
+                        <td className="px-6 py-3 whitespace-nowrap text-sm font-bold text-ink sticky left-0 bg-appbg shadow-r">
                           {product.name}
                         </td>
                         {/* Empty cells for product row */}
                         {stockOutData.dates.map((date) => (
                           <td
                             key={date}
-                            className="px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-center bg-gray-50"
+                            className="px-6 py-3 whitespace-nowrap text-sm text-slate-500 text-center bg-appbg"
                           >
                             -
                           </td>
                         ))}
                         {/* Product Total Column */}
-                        <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-gray-50 font-bold text-green-700">
+                        <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-appbg font-bold text-green-700">
                           {product.total && product.total > 0 ? (
                             <span>
                               {formatStockValue(convertProductValue(product, product.total))}
-                              {getProductDisplayUnit(product) && <span className="text-xs text-gray-400 ml-1">{getProductDisplayUnit(product)}</span>}
+                              {getProductDisplayUnit(product) && <span className="text-xs text-slate-400 ml-1">{getProductDisplayUnit(product)}</span>}
                             </span>
                           ) : '-'}
                         </td>
                         {/* Product Average Column */}
-                        <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-gray-50 font-bold text-indigo-700">
+                        <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-appbg font-bold text-brand-700">
                           {product.average && product.average > 0 ? (
                             <span>
                               {formatStockValue(convertProductValue(product, product.average))}
-                              {getProductDisplayUnit(product) && <span className="text-xs text-gray-400 ml-1">{getProductDisplayUnit(product)}</span>}
+                              {getProductDisplayUnit(product) && <span className="text-xs text-slate-400 ml-1">{getProductDisplayUnit(product)}</span>}
                             </span>
                           ) : '-'}
                         </td>
@@ -488,11 +488,11 @@ const Index = ({ products, stockOutData, filters, error }) => {
                       {/* Variant Rows */}
                       {product.variants && product.variants.length > 0 ? (
                         product.variants.map((variant) => (
-                          <tr key={variant.id} className="hover:bg-gray-50">
-                            <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-700 sticky left-0 bg-white shadow-r pl-10">
+                          <tr key={variant.id} className="hover:bg-appbg">
+                            <td className="px-6 py-3 whitespace-nowrap text-sm text-slate-700 sticky left-0 bg-white shadow-r pl-10">
                               <div className="flex items-center space-x-2">
                                 <span>{variant.name}</span>
-                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800">
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-brand-100 text-brand-800">
                                   Stok: {formatStockValue(getConvertedValue(variant, variant.stock))}{getDisplayUnit(variant) ? ` ${getDisplayUnit(variant)}` : ''}
                                 </span>
                               </div>
@@ -510,16 +510,16 @@ const Index = ({ products, stockOutData, filters, error }) => {
                               {variant.total && variant.total > 0 ? (
                                 <span>
                                   {formatStockValue(getConvertedValue(variant, variant.total))}
-                                  {getDisplayUnit(variant) && <span className="text-xs text-gray-400 ml-1">{getDisplayUnit(variant)}</span>}
+                                  {getDisplayUnit(variant) && <span className="text-xs text-slate-400 ml-1">{getDisplayUnit(variant)}</span>}
                                 </span>
                               ) : '-'}
                             </td>
                             {/* Average Column */}
-                            <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-indigo-50 font-medium text-indigo-700">
+                            <td className="px-6 py-3 whitespace-nowrap text-sm text-center bg-brand-50 font-medium text-brand-700">
                               {variant.average && variant.average > 0 ? (
                                 <span>
                                   {formatStockValue(getConvertedValue(variant, variant.average))}
-                                  {getDisplayUnit(variant) && <span className="text-xs text-gray-400 ml-1">{getDisplayUnit(variant)}</span>}
+                                  {getDisplayUnit(variant) && <span className="text-xs text-slate-400 ml-1">{getDisplayUnit(variant)}</span>}
                                 </span>
                               ) : '-'}
                             </td>
@@ -529,7 +529,7 @@ const Index = ({ products, stockOutData, filters, error }) => {
                         <tr>
                           <td
                             colSpan={stockOutData.dates.length + 3}
-                            className="px-6 py-4 text-sm text-gray-500 text-center"
+                            className="px-6 py-4 text-sm text-slate-500 text-center"
                           >
                             Tidak ada variasi produk
                           </td>
@@ -543,11 +543,11 @@ const Index = ({ products, stockOutData, filters, error }) => {
                       colSpan={(stockOutData?.dates?.length || 0) + 3}
                       className="px-6 py-12 text-center"
                     >
-                      <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                      <h3 className="text-sm font-medium text-gray-900 mb-1">
+                      <DocumentTextIcon className="mx-auto h-12 w-12 text-slate-400 mb-4" />
+                      <h3 className="text-sm font-medium text-ink mb-1">
                         Tidak ada data stock out
                       </h3>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-slate-500">
                         Silakan ubah filter atau pilih rentang tanggal yang berbeda.
                       </p>
                     </td>
@@ -559,8 +559,8 @@ const Index = ({ products, stockOutData, filters, error }) => {
 
           {/* Summary Info */}
           {stockOutData?.products && stockOutData.products.length > 0 && (
-            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
-              <div className="flex items-center justify-between text-sm text-gray-600">
+            <div className="bg-appbg px-6 py-4 border-t border-slate-200">
+              <div className="flex items-center justify-between text-sm text-slate-500">
                 <div>
                   <span className="font-medium">Total Produk:</span> {stockOutData.products.length}
                 </div>
@@ -581,7 +581,7 @@ const Index = ({ products, stockOutData, filters, error }) => {
           )}
         </div>
 
-        <div className="mt-4 text-xs text-gray-500 italic">
+        <div className="mt-4 text-xs text-slate-500 italic">
           * Konversi menggunakan rate yang berlaku saat ini. Rate dapat berubah jika admin memperbarui multiplier.
         </div>
       </div>

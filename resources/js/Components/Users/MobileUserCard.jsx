@@ -10,7 +10,7 @@ const MobileUserCard = ({ user, onView, onEdit, onDelete, onToggleStatus, onAssi
   const getStatusBadge = (status) => {
     const statusConfig = {
       active: { bg: 'bg-green-100', text: 'text-green-800', label: 'Aktif' },
-      inactive: { bg: 'bg-gray-100', text: 'text-gray-800', label: 'Tidak Aktif' },
+      inactive: { bg: 'bg-appbg', text: 'text-ink', label: 'Tidak Aktif' },
       suspended: { bg: 'bg-red-100', text: 'text-red-800', label: 'Ditangguhkan' },
     };
 
@@ -39,8 +39,8 @@ const MobileUserCard = ({ user, onView, onEdit, onDelete, onToggleStatus, onAssi
       <div className="px-4 py-4 sm:px-6">
         <div className="flex items-center justify-between mb-3">
           <div className="flex-1">
-            <h3 className="text-lg font-medium text-gray-900 truncate">{user.name}</h3>
-            <p className="text-sm text-gray-500 truncate">{user.email}</p>
+            <h3 className="text-lg font-medium text-ink truncate">{user.name}</h3>
+            <p className="text-sm text-slate-500 truncate">{user.email}</p>
           </div>
           <div className="ml-2 flex-shrink-0">
             {getStatusBadge(user.status)}
@@ -52,25 +52,25 @@ const MobileUserCard = ({ user, onView, onEdit, onDelete, onToggleStatus, onAssi
             {user.roles?.map((role) => (
               <span
                 key={role.id}
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-100 text-brand-800"
               >
                 {role.name}
               </span>
             ))}
             {(!user.roles || user.roles.length === 0) && (
-              <span className="text-sm text-gray-500">No roles assigned</span>
+              <span className="text-sm text-slate-500">No roles assigned</span>
             )}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-2 text-sm text-gray-500 mb-4">
+        <div className="grid grid-cols-1 gap-2 text-sm text-slate-500 mb-4">
           <div className="flex justify-between">
             <span>Last Login:</span>
-            <span className="font-medium text-gray-900">{formatDate(user.last_login_at)}</span>
+            <span className="font-medium text-ink">{formatDate(user.last_login_at)}</span>
           </div>
           <div className="flex justify-between">
             <span>Created:</span>
-            <span className="font-medium text-gray-900">{formatDate(user.created_at)}</span>
+            <span className="font-medium text-ink">{formatDate(user.created_at)}</span>
           </div>
         </div>
 

@@ -21,10 +21,10 @@ export default function Edit({ mustVerifyEmail, status }) {
                 {/* Header */}
                 <div className="md:flex md:items-center md:justify-between mb-6">
                     <div className="flex-1 min-w-0">
-                        <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                        <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
                             Edit Profil
                         </h2>
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-slate-500">
                             Kelola informasi profil, kata sandi, dan akun Anda
                         </p>
                     </div>
@@ -49,16 +49,16 @@ export default function Edit({ mustVerifyEmail, status }) {
                 </div>
 
                 {/* Help Information */}
-                <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="mt-6 bg-brand-50 border border-brand-200 rounded-lg p-4">
                     <div className="flex">
                         <div className="flex-shrink-0">
-                            <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                            <svg className="h-5 w-5 text-brand-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                             </svg>
                         </div>
                         <div className="ml-3">
-                            <h3 className="text-sm font-medium text-blue-800">Tips Mengedit Profil</h3>
-                            <div className="mt-2 text-sm text-blue-700">
+                            <h3 className="text-sm font-medium text-brand-800">Tips Mengedit Profil</h3>
+                            <div className="mt-2 text-sm text-brand-700">
                                 <ul className="list-disc pl-5 space-y-1">
                                     <li>Perubahan email akan memerlukan verifikasi email baru</li>
                                     <li>Kata sandi dapat diubah melalui form Update Password</li>

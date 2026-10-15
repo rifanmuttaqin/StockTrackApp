@@ -73,15 +73,15 @@ const Show = ({ product, errors, flash }) => {
             <div className="flex items-center">
               <Link
                 href={route('products.index')}
-                className="inline-flex items-center text-gray-500 hover:text-gray-700 mr-4"
+                className="inline-flex items-center text-slate-500 hover:text-slate-700 mr-4"
               >
                 <ArrowLeftIcon className="h-5 w-5" />
               </Link>
               <div>
-                <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
                   {product?.name}
                 </h2>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-slate-500">
                   SKU: {product?.sku}
                 </p>
               </div>
@@ -91,7 +91,7 @@ const Show = ({ product, errors, flash }) => {
             {can('products.update') && (
               <Link
                 href={route('products.edit', product.id)}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
               >
                 <PencilIcon className="h-4 w-4 mr-2" />
                 Edit Produk
@@ -135,7 +135,7 @@ const Show = ({ product, errors, flash }) => {
 
         {/* Loading Overlay */}
         {loading && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
             <LoadingSpinner size="lg" />
           </div>
         )}
@@ -143,44 +143,44 @@ const Show = ({ product, errors, flash }) => {
         {/* Product Information Card */}
         <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
           <div className="px-4 py-5 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
+            <h3 className="text-lg leading-6 font-medium text-ink">
               Informasi Produk
             </h3>
-            <p className="mt-1 max-w-2xl text-sm text-gray-500">
+            <p className="mt-1 max-w-2xl text-sm text-slate-500">
               Detail lengkap mengenai produk ini
             </p>
           </div>
-          <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+          <div className="border-t border-slate-200 px-4 py-5 sm:px-6">
             <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <dt className="text-sm font-medium text-gray-500">Nama Produk</dt>
-                <dd className="mt-1 text-sm text-gray-900 font-semibold">{product?.name}</dd>
+                <dt className="text-sm font-medium text-slate-500">Nama Produk</dt>
+                <dd className="mt-1 text-sm text-ink font-semibold">{product?.name}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">SKU Produk</dt>
+                <dt className="text-sm font-medium text-slate-500">SKU Produk</dt>
                 <dd className="mt-1">
                   <Badge variant="info">{product?.sku}</Badge>
                 </dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Jumlah Varian</dt>
+                <dt className="text-sm font-medium text-slate-500">Jumlah Varian</dt>
                 <dd className="mt-1">
                   <Badge variant="success">{product?.variants_count || 0} Varian</Badge>
                 </dd>
               </div>
               <div className="sm:col-span-2">
-                <dt className="text-sm font-medium text-gray-500">Deskripsi</dt>
-                <dd className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">
+                <dt className="text-sm font-medium text-slate-500">Deskripsi</dt>
+                <dd className="mt-1 text-sm text-ink whitespace-pre-wrap">
                   {product?.description || '-'}
                 </dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Dibuat Pada</dt>
-                <dd className="mt-1 text-sm text-gray-900">{formatDate(product?.created_at)}</dd>
+                <dt className="text-sm font-medium text-slate-500">Dibuat Pada</dt>
+                <dd className="mt-1 text-sm text-ink">{formatDate(product?.created_at)}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Terakhir Diupdate</dt>
-                <dd className="mt-1 text-sm text-gray-900">{formatDate(product?.updated_at)}</dd>
+                <dt className="text-sm font-medium text-slate-500">Terakhir Diupdate</dt>
+                <dd className="mt-1 text-sm text-ink">{formatDate(product?.updated_at)}</dd>
               </div>
             </dl>
           </div>
@@ -188,20 +188,20 @@ const Show = ({ product, errors, flash }) => {
 
         {/* Variants Section */}
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-          <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
+          <div className="px-4 py-5 sm:px-6 border-b border-slate-200">
             <div className="flex justify-between items-center">
               <div>
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                <h3 className="text-lg leading-6 font-medium text-ink">
                   Daftar Varian
                 </h3>
-                <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                <p className="mt-1 max-w-2xl text-sm text-slate-500">
                   Semua varian yang terkait dengan produk ini
                 </p>
               </div>
               {can('product-variants.create') && (
                 <Link
                   href={route('products.edit', product.id)}
-                  className="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                 >
                   <PlusIcon className="h-4 w-4 mr-2" />
                   Tambah Varian
@@ -213,28 +213,28 @@ const Show = ({ product, errors, flash }) => {
           {/* Variants List */}
           {product?.variants && product.variants.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-slate-200">
+                <thead className="bg-appbg">
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                       Nama Varian
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                       SKU
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                       Stock Current
                     </th>
-                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
                       Aksi
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-slate-200">
                   {product.variants.map((variant) => (
-                    <tr key={variant.id} className="hover:bg-gray-50">
+                    <tr key={variant.id} className="hover:bg-appbg">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-ink">
                           {variant.name}
                         </div>
                       </td>
@@ -246,24 +246,24 @@ const Show = ({ product, errors, flash }) => {
                           variant.stock_current > 10
                             ? 'bg-green-100 text-green-800'
                             : variant.stock_current > 0
-                            ? 'bg-yellow-100 text-yellow-800'
+                            ? 'bg-amber-100 text-amber-800'
                             : 'bg-red-100 text-red-800'
                         }`}>
                           {variant.stock_current} {variant.unit?.abbreviation || 'unit'}
                         </span>
                         {variant.unit && (
                           <div className="mt-2">
-                            <span className="text-sm text-gray-500">Satuan: </span>
+                            <span className="text-sm text-slate-500">Satuan: </span>
                             <span className="text-sm font-medium">{variant.unit.name} ({variant.unit.abbreviation})</span>
                           </div>
                         )}
                         {variant.conversions?.length > 0 && (
                           <div className="mt-1">
-                            <span className="text-sm text-gray-500">Konversi: </span>
+                            <span className="text-sm text-slate-500">Konversi: </span>
                             {variant.conversions.map((c) => (
-                              <span key={c.id} className="inline-flex items-center mr-2 px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800">
+                              <span key={c.id} className="inline-flex items-center mr-2 px-2 py-0.5 rounded text-xs bg-brand-100 text-brand-800">
                                 {c.converted_stock} {c.abbreviation}
-                                {c.is_primary && <span className="ml-1 text-blue-600">*</span>}
+                                {c.is_primary && <span className="ml-1 text-brand-700">*</span>}
                               </span>
                             ))}
                           </div>
@@ -274,7 +274,7 @@ const Show = ({ product, errors, flash }) => {
                           {can('product-variants.update') && (
                             <Link
                               href={route('products.edit', product.id)}
-                              className="text-blue-600 hover:text-blue-900"
+                              className="text-brand-700 hover:text-brand-900"
                               title="Edit Varian"
                             >
                               <PencilIcon className="h-5 w-5" />
@@ -303,19 +303,19 @@ const Show = ({ product, errors, flash }) => {
             </div>
           ) : (
             <div className="px-4 py-8 text-center">
-              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100 mb-4">
-                <svg className="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-appbg mb-4">
+                <svg className="h-6 w-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-1">Belum Ada Varian</h3>
-              <p className="text-sm text-gray-500 mb-4">
+              <h3 className="text-lg font-medium text-ink mb-1">Belum Ada Varian</h3>
+              <p className="text-sm text-slate-500 mb-4">
                 Produk ini belum memiliki varian. Tambahkan varian sekarang.
               </p>
               {can('product-variants.create') && (
                 <Link
                   href={route('products.edit', product.id)}
-                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                 >
                   <PlusIcon className="h-4 w-4 mr-2" />
                   Tambah Varian
@@ -331,7 +331,7 @@ const Show = ({ product, errors, flash }) => {
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <div className="w-8 h-8 bg-brand rounded-md flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
@@ -339,8 +339,8 @@ const Show = ({ product, errors, flash }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Varian</dt>
-                    <dd className="text-lg font-medium text-gray-900">
+                    <dt className="text-sm font-medium text-slate-500 truncate">Total Varian</dt>
+                    <dd className="text-lg font-medium text-ink">
                       {product?.variants_count || 0}
                     </dd>
                   </dl>
@@ -361,8 +361,8 @@ const Show = ({ product, errors, flash }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Stock</dt>
-                    <dd className="text-lg font-medium text-gray-900">
+                    <dt className="text-sm font-medium text-slate-500 truncate">Total Stock</dt>
+                    <dd className="text-lg font-medium text-ink">
                       {product?.variants?.reduce((sum, v) => sum + v.stock_current, 0) || 0} {product?.variants?.[0]?.unit?.abbreviation || 'unit'}
                     </dd>
                   </dl>
@@ -375,7 +375,7 @@ const Show = ({ product, errors, flash }) => {
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                  <div className="w-8 h-8 bg-amber-500 rounded-md flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -383,8 +383,8 @@ const Show = ({ product, errors, flash }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Terakhir Update</dt>
-                    <dd className="text-lg font-medium text-gray-900">
+                    <dt className="text-sm font-medium text-slate-500 truncate">Terakhir Update</dt>
+                    <dd className="text-lg font-medium text-ink">
                       {product?.updated_at
                         ? new Date(product.updated_at).toLocaleDateString('id-ID', {
                             day: 'numeric',
@@ -400,16 +400,16 @@ const Show = ({ product, errors, flash }) => {
         </div>
 
         {/* Help Information */}
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="mt-6 bg-brand-50 border border-brand-200 rounded-lg p-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="h-5 w-5 text-brand-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">Informasi Produk</h3>
-              <div className="mt-2 text-sm text-blue-700">
+              <h3 className="text-sm font-medium text-brand-800">Informasi Produk</h3>
+              <div className="mt-2 text-sm text-brand-700">
                 <ul className="list-disc pl-5 space-y-1">
                   <li>Gunakan tombol "Edit Produk" untuk mengubah informasi produk dan menambah varian baru</li>
                   <li>Setiap varian dapat diedit atau dihapus secara terpisah</li>

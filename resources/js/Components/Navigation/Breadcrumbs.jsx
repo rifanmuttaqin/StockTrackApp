@@ -17,19 +17,19 @@ export default function Breadcrumbs({ items }) {
                         <li key={index} className="inline-flex items-center">
                             {index > 0 && (
                                 <ChevronRightIcon
-                                    className="w-4 h-4 text-gray-400 mx-1"
+                                    className="w-4 h-4 text-slate-400 mx-1"
                                     aria-hidden="true"
                                 />
                             )}
 
                             {isLast ? (
-                                <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">
+                                <span className="ml-1 text-sm font-medium text-slate-500 md:ml-2">
                                     {item.label}
                                 </span>
                             ) : (
                                 <Link
                                     href={item.href}
-                                    className="ml-1 text-sm font-medium text-gray-700 hover:text-indigo-600 md:ml-2"
+                                    className="ml-1 text-sm font-medium text-slate-600 hover:text-brand-700 md:ml-2"
                                 >
                                     {item.label}
                                 </Link>

@@ -182,9 +182,9 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
-          className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm ${
-            error ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-indigo-500'
-          } ${disabled ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'bg-white'}`}
+          className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand sm:text-sm ${
+            error ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-brand'
+          } ${disabled ? 'bg-appbg text-slate-500 cursor-not-allowed' : 'bg-white'}`}
         />
       </div>
     );
@@ -206,10 +206,10 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
    * Get difference color class
    */
   const getDifferenceColor = (diff) => {
-    if (diff === null || diff === undefined) return 'text-gray-400';
+    if (diff === null || diff === undefined) return 'text-slate-400';
     if (diff < 0) return 'text-red-600 font-semibold';
     if (diff > 0) return 'text-green-600 font-semibold';
-    return 'text-gray-500';
+    return 'text-slate-500';
   };
 
   /**
@@ -238,10 +238,10 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
           {/* Header */}
           <div className="md:flex md:items-center md:justify-between mb-6">
             <div className="flex-1 min-w-0">
-              <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+              <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
                 Input Stock Opname
               </h2>
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-slate-500">
                 Masukkan data stock opname berdasarkan template aktif
               </p>
             </div>
@@ -258,7 +258,7 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
           <div className="mt-6">
             <Link
               href={route('stock-opname.index')}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             >
               <ArrowLeftIcon className="h-5 w-5 mr-2" />
               Kembali ke Daftar Stock Opname
@@ -286,17 +286,17 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
               Input Stock Opname
             </h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-slate-500">
               Masukkan data stock opname berdasarkan template: {activeTemplate.name}
             </p>
           </div>
           <div className="mt-4 flex md:mt-0 md:ml-4 space-x-3">
             <Link
               href={route('stock-opname.index')}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             >
               <ArrowLeftIcon className="h-5 w-5 mr-2" />
               Kembali
@@ -319,7 +319,7 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
 
         {/* Loading Overlay */}
         {loading && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
             <LoadingSpinner size="lg" />
           </div>
         )}
@@ -331,7 +331,7 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
             <MobileFormSection
               title="Informasi Stock Opname"
               description="Masukkan tanggal dan catatan stock opname"
-              className="p-6 border-b border-gray-200"
+              className="p-6 border-b border-slate-200"
             >
               <div className="grid grid-cols-1 gap-6">
                 {/* Date Input */}
@@ -354,17 +354,17 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
                     }}
                     placeholder="Masukkan catatan jika diperlukan"
                     rows={3}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand sm:text-sm"
                   />
-                  <p className="mt-1 text-sm text-gray-500">{formData.note.length}/500 karakter</p>
+                  <p className="mt-1 text-sm text-slate-500">{formData.note.length}/500 karakter</p>
                 </MobileFormField>
 
                 {/* Template Info */}
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <div className="bg-appbg p-4 rounded-lg border border-slate-200">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900">Template Aktif</h4>
-                      <p className="mt-1 text-sm text-gray-500">{activeTemplate.name}</p>
+                      <h4 className="text-sm font-medium text-ink">Template Aktif</h4>
+                      <p className="mt-1 text-sm text-slate-500">{activeTemplate.name}</p>
                     </div>
                     <Badge variant="success">{activeTemplate.items?.length || 0} Varian</Badge>
                   </div>
@@ -382,52 +382,52 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
                 <>
                   {/* Desktop Table View */}
                   <div className="hidden sm:block overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-slate-200">
+                      <thead className="bg-appbg">
                         <tr>
-                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                             Produk
                           </th>
-                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                             Varian
                           </th>
-                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                             SKU
                           </th>
-                          <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
                             Stock Sistem
                           </th>
-                          <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
                             Stock Fisik
                           </th>
-                          <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th scope="col" className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
                             Selisih
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
+                      <tbody className="bg-white divide-y divide-slate-200">
                         {activeTemplate.items.map((item, index) => {
                           const variantId = item.product_variant?.id;
                           const systemStock = item.product_variant?.stock_current || 0;
                           const diff = getDifference(variantId);
 
                           return (
-                            <tr key={variantId || index} className="hover:bg-gray-50">
+                            <tr key={variantId || index} className="hover:bg-appbg">
                               <td className="px-4 py-3 whitespace-nowrap">
-                                <div className="text-sm font-medium text-gray-900">
+                                <div className="text-sm font-medium text-ink">
                                   {item.product_variant?.product?.name || '-'}
                                 </div>
                               </td>
                               <td className="px-4 py-3 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">
+                                <div className="text-sm text-ink">
                                   {item.product_variant?.variant_name || '-'}
                                 </div>
                               </td>
                               <td className="px-4 py-3 whitespace-nowrap">
-                                <div className="text-sm text-gray-500">{item.product_variant?.sku || '-'}</div>
+                                <div className="text-sm text-slate-500">{item.product_variant?.sku || '-'}</div>
                               </td>
                               <td className="px-4 py-3 whitespace-nowrap text-center">
-                                <span className="text-sm font-medium text-gray-900">{systemStock}</span>
+                                <span className="text-sm font-medium text-ink">{systemStock}</span>
                               </td>
                               <td className="px-4 py-3 whitespace-nowrap text-center">
                                 <input
@@ -439,7 +439,7 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
                                   }
                                   onChange={(e) => handlePhysicalStockChange(variantId, e.target.value)}
                                   placeholder="-"
-                                  className="w-24 px-2 py-1 text-center border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                  className="w-24 px-2 py-1 text-center border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand sm:text-sm"
                                 />
                               </td>
                               <td className="px-4 py-3 whitespace-nowrap text-center">
@@ -464,14 +464,14 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
                       return (
                         <div
                           key={variantId || index}
-                          className="p-4 bg-gray-50 rounded-lg border border-gray-200"
+                          className="p-4 bg-appbg rounded-lg border border-slate-200"
                         >
                           {/* Variant Header */}
                           <div className="mb-3">
-                            <h4 className="text-sm font-bold text-gray-900">
+                            <h4 className="text-sm font-bold text-ink">
                               {item.product_variant?.product?.name || '-'}
                             </h4>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-slate-500 mt-1">
                               {item.product_variant?.variant_name || '-'} | SKU: {item.product_variant?.sku || '-'}
                             </p>
                           </div>
@@ -479,11 +479,11 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
                           {/* Stock Info */}
                           <div className="grid grid-cols-3 gap-2 mb-3">
                             <div className="text-center">
-                              <p className="text-xs text-gray-500">Stock Sistem</p>
-                              <p className="text-sm font-medium text-gray-900">{systemStock}</p>
+                              <p className="text-xs text-slate-500">Stock Sistem</p>
+                              <p className="text-sm font-medium text-ink">{systemStock}</p>
                             </div>
                             <div className="text-center">
-                              <p className="text-xs text-gray-500">Stock Fisik</p>
+                              <p className="text-xs text-slate-500">Stock Fisik</p>
                               <input
                                 type="number"
                                 min="0"
@@ -493,11 +493,11 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
                                 }
                                 onChange={(e) => handlePhysicalStockChange(variantId, e.target.value)}
                                 placeholder="-"
-                                className="w-full px-2 py-1 text-center border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                className="w-full px-2 py-1 text-center border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand sm:text-sm"
                               />
                             </div>
                             <div className="text-center">
-                              <p className="text-xs text-gray-500">Selisih</p>
+                              <p className="text-xs text-slate-500">Selisih</p>
                               <p className={`text-sm font-medium ${getDifferenceColor(diff)}`}>
                                 {renderDifference(diff)}
                               </p>
@@ -509,11 +509,11 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
                   </div>
 
                   {/* Summary */}
-                  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="mt-6 p-4 bg-brand-50 border border-brand-200 rounded-lg">
                     <div className="flex items-center">
-                      <DocumentCheckIcon className="h-5 w-5 text-blue-600 mr-2" />
+                      <DocumentCheckIcon className="h-5 w-5 text-brand-700 mr-2" />
                       <div>
-                        <span className="text-sm font-medium text-blue-900">
+                        <span className="text-sm font-medium text-brand-900">
                           Total Varian: {activeTemplate.items.length}
                         </span>
                       </div>
@@ -523,7 +523,7 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
               ) : (
                 <div className="text-center py-8">
                   <svg
-                    className="mx-auto h-12 w-12 text-gray-400"
+                    className="mx-auto h-12 w-12 text-slate-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -535,8 +535,8 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
                       d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                     />
                   </svg>
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">Tidak Ada Varian</h3>
-                  <p className="mt-1 text-sm text-gray-500">
+                  <h3 className="mt-2 text-sm font-medium text-ink">Tidak Ada Varian</h3>
+                  <p className="mt-1 text-sm text-slate-500">
                     Template ini tidak memiliki varian. Silakan edit template untuk menambahkan varian.
                   </p>
                 </div>
@@ -546,10 +546,10 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
         </div>
 
         {/* Help Information */}
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="mt-6 bg-brand-50 border border-brand-200 rounded-lg p-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="h-5 w-5 text-brand-500" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
                   d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
@@ -558,8 +558,8 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">Tips Input Stock Opname</h3>
-              <div className="mt-2 text-sm text-blue-700">
+              <h3 className="text-sm font-medium text-brand-800">Tips Input Stock Opname</h3>
+              <div className="mt-2 text-sm text-brand-700">
                 <ul className="list-disc pl-5 space-y-1">
                   <li>Stock fisik tidak boleh negatif</li>
                   <li>Selisih dihitung otomatis: Stock Fisik - Stock Sistem</li>
@@ -573,19 +573,19 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
       </div>
 
       {/* Sticky Action Buttons - Mobile First */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 sm:hidden z-[60] shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 sm:hidden z-[60] shadow-lg">
         <div className="flex space-x-3">
           <button
             onClick={() => handleSubmitClick('store')}
             disabled={loading}
-            className="flex-1 inline-flex justify-center items-center px-4 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 inline-flex justify-center items-center px-4 py-3 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Simpan Draft
           </button>
           <button
             onClick={() => handleSubmitClick('submit')}
             disabled={loading}
-            className="flex-1 inline-flex justify-center items-center px-4 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 inline-flex justify-center items-center px-4 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
@@ -604,10 +604,10 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
 
       {/* Desktop Action Buttons - Floating */}
       <div className="hidden sm:block fixed bottom-6 right-6 z-50">
-        <div className="bg-white shadow-lg rounded-lg px-4 py-3 flex items-center space-x-3 border border-gray-200">
+        <div className="bg-white shadow-lg rounded-lg px-4 py-3 flex items-center space-x-3 border border-slate-200">
           <Link
             href={route('stock-opname.index')}
-            className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex justify-center items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
           >
             <ArrowLeftIcon className="h-4 w-4 mr-2" />
             Batal
@@ -615,14 +615,14 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
           <button
             onClick={() => handleSubmitClick('store')}
             disabled={loading}
-            className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex justify-center items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Simpan Draft
           </button>
           <button
             onClick={() => handleSubmitClick('submit')}
             disabled={loading}
-            className="inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
@@ -645,7 +645,7 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
           <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             {/* Background overlay */}
             <div
-              className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+              className="fixed inset-0 transition-opacity bg-appbg0 bg-opacity-75"
               onClick={() => setShowConfirmModal(false)}
             />
 
@@ -654,25 +654,25 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
             <div className="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
-                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
-                    <ExclamationTriangleIcon className="h-6 w-6 text-yellow-600" />
+                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-amber-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <ExclamationTriangleIcon className="h-6 w-6 text-amber-600" />
                   </div>
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3 className="text-lg font-medium leading-6 text-gray-900">
+                    <h3 className="text-lg font-medium leading-6 text-ink">
                       {formData.action === 'submit' ? 'Konfirmasi Submit Stock Opname' : 'Simpan Sebagai Draft'}
                     </h3>
                     <div className="mt-4 space-y-3">
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-slate-500">
                         {formData.action === 'submit'
                           ? 'Stock opname akan disubmit dan stok produk akan diperbarui. Pastikan semua data sudah benar.'
                           : 'Data akan disimpan sebagai draft. Anda bisa submit nanti dari halaman daftar.'}
                       </p>
 
                       {/* Summary Stats */}
-                      <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+                      <div className="bg-appbg rounded-lg p-3 space-y-2">
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-600">Total Varian:</span>
-                          <span className="font-medium text-gray-900">
+                          <span className="text-slate-500">Total Varian:</span>
+                          <span className="font-medium text-ink">
                             {activeTemplate.items?.length || 0}
                           </span>
                         </div>
@@ -690,8 +690,8 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
                         )}
                         {summary.matching > 0 && (
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">Sesuai:</span>
-                            <span className="font-medium text-gray-900">{summary.matching} varian</span>
+                            <span className="text-slate-500">Sesuai:</span>
+                            <span className="font-medium text-ink">{summary.matching} varian</span>
                           </div>
                         )}
                       </div>
@@ -699,12 +699,12 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <div className="bg-appbg px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button
                   type="button"
                   onClick={handleConfirmSubmit}
                   disabled={loading}
-                  className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
+                  className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-brand text-base font-medium text-white hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
                 >
                   {loading ? (
                     <>
@@ -719,7 +719,7 @@ const Create = ({ activeTemplate, defaultDate, error }) => {
                   type="button"
                   onClick={() => setShowConfirmModal(false)}
                   disabled={loading}
-                  className="mt-3 inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
+                  className="mt-3 inline-flex justify-center w-full rounded-md border border-slate-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-slate-700 hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
                 >
                   Batal
                 </button>

@@ -13,10 +13,10 @@ export default function PasswordResetConfirmation() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                 </div>
-                <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+                <h2 className="mt-6 text-3xl font-extrabold text-ink">
                     Password Berhasil Direset
                 </h2>
-                <p className="mt-2 text-sm text-gray-600">
+                <p className="mt-2 text-sm text-slate-500">
                     Password Anda telah berhasil direset. Anda sekarang dapat login dengan password baru Anda.
                 </p>
             </div>
@@ -24,13 +24,13 @@ export default function PasswordResetConfirmation() {
             <div className="mt-8">
                 <div className="bg-white py-8 px-6 shadow rounded-lg">
                     <div className="text-center">
-                        <p className="text-sm text-gray-600 mb-6">
+                        <p className="text-sm text-slate-500 mb-6">
                             Klik tombol di bawah ini untuk login ke akun Anda dengan password baru.
                         </p>
 
                         <Link
                             href="/login"
-                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                         >
                             Login dengan Password Baru
                         </Link>
@@ -39,7 +39,7 @@ export default function PasswordResetConfirmation() {
             </div>
 
             <div className="text-center mt-6">
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-slate-500">
                     Jika Anda mengalami masalah, silakan hubungi tim support kami.
                 </p>
             </div>

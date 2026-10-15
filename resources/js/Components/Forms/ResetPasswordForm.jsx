@@ -61,7 +61,7 @@ export default function ResetPasswordForm({ token, email }) {
 
     const getStrengthColor = () => {
         if (passwordStrength < 2) return 'bg-red-500';
-        if (passwordStrength < 4) return 'bg-yellow-500';
+        if (passwordStrength < 4) return 'bg-amber-500';
         return 'bg-green-500';
     };
 
@@ -80,7 +80,7 @@ export default function ResetPasswordForm({ token, email }) {
                 />
             ) : (
                 <div className="mb-6">
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-slate-500">
                         Masukkan password baru Anda untuk mengganti password lama.
                     </p>
                 </div>
@@ -90,7 +90,7 @@ export default function ResetPasswordForm({ token, email }) {
                 <input type="hidden" name="token" value={data.token} />
 
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="email" className="block text-sm font-medium text-slate-700">
                         Email
                     </label>
                     <div className="mt-1">
@@ -100,7 +100,7 @@ export default function ResetPasswordForm({ token, email }) {
                             type="email"
                             autoComplete="email"
                             required
-                            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-50"
+                            className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm bg-appbg"
                             placeholder="email@example.com"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
@@ -113,7 +113,7 @@ export default function ResetPasswordForm({ token, email }) {
                 </div>
 
                 <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="password" className="block text-sm font-medium text-slate-700">
                         Password Baru
                     </label>
                     <div className="mt-1">
@@ -123,7 +123,7 @@ export default function ResetPasswordForm({ token, email }) {
                             type="password"
                             autoComplete="new-password"
                             required
-                            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm"
                             placeholder="Minimal 8 karakter"
                             value={data.password}
                             onChange={handlePasswordChange}
@@ -137,15 +137,15 @@ export default function ResetPasswordForm({ token, email }) {
                     {data.password && (
                         <div className="mt-2">
                             <div className="flex items-center justify-between mb-1">
-                                <span className="text-xs text-gray-500">Kekuatan Password:</span>
+                                <span className="text-xs text-slate-500">Kekuatan Password:</span>
                                 <span className={`text-xs font-medium ${
                                     passwordStrength < 2 ? 'text-red-500' :
-                                    passwordStrength < 4 ? 'text-yellow-500' : 'text-green-500'
+                                    passwordStrength < 4 ? 'text-warning' : 'text-green-500'
                                 }`}>
                                     {passwordStrengthText}
                                 </span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className="w-full bg-slate-200 rounded-full h-2">
                                 <div
                                     className={`h-2 rounded-full transition-all duration-300 ${getStrengthColor()}`}
                                     style={{ width: getStrengthWidth() }}
@@ -156,7 +156,7 @@ export default function ResetPasswordForm({ token, email }) {
                 </div>
 
                 <div>
-                    <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="password_confirmation" className="block text-sm font-medium text-slate-700">
                         Konfirmasi Password Baru
                     </label>
                     <div className="mt-1">
@@ -166,7 +166,7 @@ export default function ResetPasswordForm({ token, email }) {
                             type="password"
                             autoComplete="new-password"
                             required
-                            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm"
                             placeholder="Ulangi password baru"
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
@@ -182,7 +182,7 @@ export default function ResetPasswordForm({ token, email }) {
                     <button
                         type="submit"
                         disabled={processing || showSuccess}
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {processing ? (
                             <div className="flex items-center">
@@ -198,7 +198,7 @@ export default function ResetPasswordForm({ token, email }) {
                 <div className="text-center">
                     <a
                         href="/login"
-                        className="font-medium text-blue-600 hover:text-blue-500"
+                        className="font-medium text-brand-700 hover:text-brand-600"
                     >
                         Kembali ke Login
                     </a>

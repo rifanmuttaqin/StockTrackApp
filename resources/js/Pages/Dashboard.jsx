@@ -59,7 +59,7 @@ const KPI_CARDS = [
 ];
 
 const COLOR_MAP = {
-    blue: { bg: 'bg-blue-50', border: 'border-blue-200', iconBg: 'bg-blue-100', text: 'text-blue-600' },
+    blue: { bg: 'bg-brand-50', border: 'border-brand-200', iconBg: 'bg-brand-100', text: 'text-brand-700' },
     emerald: { bg: 'bg-emerald-50', border: 'border-emerald-200', iconBg: 'bg-emerald-100', text: 'text-emerald-600' },
     amber: { bg: 'bg-amber-50', border: 'border-amber-200', iconBg: 'bg-amber-100', text: 'text-amber-600' },
     violet: { bg: 'bg-violet-50', border: 'border-violet-200', iconBg: 'bg-violet-100', text: 'text-violet-600' },
@@ -114,10 +114,10 @@ export default function Dashboard() {
                 {/* Header + Period Filter */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-semibold text-gray-900">
+                        <h1 className="text-2xl font-semibold text-ink">
                             Dashboard
                         </h1>
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-slate-500">
                             Selamat datang kembali, {auth.user.name}
                         </p>
                     </div>
@@ -129,8 +129,8 @@ export default function Dashboard() {
                                 onClick={() => handlePeriodChange(p.key)}
                                 className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
                                     period === p.key
-                                        ? 'bg-indigo-600 text-white shadow-sm'
-                                        : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                                        ? 'bg-brand text-ink shadow-sm'
+                                        : 'bg-white text-slate-500 border border-slate-200 hover:bg-appbg'
                                 }`}
                             >
                                 {p.label}
@@ -141,29 +141,29 @@ export default function Dashboard() {
 
                 {/* Custom Date Range */}
                 {period === 'custom' && (
-                    <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-end gap-3">
+                    <div className="bg-white rounded-xl border border-slate-200 p-4 flex items-end gap-3">
                         <div>
-                            <label className="block text-xs font-medium text-gray-500 mb-1">Dari</label>
+                            <label className="block text-xs font-medium text-slate-500 mb-1">Dari</label>
                             <input
                                 type="date"
                                 value={customRange.start}
                                 onChange={(e) => setCustomRange(prev => ({ ...prev, start: e.target.value }))}
-                                className="block rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                                className="block rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-ink focus:border-brand focus:ring-1 focus:ring-brand"
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-500 mb-1">Sampai</label>
+                            <label className="block text-xs font-medium text-slate-500 mb-1">Sampai</label>
                             <input
                                 type="date"
                                 value={customRange.end}
                                 onChange={(e) => setCustomRange(prev => ({ ...prev, end: e.target.value }))}
-                                className="block rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                                className="block rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-ink focus:border-brand focus:ring-1 focus:ring-brand"
                             />
                         </div>
                         <button
                             onClick={handleCustomDateApply}
                             disabled={!customRange.start || !customRange.end}
-                            className="px-4 py-1.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="px-4 py-1.5 text-sm font-medium text-ink bg-brand rounded-lg hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                             Terapkan
                         </button>
@@ -184,8 +184,8 @@ export default function Dashboard() {
                                         {card.icon}
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-gray-500">{card.label}</p>
-                                        <p className="text-2xl font-bold text-gray-900">
+                                        <p className="text-sm font-medium text-slate-500">{card.label}</p>
+                                        <p className="text-2xl font-bold text-ink">
                                             {data[card.key] ?? 0}
                                         </p>
                                     </div>
@@ -198,19 +198,19 @@ export default function Dashboard() {
                 {/* Charts Row */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Stock Movement Trend */}
-                    <div className="bg-white rounded-xl border border-gray-200 p-6">
-                        <h3 className="text-base font-semibold text-gray-900 mb-4">
+                    <div className="bg-white rounded-xl border border-slate-200 p-6">
+                        <h3 className="text-base font-semibold text-ink mb-4">
                             Trend Pergerakan Stok
                         </h3>
                         <div className="h-64">
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={data.stockMovementTrend || []}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#E7EFE3" />
                                     <XAxis
                                         dataKey="date"
                                         tick={{ fontSize: 12, fill: '#94a3b8' }}
                                         tickLine={false}
-                                        axisLine={{ stroke: '#e2e8f0' }}
+                                        axisLine={{ stroke: '#DCE5D5' }}
                                     />
                                     <YAxis
                                         tick={{ fontSize: 12, fill: '#94a3b8' }}
@@ -220,7 +220,7 @@ export default function Dashboard() {
                                     <Tooltip
                                         contentStyle={{
                                             borderRadius: '8px',
-                                            border: '1px solid #e2e8f0',
+                                            border: '1px solid #DCE5D5',
                                             boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                                             fontSize: '13px',
                                         }}
@@ -232,7 +232,7 @@ export default function Dashboard() {
                                         type="monotone"
                                         dataKey="stock_in"
                                         name="Stock In"
-                                        stroke="#10b981"
+                                        stroke="#22C55E"
                                         strokeWidth={2}
                                         dot={false}
                                         activeDot={{ r: 4 }}
@@ -252,8 +252,8 @@ export default function Dashboard() {
                     </div>
 
                     {/* Low Stock Bar Chart */}
-                    <div className="bg-white rounded-xl border border-gray-200 p-6">
-                        <h3 className="text-base font-semibold text-gray-900 mb-4">
+                    <div className="bg-white rounded-xl border border-slate-200 p-6">
+                        <h3 className="text-base font-semibold text-ink mb-4">
                             Produk Stok Terendah
                         </h3>
                         <div className="h-64">
@@ -264,7 +264,7 @@ export default function Dashboard() {
                                         layout="vertical"
                                         margin={{ left: 10, right: 20, top: 0, bottom: 0 }}
                                     >
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#E7EFE3" horizontal={false} />
                                         <XAxis
                                             type="number"
                                             tick={{ fontSize: 12, fill: '#94a3b8' }}
@@ -282,7 +282,7 @@ export default function Dashboard() {
                                         <Tooltip
                                             contentStyle={{
                                                 borderRadius: '8px',
-                                                border: '1px solid #e2e8f0',
+                                                border: '1px solid #DCE5D5',
                                                 boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                                                 fontSize: '13px',
                                             }}
@@ -301,7 +301,7 @@ export default function Dashboard() {
                                     </BarChart>
                                 </ResponsiveContainer>
                             ) : (
-                                <div className="flex items-center justify-center h-full text-sm text-gray-400">
+                                <div className="flex items-center justify-center h-full text-sm text-slate-400">
                                     Tidak ada produk dengan stok rendah
                                 </div>
                             )}
@@ -311,26 +311,26 @@ export default function Dashboard() {
 
                 {/* Low Stock Table */}
                 {(data.lowStockProducts || []).length > 0 && (
-                    <div className="bg-white rounded-xl border border-gray-200">
-                        <div className="px-6 py-4 border-b border-gray-100">
-                            <h3 className="text-base font-semibold text-gray-900">
+                    <div className="bg-white rounded-xl border border-slate-200">
+                        <div className="px-6 py-4 border-b border-slate-100">
+                            <h3 className="text-base font-semibold text-ink">
                                 Daftar Produk Stok Menipis
                             </h3>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm">
                                 <thead>
-                                    <tr className="border-b border-gray-100">
-                                        <th className="text-left px-6 py-3 font-medium text-gray-500">Produk</th>
-                                        <th className="text-left px-6 py-3 font-medium text-gray-500">Variant</th>
-                                        <th className="text-right px-6 py-3 font-medium text-gray-500">Stok Saat Ini</th>
+                                    <tr className="border-b border-slate-100">
+                                        <th className="text-left px-6 py-3 font-medium text-slate-500">Produk</th>
+                                        <th className="text-left px-6 py-3 font-medium text-slate-500">Variant</th>
+                                        <th className="text-right px-6 py-3 font-medium text-slate-500">Stok Saat Ini</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-50">
+                                <tbody className="divide-y divide-slate-100">
                                     {data.lowStockProducts.map((item, idx) => (
-                                        <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                                            <td className="px-6 py-3 text-gray-900 font-medium">{item.product_name}</td>
-                                            <td className="px-6 py-3 text-gray-600">{item.variant_name}</td>
+                                        <tr key={idx} className="hover:bg-appbg transition-colors">
+                                            <td className="px-6 py-3 text-ink font-medium">{item.product_name}</td>
+                                            <td className="px-6 py-3 text-slate-500">{item.variant_name}</td>
                                             <td className="px-6 py-3 text-right">
                                                 <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                                                     item.stock_current === 0

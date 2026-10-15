@@ -78,21 +78,21 @@ const RoleAssignmentModal = ({
     >
       <div className="mt-2">
         {user && (
-          <div className="mb-4 p-3 bg-gray-50 rounded-md">
-            <p className="text-sm font-medium text-gray-900">User: {user.name}</p>
-            <p className="text-sm text-gray-500">{user.email}</p>
+          <div className="mb-4 p-3 bg-appbg rounded-md">
+            <p className="text-sm font-medium text-ink">User: {user.name}</p>
+            <p className="text-sm text-slate-500">{user.email}</p>
           </div>
         )}
 
         {/* Tabs */}
-        <div className="border-b border-gray-200">
+        <div className="border-b border-slate-200">
           <nav className="-mb-px flex space-x-8">
             <button
               onClick={() => setActiveTab('assign')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'assign'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-brand-500 text-brand-700'
+                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
               }`}
             >
               Assign Role
@@ -101,8 +101,8 @@ const RoleAssignmentModal = ({
               onClick={() => setActiveTab('remove')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'remove'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-brand-500 text-brand-700'
+                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
               }`}
             >
               Current Roles ({userRoles?.length || 0})
@@ -116,7 +116,7 @@ const RoleAssignmentModal = ({
             <form onSubmit={handleAssignRole}>
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="role" className="block text-sm font-medium text-slate-700">
                     Pilih Role
                   </label>
                   <div className="mt-1">
@@ -125,7 +125,7 @@ const RoleAssignmentModal = ({
                       name="role"
                       value={selectedRole}
                       onChange={(e) => setSelectedRole(e.target.value)}
-                      className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                      className="shadow-sm focus:ring-brand focus:border-brand block w-full sm:text-sm border-slate-300 rounded-md"
                       required
                     >
                       <option value="">-- Pilih Role --</option>
@@ -142,8 +142,8 @@ const RoleAssignmentModal = ({
                 </div>
 
                 {selectedRole && (
-                  <div className="p-3 bg-blue-50 rounded-md">
-                    <p className="text-sm text-blue-800">
+                  <div className="p-3 bg-brand-50 rounded-md">
+                    <p className="text-sm text-brand-800">
                       {roles.find(r => r.id === parseInt(selectedRole))?.description}
                     </p>
                   </div>
@@ -153,7 +153,7 @@ const RoleAssignmentModal = ({
               <div className="mt-6 flex justify-end space-x-3">
                 <button
                   type="button"
-                  className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="bg-white py-2 px-4 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                   onClick={onClose}
                   disabled={processing || loading}
                 >
@@ -161,7 +161,7 @@ const RoleAssignmentModal = ({
                 </button>
                 <button
                   type="submit"
-                  className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                  className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50"
                   disabled={!selectedRole || processing || loading}
                 >
                   {processing || loading ? (
@@ -182,10 +182,10 @@ const RoleAssignmentModal = ({
               {userRoles && userRoles.length > 0 ? (
                 <div className="space-y-3">
                   {userRoles.map((role) => (
-                    <div key={role.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                    <div key={role.id} className="flex items-center justify-between p-3 bg-appbg rounded-md">
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{role.name}</p>
-                        <p className="text-sm text-gray-500">{role.description}</p>
+                        <p className="text-sm font-medium text-ink">{role.name}</p>
+                        <p className="text-sm text-slate-500">{role.description}</p>
                       </div>
                       <button
                         onClick={() => handleRemoveRole(role.id)}
@@ -203,14 +203,14 @@ const RoleAssignmentModal = ({
                 </div>
               ) : (
                 <div className="text-center py-4">
-                  <p className="text-sm text-gray-500">User belum memiliki role</p>
+                  <p className="text-sm text-slate-500">User belum memiliki role</p>
                 </div>
               )}
 
               <div className="mt-6 flex justify-end">
                 <button
                   type="button"
-                  className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="bg-white py-2 px-4 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                   onClick={onClose}
                   disabled={processing || loading}
                 >

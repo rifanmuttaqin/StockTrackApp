@@ -19,12 +19,12 @@ import {
  */
 const PRODUCT_COLORS = [
   { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-900', badge: 'bg-red-100 text-red-800' },
-  { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-900', badge: 'bg-blue-100 text-blue-800' },
+  { bg: 'bg-brand-50', border: 'border-brand-200', text: 'text-brand-900', badge: 'bg-brand-100 text-brand-800' },
   { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-900', badge: 'bg-green-100 text-green-800' },
-  { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-900', badge: 'bg-yellow-100 text-yellow-800' },
+  { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-900', badge: 'bg-amber-100 text-amber-800' },
   { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-900', badge: 'bg-purple-100 text-purple-800' },
   { bg: 'bg-pink-50', border: 'border-pink-200', text: 'text-pink-900', badge: 'bg-pink-100 text-pink-800' },
-  { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-900', badge: 'bg-indigo-100 text-indigo-800' },
+  { bg: 'bg-brand-50', border: 'border-brand-200', text: 'text-brand-900', badge: 'bg-brand-100 text-brand-800' },
   { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-900', badge: 'bg-orange-100 text-orange-800' },
   { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-900', badge: 'bg-teal-100 text-teal-800' },
   { bg: 'bg-cyan-50', border: 'border-cyan-200', text: 'text-cyan-900', badge: 'bg-cyan-100 text-cyan-800' },
@@ -279,9 +279,9 @@ const Edit = ({ stockOutRecord }) => {
         
         {/* Display input showing formatted date */}
         <div
-          className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm ${
-            error ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-indigo-500'
-          } ${disabled ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'bg-white cursor-pointer'}`}
+          className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand sm:text-sm ${
+            error ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-brand'
+          } ${disabled ? 'bg-appbg text-slate-500 cursor-not-allowed' : 'bg-white cursor-pointer'}`}
         >
           {value ? formatDate(value) : 'Pilih tanggal'}
         </div>
@@ -289,7 +289,7 @@ const Edit = ({ stockOutRecord }) => {
         {/* Calendar icon indicator */}
         {!disabled && (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
@@ -348,21 +348,21 @@ const Edit = ({ stockOutRecord }) => {
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-3">
-              <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+              <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
                 Edit Stock Keluar
               </h2>
               <Badge variant={getStatusBadgeVariant(stockOutRecord?.status)}>
                 {getStatusLabel(stockOutRecord?.status)}
               </Badge>
             </div>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-slate-500">
               Edit data stock keluar dengan ID: {stockOutRecord?.id}
             </p>
           </div>
           <div className="mt-4 flex md:mt-0 md:ml-4 space-x-3">
             <Link
               href={route('stock-out.index')}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             >
               <ArrowLeftIcon className="h-5 w-5 mr-2" />
               Kembali
@@ -385,7 +385,7 @@ const Edit = ({ stockOutRecord }) => {
 
         {/* Loading Overlay */}
         {processing && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
             <LoadingSpinner size="lg" />
           </div>
         )}
@@ -397,7 +397,7 @@ const Edit = ({ stockOutRecord }) => {
             <MobileFormSection
               title="Informasi Stock Keluar"
               description="Edit tanggal stock keluar"
-              className="p-6 border-b border-gray-200"
+              className="p-6 border-b border-slate-200"
             >
               <div className="grid grid-cols-1 gap-6">
               {/* Date Input */}
@@ -415,29 +415,29 @@ const Edit = ({ stockOutRecord }) => {
               </MobileFormField>
 
                 {/* Record Info */}
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <div className="bg-appbg p-4 rounded-lg border border-slate-200">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900">ID Record</h4>
-                      <p className="mt-1 text-sm text-gray-500">{stockOutRecord?.id}</p>
+                      <h4 className="text-sm font-medium text-ink">ID Record</h4>
+                      <p className="mt-1 text-sm text-slate-500">{stockOutRecord?.id}</p>
                     </div>
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900">Status</h4>
-                      <p className="mt-1 text-sm text-gray-500">
+                      <h4 className="text-sm font-medium text-ink">Status</h4>
+                      <p className="mt-1 text-sm text-slate-500">
                         <Badge variant={getStatusBadgeVariant(stockOutRecord?.status)}>
                           {getStatusLabel(stockOutRecord?.status)}
                         </Badge>
                       </p>
                     </div>
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900">Dibuat Pada</h4>
-                      <p className="mt-1 text-sm text-gray-500">
+                      <h4 className="text-sm font-medium text-ink">Dibuat Pada</h4>
+                      <p className="mt-1 text-sm text-slate-500">
                         {stockOutRecord?.created_at ? formatDate(stockOutRecord.created_at) : '-'}
                       </p>
                     </div>
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900">Terakhir Diupdate</h4>
-                      <p className="mt-1 text-sm text-gray-500">
+                      <h4 className="text-sm font-medium text-ink">Terakhir Diupdate</h4>
+                      <p className="mt-1 text-sm text-slate-500">
                         {stockOutRecord?.updated_at ? formatDate(stockOutRecord.updated_at) : '-'}
                       </p>
                     </div>
@@ -450,7 +450,7 @@ const Edit = ({ stockOutRecord }) => {
             <MobileFormSection
               title="Daftar Varian"
               description={`Edit quantity untuk setiap varian (${stockOutRecord?.items?.length || 0} varian)`}
-              className="p-6 border-b border-gray-200"
+              className="p-6 border-b border-slate-200"
             >
               {stockOutRecord?.items?.length > 0 ? (
                 <div className="space-y-4">
@@ -495,9 +495,9 @@ const Edit = ({ stockOutRecord }) => {
                               onChange={(e) => handleQuantityChange(item.product_variant_id, e.target.value)}
                               disabled={stockOutRecord?.status === 'submit'}
                               placeholder="0"
-                              className={`block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-                                quantityErrors[item.product_variant_id] ? 'border-red-500' : 'border-gray-300'
-                              } disabled:bg-gray-100 disabled:text-gray-500`}
+                              className={`block w-full px-3 py-2 border rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm ${
+                                quantityErrors[item.product_variant_id] ? 'border-red-500' : 'border-slate-300'
+                              } disabled:bg-appbg disabled:text-slate-500`}
                             />
                           </MobileFormField>
                         </div>
@@ -514,11 +514,11 @@ const Edit = ({ stockOutRecord }) => {
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="mx-auto h-12 w-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                   </svg>
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">Tidak Ada Varian</h3>
-                  <p className="mt-1 text-sm text-gray-500">
+                  <h3 className="mt-2 text-sm font-medium text-ink">Tidak Ada Varian</h3>
+                  <p className="mt-1 text-sm text-slate-500">
                     Record ini tidak memiliki varian.
                   </p>
                 </div>
@@ -526,15 +526,15 @@ const Edit = ({ stockOutRecord }) => {
 
               {/* Summary */}
               {stockOutRecord?.items?.length > 0 && (
-                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="mt-4 p-4 bg-brand-50 border border-brand-200 rounded-lg">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                      <DocumentCheckIcon className="h-5 w-5 text-blue-600 mr-2" />
+                      <DocumentCheckIcon className="h-5 w-5 text-brand-700 mr-2" />
                       <div>
-                        <span className="text-sm font-medium text-blue-900">
+                        <span className="text-sm font-medium text-brand-900">
                           Total Varian: {stockOutRecord.items.length}
                         </span>
-                        <p className="text-xs text-blue-700 mt-1">
+                        <p className="text-xs text-brand-700 mt-1">
                           Total Quantity: {data.items.reduce((sum, item) => sum + (item.quantity || 0), 0)}
                         </p>
                       </div>
@@ -547,16 +547,16 @@ const Edit = ({ stockOutRecord }) => {
         </div>
 
         {/* Help Information */}
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="mt-6 bg-brand-50 border border-brand-200 rounded-lg p-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="h-5 w-5 text-brand-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">Tips Edit Stock Keluar</h3>
-              <div className="mt-2 text-sm text-blue-700">
+              <h3 className="text-sm font-medium text-brand-800">Tips Edit Stock Keluar</h3>
+              <div className="mt-2 text-sm text-brand-700">
                 <ul className="list-disc pl-5 space-y-1">
                   <li>Quantity tidak boleh negatif</li>
                   <li>Minimal satu varian harus memiliki quantity {'>'} 0</li>
@@ -571,14 +571,14 @@ const Edit = ({ stockOutRecord }) => {
       </div>
 
       {/* Sticky Action Buttons - Mobile First */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 sm:hidden z-40 shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 sm:hidden z-40 shadow-lg">
         <div className="flex flex-col space-y-3">
           {stockOutRecord?.status === 'draft' && (
             <>
               <button
                 onClick={handleUpdateDraft}
                 disabled={processing || Object.keys(quantityErrors).length > 0}
-                className="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full inline-flex justify-center items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {processing ? (
                   <>
@@ -595,7 +595,7 @@ const Edit = ({ stockOutRecord }) => {
               <button
                 onClick={handleSubmit}
                 disabled={processing || Object.keys(quantityErrors).length > 0}
-                className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {processing ? (
                   <>
@@ -620,7 +620,7 @@ const Edit = ({ stockOutRecord }) => {
             </>
           )}
           {stockOutRecord?.status === 'submit' && (
-            <div className="text-center text-sm text-gray-500 py-2">
+            <div className="text-center text-sm text-slate-500 py-2">
               Record sudah disubmit, tidak dapat diedit
             </div>
           )}
@@ -632,7 +632,7 @@ const Edit = ({ stockOutRecord }) => {
         <div className="bg-white shadow overflow-hidden sm:rounded-lg px-6 py-4 flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
           <Link
             href={route('stock-out.index')}
-            className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
           >
             <ArrowLeftIcon className="h-4 w-4 mr-2" />
             Batal
@@ -642,7 +642,7 @@ const Edit = ({ stockOutRecord }) => {
               <button
                 onClick={handleUpdateDraft}
                 disabled={processing || Object.keys(quantityErrors).length > 0}
-                className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {processing ? (
                   <>
@@ -659,7 +659,7 @@ const Edit = ({ stockOutRecord }) => {
               <button
                 onClick={handleSubmit}
                 disabled={processing || Object.keys(quantityErrors).length > 0}
-                className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {processing ? (
                   <>
@@ -684,7 +684,7 @@ const Edit = ({ stockOutRecord }) => {
             </>
           )}
           {stockOutRecord?.status === 'submit' && (
-            <div className="text-sm text-gray-500 py-2">
+            <div className="text-sm text-slate-500 py-2">
               Record sudah disubmit, tidak dapat diedit
             </div>
           )}
@@ -702,24 +702,24 @@ const Edit = ({ stockOutRecord }) => {
           <div className="flex items-center mb-4">
             <ExclamationTriangleIcon className="h-8 w-8 text-red-600 mr-3" />
             <div>
-              <h3 className="text-lg font-medium text-gray-900">
+              <h3 className="text-lg font-medium text-ink">
                 Hapus Draft Stock Out
               </h3>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-slate-500 mt-1">
                 Apakah Anda yakin ingin menghapus draft stock out ini? Tindakan ini tidak dapat dibatalkan.
               </p>
             </div>
           </div>
 
-          <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="mt-4 p-4 bg-appbg rounded-lg border border-slate-200">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="font-medium text-gray-700">ID Record:</span>
-                <p className="text-gray-900">{stockOutRecord?.id}</p>
+                <span className="font-medium text-slate-700">ID Record:</span>
+                <p className="text-ink">{stockOutRecord?.id}</p>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Tanggal:</span>
-                <p className="text-gray-900">{formatDate(stockOutRecord?.date)}</p>
+                <span className="font-medium text-slate-700">Tanggal:</span>
+                <p className="text-ink">{formatDate(stockOutRecord?.date)}</p>
               </div>
             </div>
           </div>
@@ -727,7 +727,7 @@ const Edit = ({ stockOutRecord }) => {
           <div className="mt-6 flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
             <button
               onClick={() => setShowDeleteModal(false)}
-              className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
             >
               <XMarkIcon className="h-4 w-4 mr-2" />
               Batal

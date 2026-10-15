@@ -4,20 +4,20 @@ import { cva } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const mobileButtonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-poppins font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-95",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-poppins font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-95",
   {
     variants: {
       variant: {
         default:
-          "bg-blue-600 text-white shadow-md hover:bg-blue-700 active:bg-blue-800",
+          "bg-brand text-ink shadow-md hover:bg-brand-600 active:bg-brand-700",
         destructive:
-          "bg-red-600 text-white shadow-md hover:bg-red-700 active:bg-red-800",
+          "bg-error text-white shadow-md hover:bg-red-600 active:bg-red-700",
         outline:
-          "border border-gray-300 bg-white shadow-sm hover:bg-gray-50 hover:text-blue-600 active:bg-gray-100",
+          "border border-slate-300 bg-white shadow-sm hover:bg-slate-50 hover:text-brand-700 active:bg-slate-100",
         secondary:
-          "bg-gray-100 text-gray-900 shadow-sm hover:bg-gray-200 active:bg-gray-300",
-        ghost: "hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100",
-        link: "text-blue-600 underline-offset-4 hover:underline active:text-blue-700",
+          "bg-slate-100 text-ink shadow-sm hover:bg-slate-200 active:bg-slate-300",
+        ghost: "hover:bg-brand-50 hover:text-brand-700 active:bg-brand-100",
+        link: "text-brand-700 underline-offset-4 hover:underline active:text-brand-800",
       },
       size: {
         default: "h-12 px-6 py-3 min-h-[48px] min-w-[48px]",

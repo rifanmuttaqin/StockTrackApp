@@ -19,7 +19,7 @@ export default function AppLayout({ title, children, header, breadcrumbs }) {
 
     // Desktop layout
     return (
-        <div className="h-screen bg-gray-50 overflow-hidden">
+        <div className="h-screen bg-appbg overflow-hidden">
             <Head title={title} />
 
             <div className="flex h-full">
@@ -32,7 +32,7 @@ export default function AppLayout({ title, children, header, breadcrumbs }) {
                     <Navbar />
 
                     {/* Page Content - Scrollable area */}
-                    <main className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 custom-scrollbar">
+                    <main className="flex-1 overflow-y-auto overflow-x-hidden bg-appbg custom-scrollbar">
                         <div className="p-6">
                             <div className="container mx-auto max-w-7xl">
                                 {/* Breadcrumbs - Only show on desktop */}

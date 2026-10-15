@@ -27,14 +27,14 @@ export default function Alert({
             iconColor: 'text-red-400',
         },
         warning: {
-            container: 'bg-yellow-50 border-yellow-200 text-yellow-800',
+            container: 'bg-amber-50 border-amber-200 text-amber-800',
             icon: ExclamationCircleIcon,
-            iconColor: 'text-yellow-400',
+            iconColor: 'text-warning',
         },
         info: {
-            container: 'bg-blue-50 border-blue-200 text-blue-800',
+            container: 'bg-brand-50 border-brand-200 text-brand-800',
             icon: InformationCircleIcon,
-            iconColor: 'text-blue-400',
+            iconColor: 'text-brand-600',
         },
     };
 

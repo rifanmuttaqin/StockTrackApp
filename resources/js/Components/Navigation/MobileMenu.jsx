@@ -171,13 +171,13 @@ const MobileMenu = ({ isOpen, onClose }) => {
         ref={menuRef}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-blue-600">
-          <h2 id="mobile-menu-title" className="text-lg font-semibold text-white font-poppins">Menu</h2>
+        <div className="flex items-center justify-between p-4 border-b border-brand-600 bg-brand">
+          <h2 id="mobile-menu-title" className="text-lg font-semibold text-ink font-poppins">Menu</h2>
           <Button
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-white hover:bg-blue-700"
+            className="text-ink hover:bg-brand-600"
             aria-label="Tutup menu"
           >
             <X size={20} />
@@ -185,16 +185,16 @@ const MobileMenu = ({ isOpen, onClose }) => {
         </div>
 
         {/* User Profile */}
-        <div className="p-4 border-b border-gray-200 bg-gray-50">
+        <div className="p-4 border-b border-slate-200 bg-appbg">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
-              <User className="text-white" size={20} />
+            <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center">
+              <User className="text-ink" size={20} />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900 font-poppins">
+              <p className="text-sm font-medium text-ink font-poppins">
                 {auth?.user?.name || 'User'}
               </p>
-              <p className="text-xs text-gray-500 font-poppins">
+              <p className="text-xs text-slate-500 font-poppins">
                 {auth?.user?.email || 'user@example.com'}
               </p>
             </div>
@@ -228,8 +228,8 @@ const MobileMenu = ({ isOpen, onClose }) => {
                       onClick={() => setUserMenuOpen(isMenuOpen ? null : item.name)}
                       className={`flex items-center justify-between w-full px-3 py-2 rounded-lg transition-colors duration-200 ${
                         item.active
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'text-gray-700 hover:bg-gray-100'
+                          ? 'bg-brand-100 text-brand-800'
+                          : 'text-ink hover:bg-slate-100'
                       }`}
                       style={{ minHeight: '44px' }}
                       aria-expanded={isMenuOpen}
@@ -239,7 +239,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
                       <div className="flex items-center space-x-3">
                         <Icon
                           size={18}
-                          className={item.active ? 'text-blue-700' : 'text-gray-500'}
+                          className={item.active ? 'text-brand-700' : 'text-slate-500'}
                         />
                         <span className="text-sm font-medium font-poppins">
                           {item.name}
@@ -267,15 +267,15 @@ const MobileMenu = ({ isOpen, onClose }) => {
                               onClick={onClose}
                               className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors duration-200 ${
                                 url === subItem.href
-                                  ? 'bg-blue-100 text-blue-700'
-                                  : 'text-gray-600 hover:bg-gray-100'
+                                  ? 'bg-brand-100 text-brand-800'
+                                  : 'text-slate-600 hover:bg-slate-100'
                               }`}
                               style={{ minHeight: '44px' }}
                               role="menuitem"
                             >
                               <SubIcon
                                 size={16}
-                                className={url === subItem.href ? 'text-blue-700' : 'text-gray-400'}
+                                className={url === subItem.href ? 'text-brand-700' : 'text-slate-400'}
                               />
                               <span className="text-sm font-medium font-poppins">
                                 {subItem.name}
@@ -292,15 +292,15 @@ const MobileMenu = ({ isOpen, onClose }) => {
                     onClick={onClose}
                     className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors duration-200 ${
                       item.active
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? 'bg-brand-100 text-brand-800'
+                        : 'text-ink hover:bg-slate-100'
                     }`}
                     style={{ minHeight: '44px' }}
                     role="menuitem"
                   >
                     <Icon
                       size={18}
-                      className={item.active ? 'text-blue-700' : 'text-gray-500'}
+                      className={item.active ? 'text-brand-700' : 'text-slate-500'}
                     />
                     <span className="text-sm font-medium font-poppins">
                       {item.name}
@@ -313,7 +313,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-slate-200">
           <Link
             href="/logout"
             method="post"

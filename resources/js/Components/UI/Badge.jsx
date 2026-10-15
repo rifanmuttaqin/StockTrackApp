@@ -9,11 +9,11 @@ const Badge = ({
   const baseClasses = 'inline-flex items-center justify-center font-medium rounded-full';
 
   const variants = {
-    default: 'bg-blue-100 text-blue-800',
+    default: 'bg-brand-100 text-brand-800 border border-brand-200',
     success: 'bg-green-100 text-green-800',
-    warning: 'bg-yellow-100 text-yellow-800',
+    warning: 'bg-amber-100 text-amber-800',
     error: 'bg-red-100 text-red-800',
-    info: 'bg-indigo-100 text-indigo-800',
+    info: 'bg-brand-50 text-brand-700 border border-brand-200',
   };
 
   const sizes = {

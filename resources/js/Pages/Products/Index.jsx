@@ -185,8 +185,8 @@ const Index = ({ products, filters, meta }) => {
       showCancelButton: true,
       confirmButtonText: 'Ya, Ubah',
       cancelButtonText: 'Batal',
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#84CC16',
+      cancelButtonColor: '#EF4444',
     });
 
     // If cancelled, revert the input value
@@ -298,7 +298,7 @@ const Index = ({ products, filters, meta }) => {
 
   const getStockBadgeColor = (stock) => {
     if (stock > 10) return 'bg-green-100 text-green-800';
-    if (stock > 0) return 'bg-yellow-100 text-yellow-800';
+    if (stock > 0) return 'bg-amber-100 text-amber-800';
     return 'bg-red-100 text-red-800';
   };
 
@@ -312,7 +312,7 @@ const Index = ({ products, filters, meta }) => {
         actions.push({
           key: 'edit',
           icon: PencilIcon,
-          className: 'text-blue-600 hover:text-blue-900',
+          className: 'text-brand-700 hover:text-brand-900',
           title: 'Edit Produk',
           onClick: () => router.get(route('products.edit', product.id)),
         });
@@ -368,10 +368,10 @@ const Index = ({ products, filters, meta }) => {
         {/* Header */}
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
               Manajemen Produk
             </h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-slate-500">
               Kelola produk dan varian produk Anda
             </p>
           </div>
@@ -379,7 +379,7 @@ const Index = ({ products, filters, meta }) => {
             {can('products.update') && (
               <button
                 onClick={() => {/* TODO: implement bulk-assign modal */}}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-appbg"
               >
                 Atur Satuan
               </button>
@@ -387,7 +387,7 @@ const Index = ({ products, filters, meta }) => {
             {can('products.create') && (
               <Link
                 href={route('products.create')}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
               >
                 <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -411,7 +411,7 @@ const Index = ({ products, filters, meta }) => {
 
         {/* Loading Overlay */}
         {loading && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
             <LoadingSpinner size="lg" />
           </div>
         )}
@@ -420,14 +420,14 @@ const Index = ({ products, filters, meta }) => {
         <div className="mb-4 flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+              <MagnifyingGlassIcon className="h-5 w-5 text-slate-400" />
             </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Cari berdasarkan nama atau SKU..."
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-md leading-5 bg-white placeholder-slate-400 focus:outline-none focus:placeholder-slate-400 focus:ring-1 focus:ring-brand focus:border-brand sm:text-sm"
             />
           </div>
 
@@ -439,8 +439,8 @@ const Index = ({ products, filters, meta }) => {
                 onChange={handleToggleDeleted}
                 className="sr-only peer"
               />
-              <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-              <span className="ml-3 text-sm font-medium text-gray-900">Tampilkan Produk Dihapus</span>
+              <div className="relative w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand"></div>
+              <span className="ml-3 text-sm font-medium text-ink">Tampilkan Produk Dihapus</span>
             </label>
           </div>
         </div>
@@ -448,14 +448,14 @@ const Index = ({ products, filters, meta }) => {
         {/* Products Table */}
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-slate-200">
+              <thead className="bg-appbg">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-10">
                     {/* Expand/Collapse column */}
                   </th>
                   <th
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-appbg"
                     onClick={() => handleSortChange('name')}
                   >
                     <div className="flex items-center space-x-1">
@@ -464,7 +464,7 @@ const Index = ({ products, filters, meta }) => {
                     </div>
                   </th>
                   <th
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-appbg"
                     onClick={() => handleSortChange('sku')}
                   >
                     <div className="flex items-center space-x-1">
@@ -472,11 +472,11 @@ const Index = ({ products, filters, meta }) => {
                       {getSortIcon('sku')}
                     </div>
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Deskripsi
                   </th>
                   <th
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-appbg"
                     onClick={() => handleSortChange('variants_count')}
                   >
                     <div className="flex items-center space-x-1">
@@ -485,7 +485,7 @@ const Index = ({ products, filters, meta }) => {
                     </div>
                   </th>
                   <th
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-appbg"
                     onClick={() => handleSortChange('total_stock')}
                   >
                     <div className="flex items-center space-x-1">
@@ -493,24 +493,24 @@ const Index = ({ products, filters, meta }) => {
                       {getSortIcon('total_stock')}
                     </div>
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Aksi
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-slate-200">
                 {products?.data && products.data.length > 0 ? (
                   products.data.map((product) => (
                     <React.Fragment key={product.id}>
                       {/* Product Row */}
                       <tr
-                        className={`hover:bg-gray-50 ${product.deleted_at ? 'bg-gray-50' : ''}`}
+                        className={`hover:bg-appbg ${product.deleted_at ? 'bg-appbg' : ''}`}
                       >
                         <td className="px-6 py-4 whitespace-nowrap">
                           {product.variants && product.variants.length > 0 && (
                             <button
                               onClick={() => toggleRowExpansion(product.id)}
-                              className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                              className="text-slate-400 hover:text-slate-500 focus:outline-none"
                             >
                               {expandedRows.has(product.id) ? (
                                 <ChevronDownIcon className="h-5 w-5" />
@@ -529,7 +529,7 @@ const Index = ({ products, filters, meta }) => {
                             )}
                             <div
                               className={`font-medium ${
-                                product.deleted_at ? 'text-gray-500 line-through' : 'text-gray-900'
+                                product.deleted_at ? 'text-slate-500 line-through' : 'text-ink'
                               }`}
                             >
                               {product.name}
@@ -538,19 +538,19 @@ const Index = ({ products, filters, meta }) => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            product.deleted_at ? 'bg-gray-100 text-gray-600' : 'bg-blue-100 text-blue-800'
+                            product.deleted_at ? 'bg-appbg text-slate-500' : 'bg-brand-100 text-brand-800'
                           }`}>
                             {product.sku}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className={`max-w-xs truncate ${product.deleted_at ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`max-w-xs truncate ${product.deleted_at ? 'text-slate-400' : 'text-slate-500'}`}>
                             {product.description || '-'}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            product.deleted_at ? 'bg-gray-100 text-gray-600' : 'bg-green-100 text-green-800'
+                            product.deleted_at ? 'bg-appbg text-slate-500' : 'bg-green-100 text-green-800'
                           }`}>
                             {product.variants_count || 0}
                           </span>
@@ -569,7 +569,7 @@ const Index = ({ products, filters, meta }) => {
                                   e.stopPropagation();
                                   action.onClick(product);
                                 }}
-                                className={action.className || 'text-blue-600 hover:text-blue-900'}
+                                className={action.className || 'text-brand-700 hover:text-brand-900'}
                                 title={action.title}
                               >
                                 <action.icon className="h-5 w-5" />
@@ -581,32 +581,32 @@ const Index = ({ products, filters, meta }) => {
 
                       {/* Variant Details Row (Collapsible) */}
                       {expandedRows.has(product.id) && product.variants && product.variants.length > 0 && (
-                        <tr className="bg-gray-50">
+                        <tr className="bg-appbg">
                           <td colSpan="7" className="px-6 py-4">
                             <div className="ml-8">
-                              <h4 className="text-sm font-medium text-gray-700 mb-3">Detail Varian</h4>
-                              <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-100">
+                              <h4 className="text-sm font-medium text-slate-700 mb-3">Detail Varian</h4>
+                              <table className="min-w-full divide-y divide-slate-200">
+                                <thead className="bg-appbg">
                                   <tr>
-                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                                       Nama Varian
                                     </th>
-                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                                       SKU Varian
                                     </th>
-                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                                       Stock Saat Ini
                                     </th>
                                   </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-white divide-y divide-slate-200">
                                   {product.variants.map((variant) => (
-                                    <tr key={variant.id} className="hover:bg-gray-50">
-                                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                    <tr key={variant.id} className="hover:bg-appbg">
+                                      <td className="px-4 py-3 whitespace-nowrap text-sm text-ink">
                                         {variant.name}
                                       </td>
                                       <td className="px-4 py-3 whitespace-nowrap">
-                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-brand-100 text-brand-800">
                                           {variant.sku}
                                         </span>
                                       </td>
@@ -620,7 +620,7 @@ const Index = ({ products, filters, meta }) => {
                                               onChange={(e) => handleStockChange(variant.id, e.target.value)}
                                               onBlur={() => handleStockBlur(variant.id)}
                                               onKeyDown={(e) => handleStockKeyPress(e, variant.id)}
-                                              className="w-20 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                                              className="w-20 px-2 py-1 border border-slate-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
                                               autoFocus
                                             />
                                             {updatingStock[variant.id] && (
@@ -632,7 +632,7 @@ const Index = ({ products, filters, meta }) => {
                                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStockBadgeColor(variant.stock_current)}`}>
                                               {variant.stock_current} {variant.unit?.abbreviation || 'unit'}
                                               {variant.conversions?.find(c => c.is_primary) && (
-                                                <span className="ml-1 text-gray-500">
+                                                <span className="ml-1 text-slate-500">
                                                   ({variant.conversions.find(c => c.is_primary).converted_stock} {variant.conversions.find(c => c.is_primary).abbreviation})
                                                 </span>
                                               )}
@@ -640,7 +640,7 @@ const Index = ({ products, filters, meta }) => {
                                             {can('product_variants.edit') && (
                                               <button
                                                 onClick={() => handleStockEdit(variant.id, variant.stock_current, variant.name)}
-                                                className="text-blue-600 hover:text-blue-900 focus:outline-none"
+                                                className="text-brand-700 hover:text-brand-900 focus:outline-none"
                                                 title="Edit Stok"
                                               >
                                                 <PencilIcon className="h-4 w-4" />
@@ -661,7 +661,7 @@ const Index = ({ products, filters, meta }) => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">
+                    <td colSpan="7" className="px-6 py-4 text-center text-sm text-slate-500">
                       {showDeleted ? "Tidak ada produk yang dihapus ditemukan" : "Tidak ada produk ditemukan"}
                     </td>
                   </tr>
@@ -679,17 +679,17 @@ const Index = ({ products, filters, meta }) => {
                 <button
                   onClick={() => handlePageChange(Math.max(1, meta.current_page - 1))}
                   disabled={meta.current_page <= 1}
-                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="px-3 py-1 text-sm bg-brand text-ink rounded disabled:bg-slate-300 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-slate-700">
                   Halaman {meta.current_page} dari {meta.last_page}
                 </span>
                 <button
                   onClick={() => handlePageChange(Math.min(meta.last_page, meta.current_page + 1))}
                   disabled={meta.current_page >= meta.last_page}
-                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="px-3 py-1 text-sm bg-brand text-ink rounded disabled:bg-slate-300 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>
@@ -710,7 +710,7 @@ const Index = ({ products, filters, meta }) => {
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-indigo-500 rounded-md flex items-center justify-center">
+                  <div className="w-8 h-8 bg-brand-500 rounded-md flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
@@ -718,8 +718,8 @@ const Index = ({ products, filters, meta }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Produk</dt>
-                    <dd className="text-lg font-medium text-gray-900">{meta?.total || 0}</dd>
+                    <dt className="text-sm font-medium text-slate-500 truncate">Total Produk</dt>
+                    <dd className="text-lg font-medium text-ink">{meta?.total || 0}</dd>
                   </dl>
                 </div>
               </div>
@@ -738,8 +738,8 @@ const Index = ({ products, filters, meta }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Varian</dt>
-                    <dd className="text-lg font-medium text-gray-900">{meta?.total_variants || 0}</dd>
+                    <dt className="text-sm font-medium text-slate-500 truncate">Total Varian</dt>
+                    <dd className="text-lg font-medium text-ink">{meta?.total_variants || 0}</dd>
                   </dl>
                 </div>
               </div>
@@ -750,7 +750,7 @@ const Index = ({ products, filters, meta }) => {
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                  <div className="w-8 h-8 bg-amber-500 rounded-md flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                     </svg>
@@ -758,8 +758,8 @@ const Index = ({ products, filters, meta }) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Rata-rata Varian/Produk</dt>
-                    <dd className="text-lg font-medium text-gray-900">
+                    <dt className="text-sm font-medium text-slate-500 truncate">Rata-rata Varian/Produk</dt>
+                    <dd className="text-lg font-medium text-ink">
                       {meta?.total && meta?.total_variants
                         ? (meta.total_variants / meta.total).toFixed(1)
                         : '0.0'}

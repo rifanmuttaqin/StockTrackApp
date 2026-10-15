@@ -78,33 +78,33 @@ const SearchableSelect = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-3 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm cursor-pointer"
+        className="w-full flex items-center justify-between px-3 py-2 text-left bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand text-sm cursor-pointer"
       >
-        <span className={`block truncate ${!selectedOption ? 'text-gray-500' : 'text-gray-900'}`}>
+        <span className={`block truncate ${!selectedOption ? 'text-slate-500' : 'text-ink'}`}>
           {displayLabel}
         </span>
-        <ChevronDownIcon className="h-4 w-4 text-gray-400 ml-2 flex-shrink-0" />
+        <ChevronDownIcon className="h-4 w-4 text-slate-400 ml-2 flex-shrink-0" />
       </button>
 
       {/* Dropdown Panel */}
       {isOpen && (
-        <div className="absolute z-50 mt-1 w-full rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none max-h-60 flex flex-col border border-gray-200">
+        <div className="absolute z-50 mt-1 w-full rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none max-h-60 flex flex-col border border-slate-200">
           {/* Search Box */}
-          <div className="p-2 border-b border-gray-100 flex items-center bg-gray-50">
-            <MagnifyingGlassIcon className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
+          <div className="p-2 border-b border-slate-100 flex items-center bg-appbg">
+            <MagnifyingGlassIcon className="h-4 w-4 text-slate-400 mr-2 flex-shrink-0" />
             <input
               ref={searchInputRef}
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={searchPlaceholder}
-              className="w-full bg-transparent border-none p-0 focus:outline-none focus:ring-0 text-sm text-gray-900 placeholder-gray-400"
+              className="w-full bg-transparent border-none p-0 focus:outline-none focus:ring-0 text-sm text-ink placeholder-slate-400"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="p-1 rounded-full hover:bg-gray-200 text-gray-400 hover:text-gray-600"
+                className="p-1 rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-500"
               >
                 <XMarkIcon className="h-3 w-3" />
               </button>
@@ -121,10 +121,10 @@ const SearchableSelect = ({
                     key={String(opt.value)}
                     type="button"
                     onClick={() => handleSelect(opt.value)}
-                    className={`w-full text-left px-3 py-2 text-sm hover:bg-indigo-50 hover:text-indigo-900 ${
+                    className={`w-full text-left px-3 py-2 text-sm hover:bg-brand-50 hover:text-brand-900 ${
                       isSelected
-                        ? 'bg-indigo-100 text-indigo-900 font-semibold'
-                        : 'text-gray-700'
+                        ? 'bg-brand-100 text-brand-900 font-semibold'
+                        : 'text-slate-700'
                     }`}
                   >
                     {opt.label}
@@ -132,7 +132,7 @@ const SearchableSelect = ({
                 );
               })
             ) : (
-              <div className="px-3 py-2 text-sm text-gray-500 text-center">
+              <div className="px-3 py-2 text-sm text-slate-500 text-center">
                 {emptyMessage}
               </div>
             )}

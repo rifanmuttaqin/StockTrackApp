@@ -60,19 +60,19 @@ export default function ActivityLogTable({ activities, onFilterChange }) {
             case 'login':
                 return 'bg-green-100 text-green-800';
             case 'logout':
-                return 'bg-gray-100 text-gray-800';
+                return 'bg-appbg text-ink';
             case 'created':
-                return 'bg-blue-100 text-blue-800';
+                return 'bg-brand-100 text-brand-800';
             case 'updated':
-                return 'bg-yellow-100 text-yellow-800';
+                return 'bg-amber-100 text-amber-800';
             case 'deleted':
                 return 'bg-red-100 text-red-800';
             case 'password_changed':
                 return 'bg-purple-100 text-purple-800';
             case 'profile_updated':
-                return 'bg-indigo-100 text-indigo-800';
+                return 'bg-brand-100 text-brand-800';
             default:
-                return 'bg-gray-100 text-gray-800';
+                return 'bg-appbg text-ink';
         }
     };
 
@@ -132,25 +132,25 @@ export default function ActivityLogTable({ activities, onFilterChange }) {
     return (
         <div className="bg-white shadow overflow-hidden sm:rounded-md">
             <div className="px-4 py-5 sm:px-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                <h3 className="text-lg leading-6 font-medium text-ink">
                     Log Aktivitas
                 </h3>
-                <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                <p className="mt-1 max-w-2xl text-sm text-slate-500">
                     Riwayat aktivitas akun Anda.
                 </p>
             </div>
 
             {/* Filters */}
-            <div className="border-t border-gray-200 px-4 py-5 sm:p-6">
+            <div className="border-t border-slate-200 px-4 py-5 sm:p-6">
                 <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4">
                     <div>
-                        <label htmlFor="action" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="action" className="block text-sm font-medium text-slate-700">
                             Aksi
                         </label>
                         <select
                             id="action"
                             name="action"
-                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm rounded-md"
                             value={filters.action}
                             onChange={(e) => handleFilterChange('action', e.target.value)}
                         >
@@ -166,28 +166,28 @@ export default function ActivityLogTable({ activities, onFilterChange }) {
                     </div>
 
                     <div>
-                        <label htmlFor="date_from" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="date_from" className="block text-sm font-medium text-slate-700">
                             Dari Tanggal
                         </label>
                         <input
                             type="date"
                             id="date_from"
                             name="date_from"
-                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            className="mt-1 block w-full border-slate-300 rounded-md shadow-sm focus:ring-brand focus:border-brand sm:text-sm"
                             value={filters.date_from}
                             onChange={(e) => handleFilterChange('date_from', e.target.value)}
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="date_to" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="date_to" className="block text-sm font-medium text-slate-700">
                             Sampai Tanggal
                         </label>
                         <input
                             type="date"
                             id="date_to"
                             name="date_to"
-                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            className="mt-1 block w-full border-slate-300 rounded-md shadow-sm focus:ring-brand focus:border-brand sm:text-sm"
                             value={filters.date_to}
                             onChange={(e) => handleFilterChange('date_to', e.target.value)}
                         />
@@ -197,14 +197,14 @@ export default function ActivityLogTable({ activities, onFilterChange }) {
                 <div className="mt-4 flex justify-end space-x-2">
                     <button
                         type="button"
-                        className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        className="inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-appbg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                         onClick={clearFilters}
                     >
                         Reset
                     </button>
                     <button
                         type="button"
-                        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                         onClick={applyFilters}
                     >
                         Terapkan Filter
@@ -214,14 +214,14 @@ export default function ActivityLogTable({ activities, onFilterChange }) {
 
             {activities.data.length === 0 ? (
                 <div className="text-center py-12">
-                    <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">Tidak ada aktivitas</h3>
-                    <p className="mt-1 text-sm text-gray-500">Tidak ada aktivitas yang ditemukan dengan filter yang dipilih.</p>
+                    <h3 className="mt-2 text-sm font-medium text-ink">Tidak ada aktivitas</h3>
+                    <p className="mt-1 text-sm text-slate-500">Tidak ada aktivitas yang ditemukan dengan filter yang dipilih.</p>
                 </div>
             ) : (
-                <ul className="divide-y divide-gray-200">
+                <ul className="divide-y divide-slate-200">
                     {activities.data.map((activity) => (
                         <li key={activity.id}>
                             <div className="px-4 py-4 sm:px-6">
@@ -232,22 +232,22 @@ export default function ActivityLogTable({ activities, onFilterChange }) {
                                         </div>
                                         <div className="ml-4">
                                             <div className="flex items-center">
-                                                <p className="text-sm font-medium text-gray-900 capitalize">
+                                                <p className="text-sm font-medium text-ink capitalize">
                                                     {activity.action.replace('_', ' ')}
                                                 </p>
                                             </div>
-                                            <p className="mt-1 text-sm text-gray-500">
+                                            <p className="mt-1 text-sm text-slate-500">
                                                 {activity.description}
                                             </p>
-                                            <div className="mt-2 flex items-center space-x-4 text-xs text-gray-500">
+                                            <div className="mt-2 flex items-center space-x-4 text-xs text-slate-500">
                                                 <div className="flex items-center">
-                                                    <svg className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                                    <svg className="flex-shrink-0 mr-1.5 h-4 w-4 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
                                                         <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                                                     </svg>
                                                     {activity.ip_address}
                                                 </div>
                                                 <div className="flex items-center">
-                                                    <svg className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                                    <svg className="flex-shrink-0 mr-1.5 h-4 w-4 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
                                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                                                     </svg>
                                                     {formatDate(activity.created_at)}
@@ -263,7 +263,7 @@ export default function ActivityLogTable({ activities, onFilterChange }) {
             )}
 
             {activities.links && (
-                <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+                <div className="bg-white px-4 py-3 border-t border-slate-200 sm:px-6">
                     <Pagination links={activities.links} />
                 </div>
             )}

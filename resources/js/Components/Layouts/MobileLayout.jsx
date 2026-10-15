@@ -18,18 +18,18 @@ const MobileLayout = ({ title, children, header }) => {
   }
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col overflow-x-hidden">
+    <div className="h-screen bg-appbg flex flex-col overflow-x-hidden">
       <Head title={title} />
 
       {/* Mobile Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+      <header className="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-40">
         <div className="flex items-center justify-between px-4 py-3">
           {/* Menu Button */}
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setMobileMenuOpen(true)}
-            className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+            className="text-slate-600 hover:text-ink hover:bg-slate-100"
             style={{ minHeight: '44px', minWidth: '44px' }}
           >
             <Menu size={20} />
@@ -37,7 +37,7 @@ const MobileLayout = ({ title, children, header }) => {
 
           {/* Page Title */}
           <div className="flex-1 text-center">
-            <h1 className="text-lg font-semibold text-gray-900 font-poppins truncate">
+            <h1 className="text-lg font-semibold text-ink font-poppins truncate">
               {title || 'StockTrackApp'}
             </h1>
           </div>

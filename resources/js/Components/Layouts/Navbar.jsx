@@ -153,13 +153,13 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="bg-white shadow-sm border-b border-gray-200" role="navigation" aria-label="Main navigation">
+        <nav className="bg-white shadow-sm border-b border-slate-200" role="navigation" aria-label="Main navigation">
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     <div className="flex items-center">
                         <button
                             type="button"
-                            className="md:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                            className="md:hidden p-2 rounded-md text-slate-400 hover:text-ink hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand"
                             onClick={() => setSidebarOpen(!sidebarOpen)}
                             aria-label="Toggle sidebar"
                             aria-expanded={sidebarOpen}
@@ -177,7 +177,7 @@ export default function Navbar() {
                         <div className="relative" ref={profileMenuRef}>
                             <button
                                 type="button"
-                                className="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                className="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
                                 onClick={() => setShowProfileMenu(!showProfileMenu)}
                                 onKeyDown={handleProfileMenuKeyDown}
                                 aria-label="User menu"
@@ -185,8 +185,8 @@ export default function Navbar() {
                                 aria-haspopup="true"
                             >
                                 <span className="sr-only">Open user menu</span>
-                                <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
-                                    <span className="text-white font-medium">
+                                <div className="h-8 w-8 rounded-full bg-brand flex items-center justify-center">
+                                    <span className="text-ink font-medium">
                                         {user?.name?.charAt(0).toUpperCase()}
                                     </span>
                                 </div>
@@ -200,27 +200,27 @@ export default function Navbar() {
                                     aria-labelledby="profile-menu"
                                 >
                                     <div className="py-1">
-                                        <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
+                                        <div className="px-4 py-2 text-sm text-ink border-b border-slate-100">
                                             <div className="font-medium truncate">{user?.name}</div>
-                                            <div className="text-gray-500 truncate">{user?.email}</div>
+                                            <div className="text-slate-500 truncate">{user?.email}</div>
                                         </div>
                                         <Link
                                             href="/profile"
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                            className="block px-4 py-2 text-sm text-ink hover:bg-slate-100"
                                             role="menuitem"
                                         >
                                             <div className="flex items-center">
-                                                <UserCircleIcon className="mr-3 h-5 w-5 text-gray-400" />
+                                                <UserCircleIcon className="mr-3 h-5 w-5 text-slate-400" />
                                                 Profile
                                             </div>
                                         </Link>
                                         <button
                                             onClick={handleLogout}
-                                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                            className="block w-full text-left px-4 py-2 text-sm text-ink hover:bg-slate-100"
                                             role="menuitem"
                                         >
                                             <div className="flex items-center">
-                                                <ArrowRightOnRectangleIcon className="mr-3 h-5 w-5 text-gray-400" />
+                                                <ArrowRightOnRectangleIcon className="mr-3 h-5 w-5 text-slate-400" />
                                                 Logout
                                             </div>
                                         </button>

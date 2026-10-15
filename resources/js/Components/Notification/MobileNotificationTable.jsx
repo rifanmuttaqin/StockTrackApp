@@ -25,7 +25,7 @@ const MobileNotificationTable = ({
             );
         }
         return (
-            <Badge className="bg-gray-100 text-gray-800">
+            <Badge className="bg-appbg text-ink">
                 Sudah Dibaca
             </Badge>
         );
@@ -49,9 +49,9 @@ const MobileNotificationTable = ({
     return (
         <div className="space-y-4">
             {/* Header & Mark all as read */}
-            <div className="flex justify-between items-center bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
-                <span className="text-sm font-medium text-gray-700">
-                    Notifikasi: <span className="font-semibold text-indigo-600">{notifications.length} item</span>
+            <div className="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <span className="text-sm font-medium text-slate-700">
+                    Notifikasi: <span className="font-semibold text-brand-700">{notifications.length} item</span>
                 </span>
                 {unreadCount > 0 && (
                     <MobileButton
@@ -69,11 +69,11 @@ const MobileNotificationTable = ({
             {notifications.length === 0 ? (
                 <MobileCard>
                     <div className="p-8 text-center">
-                        <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="mx-auto h-12 w-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">Tidak ada notifikasi</h3>
-                        <p className="mt-1 text-sm text-gray-500">
+                        <h3 className="mt-2 text-sm font-medium text-ink">Tidak ada notifikasi</h3>
+                        <p className="mt-1 text-sm text-slate-500">
                             Semua notifikasi stok aman atau sesuai dengan filter Anda.
                         </p>
                     </div>
@@ -83,16 +83,16 @@ const MobileNotificationTable = ({
                     {notifications.map((notification) => (
                         <MobileCard 
                             key={notification.id} 
-                            className={`border transition-all ${notification.read_at === null ? 'border-blue-200 bg-blue-50/20 shadow-sm' : 'border-gray-200'}`}
+                            className={`border transition-all ${notification.read_at === null ? 'border-brand-200 bg-brand-50/20 shadow-sm' : 'border-slate-200'}`}
                         >
                             <div className="p-4">
                                 <div className="flex justify-between items-start mb-2">
                                     <div className="space-y-1 max-w-[70%]">
-                                        <h4 className="font-semibold text-gray-900 text-base truncate">
+                                        <h4 className="font-semibold text-ink text-base truncate">
                                             {can('product_variants.view') ? (
                                                 <Link 
                                                     href={route('variants.show', notification.data?.product_variant_id)}
-                                                    className="text-indigo-600 hover:text-indigo-900 active:text-indigo-800"
+                                                    className="text-brand-700 hover:text-brand-900 active:text-brand-800"
                                                 >
                                                     {notification.data?.product_name}
                                                 </Link>
@@ -100,7 +100,7 @@ const MobileNotificationTable = ({
                                                 notification.data?.product_name
                                             )}
                                         </h4>
-                                        <p className="text-sm text-gray-600 font-medium">
+                                        <p className="text-sm text-slate-500 font-medium">
                                             Varian: {notification.data?.variant_name}
                                         </p>
                                     </div>
@@ -110,23 +110,23 @@ const MobileNotificationTable = ({
                                     </div>
                                 </div>
 
-                                <div className="border-t border-dashed border-gray-100 my-3 pt-3 grid grid-cols-2 gap-2 text-xs text-gray-500">
+                                <div className="border-t border-dashed border-slate-100 my-3 pt-3 grid grid-cols-2 gap-2 text-xs text-slate-500">
                                     <div>
-                                        <span className="block text-gray-400">Stok Saat Ini</span>
-                                        <span className={`text-sm font-semibold ${notification.data?.stock_current <= 0 ? 'text-red-600' : 'text-gray-900'}`}>
+                                        <span className="block text-slate-400">Stok Saat Ini</span>
+                                        <span className={`text-sm font-semibold ${notification.data?.stock_current <= 0 ? 'text-red-600' : 'text-ink'}`}>
                                             {notification.data?.stock_current}
                                         </span>
                                     </div>
                                     <div>
-                                        <span className="block text-gray-400">Threshold</span>
-                                        <span className="text-sm font-semibold text-gray-900">
+                                        <span className="block text-slate-400">Threshold</span>
+                                        <span className="text-sm font-semibold text-ink">
                                             {notification.data?.stock_threshold}
                                         </span>
                                     </div>
                                 </div>
 
-                                <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-100">
-                                    <span className="text-xs text-gray-400">
+                                <div className="flex justify-between items-center mt-3 pt-3 border-t border-slate-100">
+                                    <span className="text-xs text-slate-400">
                                         {formatDate(notification.created_at)}
                                     </span>
                                     

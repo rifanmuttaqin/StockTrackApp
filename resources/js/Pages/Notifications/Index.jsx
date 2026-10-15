@@ -100,7 +100,7 @@ export default function NotificationsIndex({
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div className="md:flex md:items-center md:justify-between mb-6">
                     <div className="flex-1 min-w-0">
-                        <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                        <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
                             Notifikasi Stok
                         </h2>
                     </div>
@@ -108,7 +108,7 @@ export default function NotificationsIndex({
                         <div className="mt-4 flex md:mt-0 md:ml-4">
                             <button
                                 onClick={handleMarkAllAsRead}
-                                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-ink bg-brand hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand transition-colors"
                             >
                                 Tandai Semua Dibaca
                             </button>
@@ -129,19 +129,19 @@ export default function NotificationsIndex({
 
                 {/* Loading Overlay */}
                 {loading && (
-                    <div className="fixed inset-0 bg-gray-500 bg-opacity-25 flex items-center justify-center z-50">
+                    <div className="fixed inset-0 bg-appbg0 bg-opacity-25 flex items-center justify-center z-50">
                         <LoadingSpinner size="lg" />
                     </div>
                 )}
 
                 {/* Filter Tabs - Pill style */}
-                <div className="flex flex-wrap border-b border-gray-200 mb-6 bg-white rounded-xl p-2 shadow-sm gap-2">
+                <div className="flex flex-wrap border-b border-slate-200 mb-6 bg-white rounded-xl p-2 shadow-sm gap-2">
                     <button
                         onClick={() => handleFilterChange('all')}
                         className={`flex-1 md:flex-none text-center px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                             currentFilter === 'all'
-                                ? 'bg-indigo-50 text-indigo-600 font-semibold'
-                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                                ? 'bg-brand-50 text-brand-700 font-semibold'
+                                : 'text-slate-500 hover:text-ink hover:bg-appbg'
                         }`}
                     >
                         Semua
@@ -150,13 +150,13 @@ export default function NotificationsIndex({
                         onClick={() => handleFilterChange('unread')}
                         className={`flex-1 md:flex-none text-center px-4 py-2 text-sm font-medium rounded-lg transition-colors flex items-center justify-center ${
                             currentFilter === 'unread'
-                                ? 'bg-indigo-50 text-indigo-600 font-semibold'
-                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                                ? 'bg-brand-50 text-brand-700 font-semibold'
+                                : 'text-slate-500 hover:text-ink hover:bg-appbg'
                         }`}
                     >
                         Belum Dibaca
                         {unreadCount > 0 && (
-                            <span className="ml-2 bg-indigo-600 text-white rounded-full px-2 py-0.5 text-xs font-bold">
+                            <span className="ml-2 bg-brand text-ink rounded-full px-2 py-0.5 text-xs font-bold">
                                 {unreadCount}
                             </span>
                         )}
@@ -165,8 +165,8 @@ export default function NotificationsIndex({
                         onClick={() => handleFilterChange('read')}
                         className={`flex-1 md:flex-none text-center px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                             currentFilter === 'read'
-                                ? 'bg-indigo-50 text-indigo-600 font-semibold'
-                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                                ? 'bg-brand-50 text-brand-700 font-semibold'
+                                : 'text-slate-500 hover:text-ink hover:bg-appbg'
                         }`}
                     >
                         Sudah Dibaca
@@ -202,17 +202,17 @@ export default function NotificationsIndex({
                                 <button
                                     onClick={() => handlePageChange(Math.max(1, pagination.current_page - 1))}
                                     disabled={pagination.current_page <= 1}
-                                    className="px-3 py-1 text-sm bg-indigo-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                    className="px-3 py-1 text-sm bg-brand text-ink rounded disabled:bg-slate-300 disabled:cursor-not-allowed"
                                 >
                                     Sebelumnya
                                 </button>
-                                <span className="text-sm text-gray-700">
+                                <span className="text-sm text-slate-700">
                                     Halaman {pagination.current_page} dari {pagination.last_page}
                                 </span>
                                 <button
                                     onClick={() => handlePageChange(Math.min(pagination.last_page, pagination.current_page + 1))}
                                     disabled={pagination.current_page >= pagination.last_page}
-                                    className="px-3 py-1 text-sm bg-indigo-600 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                    className="px-3 py-1 text-sm bg-brand text-ink rounded disabled:bg-slate-300 disabled:cursor-not-allowed"
                                 >
                                     Selanjutnya
                                 </button>
@@ -237,7 +237,7 @@ export default function NotificationsIndex({
                         <div className="p-5">
                             <div className="flex items-center">
                                 <div className="flex-shrink-0">
-                                    <div className="w-8 h-8 bg-indigo-500 rounded-md flex items-center justify-center">
+                                    <div className="w-8 h-8 bg-brand-500 rounded-md flex items-center justify-center">
                                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                         </svg>
@@ -245,8 +245,8 @@ export default function NotificationsIndex({
                                 </div>
                                 <div className="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt className="text-sm font-medium text-gray-500 truncate">Total Notifikasi</dt>
-                                        <dd className="text-lg font-medium text-gray-900">{pagination.total || 0}</dd>
+                                        <dt className="text-sm font-medium text-slate-500 truncate">Total Notifikasi</dt>
+                                        <dd className="text-lg font-medium text-ink">{pagination.total || 0}</dd>
                                     </dl>
                                 </div>
                             </div>
@@ -265,8 +265,8 @@ export default function NotificationsIndex({
                                 </div>
                                 <div className="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt className="text-sm font-medium text-gray-500 truncate">Belum Dibaca</dt>
-                                        <dd className="text-lg font-medium text-gray-900">{unreadCount || 0}</dd>
+                                        <dt className="text-sm font-medium text-slate-500 truncate">Belum Dibaca</dt>
+                                        <dd className="text-lg font-medium text-ink">{unreadCount || 0}</dd>
                                     </dl>
                                 </div>
                             </div>
@@ -285,8 +285,8 @@ export default function NotificationsIndex({
                                 </div>
                                 <div className="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt className="text-sm font-medium text-gray-500 truncate">Sudah Dibaca</dt>
-                                        <dd className="text-lg font-medium text-gray-900">{Math.max(0, pagination.total - unreadCount) || 0}</dd>
+                                        <dt className="text-sm font-medium text-slate-500 truncate">Sudah Dibaca</dt>
+                                        <dd className="text-lg font-medium text-ink">{Math.max(0, pagination.total - unreadCount) || 0}</dd>
                                     </dl>
                                 </div>
                             </div>

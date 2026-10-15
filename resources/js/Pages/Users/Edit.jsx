@@ -25,7 +25,7 @@ const Edit = ({ user, roles, userRoles, errors, flash }) => {
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="md:flex md:items-center md:justify-between mb-6">
           <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            <h2 className="text-2xl font-bold leading-7 text-ink sm:text-3xl sm:truncate">
               Edit User: {user.name}
             </h2>
           </div>
@@ -51,10 +51,10 @@ const Edit = ({ user, roles, userRoles, errors, flash }) => {
           <div className="bg-white shadow sm:rounded-lg">
             <div className="px-4 py-5 sm:p-6">
               <div className="mb-4">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                <h3 className="text-lg leading-6 font-medium text-ink">
                   User Information
                 </h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-slate-500">
                   Update the user information below. Email and name are required fields.
                 </p>
               </div>
@@ -74,17 +74,17 @@ const Edit = ({ user, roles, userRoles, errors, flash }) => {
         {!isMobile && (
           <div className="mt-6 bg-white shadow sm:rounded-lg">
             <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+              <h3 className="text-lg leading-6 font-medium text-ink mb-4">
                 Additional Information
               </h3>
               <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
               <div>
-                <dt className="text-sm font-medium text-gray-500">User ID</dt>
-                <dd className="mt-1 text-sm text-gray-900">{user.id}</dd>
+                <dt className="text-sm font-medium text-slate-500">User ID</dt>
+                <dd className="mt-1 text-sm text-ink">{user.id}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Created At</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-slate-500">Created At</dt>
+                <dd className="mt-1 text-sm text-ink">
                   {new Date(user.created_at).toLocaleDateString('id-ID', {
                     year: 'numeric',
                     month: 'long',
@@ -95,8 +95,8 @@ const Edit = ({ user, roles, userRoles, errors, flash }) => {
                 </dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Last Updated</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-slate-500">Last Updated</dt>
+                <dd className="mt-1 text-sm text-ink">
                   {user.updated_at ? new Date(user.updated_at).toLocaleDateString('id-ID', {
                     year: 'numeric',
                     month: 'long',
@@ -107,8 +107,8 @@ const Edit = ({ user, roles, userRoles, errors, flash }) => {
                 </dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Last Login</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-slate-500">Last Login</dt>
+                <dd className="mt-1 text-sm text-ink">
                   {user.last_login_at ? new Date(user.last_login_at).toLocaleDateString('id-ID', {
                     year: 'numeric',
                     month: 'long',
@@ -119,28 +119,28 @@ const Edit = ({ user, roles, userRoles, errors, flash }) => {
                 </dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Email Verified</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-slate-500">Email Verified</dt>
+                <dd className="mt-1 text-sm text-ink">
                   {user.email_verified_at ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       Verified
                     </span>
                   ) : (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                       Not Verified
                     </span>
                   )}
                 </dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Two Factor</dt>
-                <dd className="mt-1 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-slate-500">Two Factor</dt>
+                <dd className="mt-1 text-sm text-ink">
                   {user.two_factor_confirmed_at ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       Enabled
                     </span>
                   ) : (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-appbg text-ink">
                       Disabled
                     </span>
                   )}
@@ -155,17 +155,17 @@ const Edit = ({ user, roles, userRoles, errors, flash }) => {
         {isMobile && (
           <div className="mt-6 bg-white shadow rounded-lg">
             <div className="p-4">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+              <h3 className="text-lg leading-6 font-medium text-ink mb-4">
                 Additional Information
               </h3>
               <dl className="space-y-3">
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <dt className="text-sm font-medium text-gray-500">User ID</dt>
-                  <dd className="text-sm text-gray-900">{user.id}</dd>
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <dt className="text-sm font-medium text-slate-500">User ID</dt>
+                  <dd className="text-sm text-ink">{user.id}</dd>
                 </div>
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <dt className="text-sm font-medium text-gray-500">Created At</dt>
-                  <dd className="text-sm text-gray-900">
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <dt className="text-sm font-medium text-slate-500">Created At</dt>
+                  <dd className="text-sm text-ink">
                     {new Date(user.created_at).toLocaleDateString('id-ID', {
                       year: 'numeric',
                       month: 'long',
@@ -175,9 +175,9 @@ const Edit = ({ user, roles, userRoles, errors, flash }) => {
                     })}
                   </dd>
                 </div>
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <dt className="text-sm font-medium text-gray-500">Last Updated</dt>
-                  <dd className="text-sm text-gray-900">
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <dt className="text-sm font-medium text-slate-500">Last Updated</dt>
+                  <dd className="text-sm text-ink">
                     {user.updated_at ? new Date(user.updated_at).toLocaleDateString('id-ID', {
                       year: 'numeric',
                       month: 'long',
@@ -187,9 +187,9 @@ const Edit = ({ user, roles, userRoles, errors, flash }) => {
                     }) : 'Never'}
                   </dd>
                 </div>
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <dt className="text-sm font-medium text-gray-500">Last Login</dt>
-                  <dd className="text-sm text-gray-900">
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <dt className="text-sm font-medium text-slate-500">Last Login</dt>
+                  <dd className="text-sm text-ink">
                     {user.last_login_at ? new Date(user.last_login_at).toLocaleDateString('id-ID', {
                       year: 'numeric',
                       month: 'long',
@@ -199,29 +199,29 @@ const Edit = ({ user, roles, userRoles, errors, flash }) => {
                     }) : 'Never'}
                   </dd>
                 </div>
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <dt className="text-sm font-medium text-gray-500">Email Verified</dt>
-                  <dd className="text-sm text-gray-900">
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <dt className="text-sm font-medium text-slate-500">Email Verified</dt>
+                  <dd className="text-sm text-ink">
                     {user.email_verified_at ? (
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                         Verified
                       </span>
                     ) : (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                         Not Verified
                       </span>
                     )}
                   </dd>
                 </div>
                 <div className="flex justify-between py-2">
-                  <dt className="text-sm font-medium text-gray-500">Two Factor</dt>
-                  <dd className="text-sm text-gray-900">
+                  <dt className="text-sm font-medium text-slate-500">Two Factor</dt>
+                  <dd className="text-sm text-ink">
                     {user.two_factor_confirmed_at ? (
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                         Enabled
                       </span>
                     ) : (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-appbg text-ink">
                         Disabled
                       </span>
                     )}
@@ -233,18 +233,18 @@ const Edit = ({ user, roles, userRoles, errors, flash }) => {
         )}
 
         {/* Help Section - Responsive */}
-        <div className={`mt-6 bg-blue-50 border-l-4 border-blue-400 p-4 ${isMobile ? 'rounded-lg' : ''}`}>
+        <div className={`mt-6 bg-brand-50 border-l-4 border-brand-500 p-4 ${isMobile ? 'rounded-lg' : ''}`}>
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+              <svg className="h-5 w-5 text-brand-500" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">
+              <h3 className="text-sm font-medium text-brand-800">
                 User Editing Tips
               </h3>
-              <div className="mt-2 text-sm text-blue-700">
+              <div className="mt-2 text-sm text-brand-700">
                 <ul className="list-disc pl-5 space-y-1">
                   <li>Email changes will require the user to verify their new email address</li>
                   <li>Status changes will take effect immediately</li>
