@@ -597,6 +597,12 @@ const Index = ({ products, filters, meta }) => {
                                     <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                                       Stock Saat Ini
                                     </th>
+                                    <th className="px-4 py-2 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                      Harga Beli
+                                    </th>
+                                    <th className="px-4 py-2 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                      Nilai
+                                    </th>
                                   </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-slate-200">
@@ -648,6 +654,12 @@ const Index = ({ products, filters, meta }) => {
                                             )}
                                           </div>
                                         )}
+                                      </td>
+                                      <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-ink">
+                                        {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(variant.purchase_price ?? 0)}
+                                      </td>
+                                      <td className="px-4 py-3 whitespace-nowrap text-sm text-right font-medium text-ink">
+                                        {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format((variant.stock_current ?? 0) * (variant.purchase_price ?? 0))}
                                       </td>
                                     </tr>
                                   ))}

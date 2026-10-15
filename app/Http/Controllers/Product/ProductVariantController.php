@@ -197,6 +197,7 @@ class ProductVariantController extends Controller
                 'variant_name' => $validatedData['variant_name'],
                 'sku' => $validatedData['sku'],
                 'stock_current' => $validatedData['stock_current'] ?? 0,
+                'purchase_price' => $validatedData['purchase_price'] ?? 0,
             ]);
 
             $this->logVariantAction('create_variant', $variant->id, [
@@ -312,6 +313,7 @@ class ProductVariantController extends Controller
                 'variant_name' => $validatedData['variant_name'],
                 'sku' => $validatedData['sku'],
                 'stock_current' => $validatedData['stock_current'] ?? $variant->stock_current,
+                'purchase_price' => $validatedData['purchase_price'] ?? $variant->purchase_price,
             ]);
 
             $this->logVariantAction('update_variant', $id, [

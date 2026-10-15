@@ -226,6 +226,12 @@ const Show = ({ product, errors, flash }) => {
                       Stock Current
                     </th>
                     <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      Harga Beli
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      Nilai Aset
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
                       Aksi
                     </th>
                   </tr>
@@ -268,6 +274,12 @@ const Show = ({ product, errors, flash }) => {
                             ))}
                           </div>
                         )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-ink">
+                        {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(variant.purchase_price ?? 0)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-ink">
+                        {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format((variant.stock_current ?? 0) * (variant.purchase_price ?? 0))}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end space-x-2">

@@ -102,8 +102,10 @@ class ProductRepository implements ProductRepositoryInterface
                     'name' => $variant->variant_name,
                     'sku' => $variant->sku,
                     'stock_current' => $variant->stock_current,
+                    'purchase_price' => (float) ($variant->purchase_price ?? 0),
                     'stock_threshold' => $variant->stock_threshold ?? 0,
                     'product_id' => $variant->product_id,
+                    'unit_id' => $variant->unit_id,
                     'unit' => $unitData,
                     'conversions' => $conversionsData,
                 ];
@@ -169,8 +171,10 @@ class ProductRepository implements ProductRepositoryInterface
                 'name' => $variant->variant_name,
                 'sku' => $variant->sku,
                 'stock_current' => $variant->stock_current,
+                'purchase_price' => (float) ($variant->purchase_price ?? 0),
                 'stock_threshold' => $variant->stock_threshold ?? 0,
                 'product_id' => $variant->product_id,
+                'unit_id' => $variant->unit_id,
                 'unit' => $unitData,
                 'conversions' => $conversionsData,
             ];
@@ -205,6 +209,7 @@ class ProductRepository implements ProductRepositoryInterface
                         'variant_name' => $variantData['name'],
                         'sku' => $variantData['sku'],
                         'stock_current' => $variantData['stock_current'],
+                        'purchase_price' => $variantData['purchase_price'] ?? 0,
                         'stock_threshold' => $variantData['stock_threshold'] ?? 0,
                         'unit_id' => $variantData['unit_id'] ?? null,
                     ]);
@@ -257,8 +262,10 @@ class ProductRepository implements ProductRepositoryInterface
                     'name' => $variant->variant_name,
                     'sku' => $variant->sku,
                     'stock_current' => $variant->stock_current,
+                    'purchase_price' => (float) ($variant->purchase_price ?? 0),
                     'stock_threshold' => $variant->stock_threshold ?? 0,
                     'product_id' => $variant->product_id,
+                    'unit_id' => $variant->unit_id,
                     'unit' => $unitData,
                     'conversions' => $conversionsData,
                 ];
@@ -319,6 +326,7 @@ class ProductRepository implements ProductRepositoryInterface
                                 'variant_name' => $variantData['name'],
                                 'sku' => $variantData['sku'],
                                 'stock_current' => $variantData['stock_current'],
+                                'purchase_price' => $variantData['purchase_price'] ?? 0,
                                 'stock_threshold' => $variantData['stock_threshold'] ?? 0,
                                 'unit_id' => $variantData['unit_id'] ?? null,
                             ]);
@@ -330,6 +338,7 @@ class ProductRepository implements ProductRepositoryInterface
                             'variant_name' => $variantData['name'],
                             'sku' => $variantData['sku'],
                             'stock_current' => $variantData['stock_current'],
+                            'purchase_price' => $variantData['purchase_price'] ?? 0,
                             'stock_threshold' => $variantData['stock_threshold'] ?? 0,
                             'unit_id' => $variantData['unit_id'] ?? null,
                         ]);
@@ -537,8 +546,10 @@ class ProductRepository implements ProductRepositoryInterface
                     'name' => $variant->variant_name,
                     'sku' => $variant->sku,
                     'stock_current' => $variant->stock_current,
+                    'purchase_price' => (float) ($variant->purchase_price ?? 0),
                     'stock_threshold' => $variant->stock_threshold ?? 0,
                     'product_id' => $variant->product_id,
+                    'unit_id' => $variant->unit_id,
                     'unit' => $unitData,
                     'conversions' => $conversionsData,
                 ];

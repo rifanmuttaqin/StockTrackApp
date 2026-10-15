@@ -42,6 +42,7 @@ class ProductVariant extends Model
         'variant_name',
         'sku',
         'stock_current',
+        'purchase_price',
         'stock_threshold',
         'unit_id',
     ];
@@ -58,6 +59,7 @@ class ProductVariant extends Model
             'product_id' => 'string',
             'unit_id' => 'string',
             'stock_current' => 'integer',
+            'purchase_price' => 'decimal:2',
             'stock_threshold' => 'integer',
         ];
     }

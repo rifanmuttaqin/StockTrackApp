@@ -33,6 +33,7 @@ class ProductVariantUpdateRequest extends FormRequest
             'variant_name' => 'required|string|max:100',
             'sku' => 'required|string|max:50|unique:product_variants,sku,' . $variantId,
             'stock_current' => 'required|integer|min:0',
+            'purchase_price' => 'nullable|numeric|min:0|max:9999999999999.99',
         ];
     }
 
@@ -82,6 +83,8 @@ class ProductVariantUpdateRequest extends FormRequest
             'stock_current.required' => 'Stok varian harus diisi',
             'stock_current.integer' => 'Stok varian harus berupa angka',
             'stock_current.min' => 'Stok varian minimal 0',
+            'purchase_price.numeric' => 'Harga beli harus berupa angka',
+            'purchase_price.min' => 'Harga beli minimal 0',
         ];
     }
 

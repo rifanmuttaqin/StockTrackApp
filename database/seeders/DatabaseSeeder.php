@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             AdminUserSeeder::class,
             UnitSeeder::class,
+            FixUserRoleSeeder::class,
+            WhatsAppStockOpnameTemplateSeeder::class,
+            // PermissionSeeder intentionally excluded: it is a no-op
+            // documentation seeder (permissions are created in RoleSeeder).
         ]);
     }
 }

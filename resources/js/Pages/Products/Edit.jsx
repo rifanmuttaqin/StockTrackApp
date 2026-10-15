@@ -17,6 +17,7 @@ const Edit = ({ product, errors, flash, baseUnits }) => {
     name: '',
     sku: '',
     stock_current: 0,
+    purchase_price: 0,
     stock_threshold: 0,
     unit_id: null,
   };
@@ -33,6 +34,7 @@ const Edit = ({ product, errors, flash, baseUnits }) => {
         name: variant.name,
         sku: variant.sku,
         stock_current: variant.stock_current,
+        purchase_price: variant.purchase_price ?? 0,
         stock_threshold: variant.stock_threshold || 0,
         unit_id: variant.unit_id || null,
       }));
@@ -303,6 +305,25 @@ const Edit = ({ product, errors, flash, baseUnits }) => {
                         placeholder="0"
                         className="block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm"
                       />
+                    </MobileFormField>
+
+                    {/* Purchase Price */}
+                    <MobileFormField
+                      label="Harga Beli (Rp)"
+                      error={errors[`variants.${index}.purchase_price`]}
+                    >
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={variant.purchase_price ?? 0}
+                        onChange={(e) => handleVariantChange(index, 'purchase_price', parseFloat(e.target.value) || 0)}
+                        placeholder="0"
+                        className="block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm"
+                      />
+                      <p className="mt-1 text-xs text-slate-500">
+                        Modal per satuan dasar, untuk laporan aset
+                      </p>
                     </MobileFormField>
 
                     {/* Stock Threshold */}

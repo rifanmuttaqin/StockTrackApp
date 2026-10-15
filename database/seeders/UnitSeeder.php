@@ -60,22 +60,17 @@ class UnitSeeder extends Seeder
         bool $isPrimary,
         ?string $description = null
     ): void {
+        // Preserve existing custom units: if the unit already exists
+        // (e.g. renamed/abbreviation/multiplier edited by user), do NOT
+        // overwrite it — only insert when truly missing. This keeps
+        // seeder runs idempotent and non-destructive against the
+        // current database content.
         $existing = DB::table('units')
             ->whereRaw('LOWER(name) = ?', [strtolower($name)])
             ->where('type', 'conversion')
             ->first();
 
         if ($existing) {
-            DB::table('units')
-                ->where('id', $existing->id)
-                ->update([
-                    'abbreviation' => $abbreviation,
-                    'base_unit_id' => $baseUnitId,
-                    'multiplier' => $multiplier,
-                    'is_primary' => $isPrimary,
-                    'description' => $description,
-                    'updated_at' => now(),
-                ]);
             return;
         }
 

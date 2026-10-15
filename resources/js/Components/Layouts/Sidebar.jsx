@@ -158,6 +158,11 @@ export default function Sidebar() {
                     href: '/reports/stock-opname',
                     permission: 'view_reports',
                 },
+                {
+                    name: 'Laporan Aset',
+                    href: '/reports/asset',
+                    permission: 'view_reports',
+                },
             ],
         },
         // {

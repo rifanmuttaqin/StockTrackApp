@@ -85,6 +85,9 @@ export default function ProductVariantsModal({ isOpen, onClose, product }) {
                   <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Stock Current
                   </th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Harga Beli
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-200">
@@ -106,6 +109,9 @@ export default function ProductVariantsModal({ isOpen, onClose, product }) {
                       }`}>
                         {variant.stock_current}
                       </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-ink">
+                      {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(variant.purchase_price ?? 0)}
                     </td>
                   </tr>
                 ))}
@@ -142,6 +148,12 @@ export default function ProductVariantsModal({ isOpen, onClose, product }) {
                       variant.stock_current > 0 ? 'text-green-600' : 'text-red-600'
                     }`}>
                       {variant.stock_current > 0 ? 'Tersedia' : 'Habis'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs mt-1">
+                    <span className="text-slate-500">Harga Beli:</span>
+                    <span className="font-medium text-ink">
+                      {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(variant.purchase_price ?? 0)}
                     </span>
                   </div>
                 </div>

@@ -11,37 +11,44 @@ class FixUserRoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
+     * Synchronises users.current_role_id with the pivot table
+     * (model_has_roles) WITHOUT overwriting values that are already
+     * correct:
+     *  - users with NULL current_role_id get it filled from their
+     *    first pivot role (covers manually created users);
+     *  - users whose current_role_id no longer matches any of their
+     *    pivot roles are reset to the first pivot role;
+     *  - users without any pivot role are left untouched.
+     *
+     * NOTE: a previous version of this seeder hardcoded
+     * admin@stocktrackapp.com -> management role, which is wrong
+     * (admin must stay admin). That mapping has been removed.
      */
     public function run(): void
     {
         DB::transaction(function () {
-            // Get roles
-            $inventoryRole = Role::where('name', 'inventory_staff')->first();
-            $supervisorRole = Role::where('name', 'warehouse_supervisor')->first();
-            $managementRole = Role::where('name', 'management')->first();
+            $users = User::all();
 
-            // Fix admin user
-            $adminUser = User::where('email', 'admin@stocktrackapp.com')->first();
-            if ($adminUser) {
-                $adminUser->current_role_id = $managementRole->id;
-                $adminUser->save();
-                $this->command->info('Fixed admin user current_role_id');
-            }
+            foreach ($users as $user) {
+                $pivotRoleIds = DB::table('model_has_roles')
+                    ->where('model_type', User::class)
+                    ->where('model_id', $user->id)
+                    ->pluck('role_id')
+                    ->all();
 
-            // Fix supervisor user
-            $supervisorUser = User::where('email', 'supervisor@stocktrackapp.com')->first();
-            if ($supervisorUser) {
-                $supervisorUser->current_role_id = $supervisorRole->id;
-                $supervisorUser->save();
-                $this->command->info('Fixed supervisor user current_role_id');
-            }
+                if (empty($pivotRoleIds)) {
+                    $this->command->warn("Skipped {$user->email}: no role in model_has_roles.");
+                    continue;
+                }
 
-            // Fix staff user
-            $staffUser = User::where('email', 'staff@stocktrackapp.com')->first();
-            if ($staffUser) {
-                $staffUser->current_role_id = $inventoryRole->id;
-                $staffUser->save();
-                $this->command->info('Fixed staff user current_role_id');
+                if (empty($user->current_role_id) || ! in_array($user->current_role_id, $pivotRoleIds, true)) {
+                    $old = $user->current_role_id ?: '(null)';
+                    $user->current_role_id = $pivotRoleIds[0];
+                    $user->save();
+                    $roleName = Role::where('id', $pivotRoleIds[0])->value('name');
+                    $this->command->info("Fixed {$user->email}: {$old} -> {$roleName}");
+                }
             }
         });
     }

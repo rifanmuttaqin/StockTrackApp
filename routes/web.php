@@ -36,6 +36,7 @@ require __DIR__.'/templates.php';
 require __DIR__.'/stock_out.php';
 require __DIR__.'/stock_in.php';
 require __DIR__.'/stock_opname.php';
+require __DIR__.'/asset_report.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/settings.php';
 require __DIR__.'/units.php';
