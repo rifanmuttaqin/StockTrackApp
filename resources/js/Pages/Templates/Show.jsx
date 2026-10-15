@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 import { Alert, LoadingSpinner, Badge } from '../../Components/UI';
+import { confirmDelete, confirmActivate } from '../../Utils/confirmDialog';
 import { usePermission } from '../../Hooks/usePermission';
 import { useMobileDetection } from '../../Hooks/useMobileDetection';
 import {
@@ -18,8 +19,13 @@ const Show = ({ template, errors, flash }) => {
   const [loading, setLoading] = useState(false);
 
   // Handle template delete
-  const handleDeleteTemplate = () => {
-    if (confirm('Apakah Anda yakin ingin menghapus template ini? Semua varian terkait juga akan dihapus.')) {
+  const handleDeleteTemplate = async () => {
+    const result = await confirmDelete({
+      title: 'Hapus Template?',
+      html: `Apakah Anda yakin ingin menghapus template <b>${template.name}</b>? Semua varian terkait juga akan dihapus.`,
+    });
+
+    if (result.isConfirmed) {
       router.delete(route('templates.destroy', template.id), {
         onStart: () => setLoading(true),
         onFinish: () => setLoading(false),
@@ -28,8 +34,14 @@ const Show = ({ template, errors, flash }) => {
   };
 
   // Handle set active
-  const handleSetActive = () => {
-    if (confirm(`Apakah Anda yakin ingin mengaktifkan template "${template.name}"? Template aktif saat ini akan dinonaktifkan.`)) {
+  const handleSetActive = async () => {
+    const result = await confirmActivate({
+      title: 'Aktifkan Template?',
+      html: `Apakah Anda yakin ingin mengaktifkan template <b>${template.name}</b>? Template aktif saat ini akan dinonaktifkan.`,
+      confirmText: 'Ya, Aktifkan',
+    });
+
+    if (result.isConfirmed) {
       router.post(route('templates.set-active', template.id), {}, {
         onStart: () => setLoading(true),
         onFinish: () => setLoading(false),
@@ -383,6 +395,7 @@ const Show = ({ template, errors, flash }) => {
             </div>
           </div>
         </div>
+
       </div>
     </AppLayout>
   );

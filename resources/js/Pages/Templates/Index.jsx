@@ -3,6 +3,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '../../Layouts/AppLayout';
 import Table from '../../Components/Common/Table';
 import { Alert, LoadingSpinner, Badge } from '../../Components/UI';
+import { confirmDelete, confirmActivate } from '../../Utils/confirmDialog';
 import { usePermission } from '../../Hooks/usePermission';
 import { useMobileDetection } from '../../Hooks/useMobileDetection';
 import {
@@ -84,8 +85,13 @@ const Index = ({ templates, filters, meta }) => {
     );
   };
 
-  const handleDelete = (template) => {
-    if (confirm('Apakah Anda yakin ingin menghapus template ini? Tindakan ini tidak dapat dibatalkan.')) {
+  const handleDelete = async (template) => {
+    const result = await confirmDelete({
+      title: 'Hapus Template?',
+      html: `Apakah Anda yakin ingin menghapus template <b>${template.name}</b>? Tindakan ini tidak dapat dibatalkan.`,
+    });
+
+    if (result.isConfirmed) {
       router.delete(route('templates.destroy', template.id), {
         onSuccess: () => {
           router.reload({ only: ['templates'] });
@@ -94,8 +100,14 @@ const Index = ({ templates, filters, meta }) => {
     }
   };
 
-  const handleSetActive = (template) => {
-    if (confirm(`Apakah Anda yakin ingin mengaktifkan template "${template.name}"? Template aktif saat ini akan dinonaktifkan.`)) {
+  const handleSetActive = async (template) => {
+    const result = await confirmActivate({
+      title: 'Aktifkan Template?',
+      html: `Apakah Anda yakin ingin mengaktifkan template <b>${template.name}</b>? Template aktif saat ini akan dinonaktifkan.`,
+      confirmText: 'Ya, Aktifkan',
+    });
+
+    if (result.isConfirmed) {
       router.post(route('templates.set-active', template.id), {}, {
         onSuccess: () => {
           router.reload({ only: ['templates'] });
@@ -438,6 +450,7 @@ const Index = ({ templates, filters, meta }) => {
             </div>
           </div>
         </div>
+
       </div>
     </AppLayout>
   );
