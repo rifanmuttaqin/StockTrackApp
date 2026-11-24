@@ -91,9 +91,13 @@ class WhatsAppSetting extends Model
 
         try {
             return decrypt($value);
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-            \Illuminate\Support\Facades\Log::warning('Gagal mendekripsi WhatsApp API key. APP_KEY mungkin telah berubah: ' . $e->getMessage());
-            return null;
+        } catch (\Throwable $e) {
+            try {
+                return decrypt($value, false);
+            } catch (\Throwable $e2) {
+                \Illuminate\Support\Facades\Log::warning('Gagal mendekripsi WhatsApp API key. APP_KEY mungkin telah berubah: ' . $e2->getMessage());
+                return null;
+            }
         }
     }
 
